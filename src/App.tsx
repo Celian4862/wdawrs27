@@ -21,7 +21,6 @@ export default function App() {
           type="button"
           disabled={tile.id === 12}
           className="border size-20"
-          onClick={() => console.log("Yuh")}
         >
           {tile.tile_type}
         </button>
