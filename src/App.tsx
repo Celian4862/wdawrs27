@@ -14,7 +14,7 @@ export default function App() {
   }));
   board[12].tile_type = hurricane;
   return (
-    <div className="grid grid-cols-5 w-fit">
+    <div className="gap-4 grid grid-cols-5 w-fit">
       {board.map((tile, i) => (
         <button
           key={i}
