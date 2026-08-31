@@ -1,19 +1,15 @@
-type RevealedType = "Item" | "Water" | "Fake" | "Exit" | "Shade" | "Hint";
-
-type HintVariant =
-  | "Pointer Row"
-  | "Pointer Col"
-  | "Motor Row"
-  | "Motor Col"
-  | "Core Row"
-  | "Core Col"
-  | "Fan Row"
-  | "Fan Col";
-
 type TileDefinition = {
   unrevealedType: "Start" | "Greenth" | "Sand";
-  revealedType: RevealedType;
-  hintVariant?: HintVariant;
+  revealedType: "Item" | "Water" | "Fake" | "Exit" | "Shade" | "Hint";
+  hintVariant?:
+    | "Pointer Row"
+    | "Pointer Col"
+    | "Motor Row"
+    | "Motor Col"
+    | "Core Row"
+    | "Core Col"
+    | "Fan Row"
+    | "Fan Col";
 };
 
 type Tile =
@@ -39,7 +35,7 @@ function shuffle<T>(items: T[]): T[] {
 const nullPosition = toIndex(2, 2); // center: 12
 const startingPosition = toIndex(3, 4); // 19
 
-const typeBPositions = [
+const greenthPositions = [
   toIndex(0, 3), // 3
   toIndex(1, 0), // 5
   toIndex(4, 1), // 21
@@ -53,15 +49,15 @@ const startingTile: TileDefinition = {
 const typeBTiles: TileDefinition[] = [
   {
     unrevealedType: "Greenth",
-    revealedType: "Water", // benefit
+    revealedType: "Water",
   },
   {
     unrevealedType: "Greenth",
-    revealedType: "Water", // benefit
+    revealedType: "Water",
   },
   {
     unrevealedType: "Greenth",
-    revealedType: "Fake", // fake
+    revealedType: "Fake",
   },
 ];
 
@@ -114,7 +110,7 @@ board[startingPosition] = {
 // Randomly assign the three type-B tiles to their three fixed positions.
 const shuffledTypeBTiles = shuffle(typeBTiles);
 
-typeBPositions.forEach((position, index) => {
+greenthPositions.forEach((position, index) => {
   board[position] = {
     id: position,
     revealed: false,
@@ -130,7 +126,7 @@ const remainingPositions = Array.from(
   (position) =>
     position !== nullPosition &&
     position !== startingPosition &&
-    !typeBPositions.includes(position),
+    !greenthPositions.includes(position),
 );
 
 // Randomly place the 20 type-C tiles in those remaining positions.
