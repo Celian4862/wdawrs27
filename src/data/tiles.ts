@@ -46,7 +46,7 @@ const startingTile: TileDefinition = {
   revealedType: "Item",
 };
 
-const typeBTiles: TileDefinition[] = [
+const greenthTiles: TileDefinition[] = [
   {
     unrevealedType: "Greenth",
     revealedType: "Water",
@@ -61,7 +61,7 @@ const typeBTiles: TileDefinition[] = [
   },
 ];
 
-const typeCTiles: TileDefinition[] = [
+const sandTiles: TileDefinition[] = [
   {
     unrevealedType: "Sand",
     revealedType: "Exit",
@@ -107,14 +107,14 @@ board[startingPosition] = {
   ...startingTile,
 };
 
-// Randomly assign the three type-B tiles to their three fixed positions.
-const shuffledTypeBTiles = shuffle(typeBTiles);
+// Randomly assign the three greenth tiles to their three fixed positions.
+const shuffledGreenthTiles = shuffle(greenthTiles);
 
 greenthPositions.forEach((position, index) => {
   board[position] = {
     id: position,
     revealed: false,
-    ...shuffledTypeBTiles[index],
+    ...shuffledGreenthTiles[index],
   };
 });
 
@@ -129,14 +129,14 @@ const remainingPositions = Array.from(
     !greenthPositions.includes(position),
 );
 
-// Randomly place the 20 type-C tiles in those remaining positions.
-const shuffledTypeCTiles = shuffle(typeCTiles);
+// Randomly place the 20 sand tiles in those remaining positions.
+const shuffledSandTiles = shuffle(sandTiles);
 
 remainingPositions.forEach((position, index) => {
   board[position] = {
     id: position,
     revealed: false,
-    ...shuffledTypeCTiles[index],
+    ...shuffledSandTiles[index],
   };
 });
 
