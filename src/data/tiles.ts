@@ -1,3 +1,5 @@
+import { shuffle } from "./shuffle";
+
 type TileDefinition = {
   unrevealedType: "Start" | "Greenth" | "Sand";
   revealedType: "Item" | "Water" | "Fake" | "Exit" | "Shade" | "Hint";
@@ -20,17 +22,6 @@ type Tile =
   | null;
 
 const toIndex = (row: number, col: number) => row * 5 + col;
-
-function shuffle<T>(items: T[]): T[] {
-  const result = [...items];
-
-  for (let i = result.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [result[i], result[j]] = [result[j], result[i]];
-  }
-
-  return result;
-}
 
 const nullPosition = toIndex(2, 2); // center: 12
 const startingPosition = toIndex(3, 4); // 19
