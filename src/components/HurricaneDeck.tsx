@@ -73,7 +73,6 @@ export default function HurricaneDeck({
           <h3 className="text-sm font-semibold tracking-[0.16em] text-white/80 uppercase">
             Movement cards
           </h3>
-          <p className="text-xs text-white/45">Cards drawn by direction</p>
         </div>
         <div className="overflow-hidden rounded-lg border border-white/10">
           <div className="grid grid-cols-[minmax(4.5rem,1.2fr)_repeat(4,minmax(0,1fr))] bg-white/10 px-2 py-2 text-center text-xs font-semibold tracking-wider text-white/55 uppercase">
