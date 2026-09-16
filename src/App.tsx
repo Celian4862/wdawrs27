@@ -1,8 +1,11 @@
 import { useState } from "react";
 import Board from "./components/Board";
 import HurricaneDeck from "./components/HurricaneDeck";
+import ItemDeck from "./components/ItemDeck";
+import type { Item } from "./data/items";
 
 export default function App() {
+  const [discardedItems] = useState<Partial<Record<Item, number>>>({});
   const [thirstCardsCount, setThirstCardsCount] = useState(0);
   const [hurricaneUpCardsCount, setHurricaneUpCardsCount] = useState(0);
   const [moveOneUpCardsCount, setMoveOneUpCardsCount] = useState(0);
@@ -57,7 +60,7 @@ export default function App() {
   };
 
   return (
-    <div className="grid w-fit grid-cols-2 gap-15">
+    <div className="grid w-fit grid-cols-2 items-start gap-15">
       <Board />
       <div>
         <HurricaneDeck
@@ -85,6 +88,7 @@ export default function App() {
         >
           Draw random card
         </button>
+        <ItemDeck discardedItems={discardedItems} />
       </div>
     </div>
   );
