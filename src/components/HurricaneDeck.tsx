@@ -32,7 +32,7 @@ export default function HurricaneDeck({
   moveThreeRightCardsCount: number;
 }) {
   return (
-    <section className="w-full max-w-xl space-y-5 rounded-xl border border-white/15 bg-white/5 p-5 shadow-2xl shadow-black/30">
+    <section className="mb-5 w-full max-w-xl space-y-5 rounded-xl border border-white/15 bg-white/5 p-5 shadow-2xl shadow-black/30">
       <header className="flex items-end justify-between gap-4 border-b border-white/10 pb-5">
         <div>
           <p className="text-xs font-semibold tracking-[0.2em] text-cyan-300 uppercase">
