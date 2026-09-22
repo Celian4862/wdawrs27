@@ -1,5 +1,6 @@
 {
   "name": "server",
+  "type": "module",
   "version": "1.0.50",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,7 +10,11 @@
     "elysia": "latest"
   },
   "devDependencies": {
-    "bun-types": "latest"
+    "bun-types": "latest",
+    "eslint": "^10.11.0",
+    "eslint-plugin-prettier": "^5.5.6",
+    "eslint-plugin-security": "^4.0.1",
+    "prettier": "^3.9.8"
   },
   "module": "src/index.js"
 }
