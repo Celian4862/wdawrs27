@@ -1,3 +1,32 @@
-import { configs } from "eslint-plugin-security";
+import js from "@eslint/js";
+import json from "@eslint/json";
+import eslintConfigPrettier from "eslint-config-prettier";
+import eslintPluginSecurity from "eslint-plugin-security";
+import { defineConfig } from "eslint/config";
+import tseslint from "typescript-eslint";
 
-module.exports = [configs.recommended];
+export default defineConfig([
+  {
+    ignores: ["tsconfig.json"],
+  },
+  {
+    files: ["**/*.{js,mjs,cjs,ts,mts,cts}"],
+    plugins: { js },
+    extends: ["js/recommended"],
+  },
+  tseslint.configs.recommended,
+  {
+    files: ["**/*.json"],
+    plugins: { json },
+    language: "json/json",
+    extends: ["json/recommended"],
+  },
+  {
+    files: ["**/*.jsonc"],
+    plugins: { json },
+    language: "json/jsonc",
+    extends: ["json/recommended"],
+  },
+  eslintPluginSecurity.configs.recommended,
+  eslintConfigPrettier,
+]);

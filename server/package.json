@@ -4,17 +4,21 @@
   "version": "1.0.50",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts"
+    "dev": "bun run --watch src/index.ts",
+    "lint": "eslint ."
   },
   "dependencies": {
     "elysia": "latest"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@eslint/json": "^2.1.0",
     "bun-types": "latest",
     "eslint": "^10.11.0",
-    "eslint-plugin-prettier": "^5.5.6",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-security": "^4.0.1",
-    "prettier": "^3.9.8"
+    "prettier": "^3.9.8",
+    "typescript-eslint": "^8.70.1"
   },
   "module": "src/index.js"
 }
