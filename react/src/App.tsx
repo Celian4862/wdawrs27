@@ -2,13 +2,13 @@ import { useState } from "react";
 import Board from "./components/Board";
 import HurricaneDeck from "./components/HurricaneDeck";
 import ItemDeck from "./components/ItemDeck";
+import PlayerInfo from "./components/PlayerInfo";
 import type { Item } from "./data/items";
 import {
   assignPlayers,
   type PlayerCount,
   type PlayerType,
 } from "./data/player-cards";
-import PlayerInfo from "./components/PlayerInfo";
 
 export default function App() {
   const [playerCount, setPlayerCount] = useState<PlayerCount | null>(null);
