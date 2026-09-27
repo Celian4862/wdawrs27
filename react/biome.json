@@ -6,10 +6,12 @@
 		"useIgnoreFile": true
 	},
 	"files": {
-		"ignoreUnknown": true,
+		"ignoreUnknown": false,
 		"includes": [
 			"**",
-			"!!**/dist"
+			"!!**/dist",
+			"!!**/node_modules",
+			"!bun.lock"
 		]
 	},
 	"formatter": {

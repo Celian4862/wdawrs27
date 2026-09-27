@@ -6,9 +6,12 @@
 		"useIgnoreFile": true
 	},
 	"files": {
-		"ignoreUnknown": true,
+		"ignoreUnknown": false,
 		"includes": [
-			"**"
+			"**",
+			"!!**/.vercel",
+			"!!**/node_modules",
+			"!bun.lock"
 		]
 	},
 	"formatter": {
