@@ -1,25 +1,25 @@
-import { shuffle } from "./shuffle";
+import { shuffle } from './shuffle';
 
 type TileDefinition = {
-  unrevealedType: "Start" | "Greenth" | "Sand";
-  revealedType: "Item" | "Water" | "Fake" | "Exit" | "Shade" | "Hint";
-  hintVariant?:
-    | "Pointer Row"
-    | "Pointer Col"
-    | "Motor Row"
-    | "Motor Col"
-    | "Core Row"
-    | "Core Col"
-    | "Fan Row"
-    | "Fan Col";
+	unrevealedType: 'Start' | 'Greenth' | 'Sand';
+	revealedType: 'Item' | 'Water' | 'Fake' | 'Exit' | 'Shade' | 'Hint';
+	hintVariant?:
+		| 'Pointer Row'
+		| 'Pointer Col'
+		| 'Motor Row'
+		| 'Motor Col'
+		| 'Core Row'
+		| 'Core Col'
+		| 'Fan Row'
+		| 'Fan Col';
 };
 
 type Tile =
-  | (TileDefinition & {
-      id: number;
-      revealed: boolean;
-    })
-  | null;
+	| (TileDefinition & {
+			id: number;
+			revealed: boolean;
+	  })
+	| null;
 
 const toIndex = (row: number, col: number) => row * 5 + col;
 
@@ -27,63 +27,73 @@ const nullPosition = toIndex(2, 2); // center: 12
 const startingPosition = toIndex(3, 4); // 19
 
 const greenthPositions = [
-  toIndex(0, 3), // 3
-  toIndex(1, 0), // 5
-  toIndex(4, 1), // 21
+	toIndex(0, 3), // 3
+	toIndex(1, 0), // 5
+	toIndex(4, 1), // 21
 ];
 
 const startingTile: TileDefinition = {
-  unrevealedType: "Start",
-  revealedType: "Item",
+	unrevealedType: 'Start',
+	revealedType: 'Item',
 };
 
 const greenthTiles: TileDefinition[] = [
-  {
-    unrevealedType: "Greenth",
-    revealedType: "Water",
-  },
-  {
-    unrevealedType: "Greenth",
-    revealedType: "Water",
-  },
-  {
-    unrevealedType: "Greenth",
-    revealedType: "Fake",
-  },
+	{
+		unrevealedType: 'Greenth',
+		revealedType: 'Water',
+	},
+	{
+		unrevealedType: 'Greenth',
+		revealedType: 'Water',
+	},
+	{
+		unrevealedType: 'Greenth',
+		revealedType: 'Fake',
+	},
 ];
 
 const sandTiles: TileDefinition[] = [
-  {
-    unrevealedType: "Sand",
-    revealedType: "Exit",
-  },
+	{
+		unrevealedType: 'Sand',
+		revealedType: 'Exit',
+	},
 
-  ...Array.from({ length: 3 }, () => ({
-    unrevealedType: "Sand" as const,
-    revealedType: "Shade" as const,
-  })),
+	...Array.from(
+		{
+			length: 3,
+		},
+		() => ({
+			unrevealedType: 'Sand' as const,
+			revealedType: 'Shade' as const,
+		}),
+	),
 
-  ...(
-    [
-      "Pointer Row",
-      "Pointer Col",
-      "Motor Row",
-      "Motor Col",
-      "Core Row",
-      "Core Col",
-      "Fan Row",
-      "Fan Col",
-    ] as const
-  ).map((hintVariant) => ({
-    unrevealedType: "Sand" as const,
-    revealedType: "Hint" as const,
-    hintVariant,
-  })),
+	...(
+		[
+			'Pointer Row',
+			'Pointer Col',
+			'Motor Row',
+			'Motor Col',
+			'Core Row',
+			'Core Col',
+			'Fan Row',
+			'Fan Col',
+		] as const
+	).map((hintVariant) => ({
+		unrevealedType: 'Sand' as const,
+		revealedType: 'Hint' as const,
+		hintVariant,
+	})),
 
-  ...Array.from({ length: 8 }, () => ({
-    unrevealedType: "Sand" as const,
-    revealedType: "Item" as const,
-  })),
+	...Array.from(
+		{
+			length: 8,
+		},
+		() => ({
+			unrevealedType: 'Sand' as const,
+			revealedType: 'Item' as const,
+		}),
+	),
 ];
 
 const board: Tile[] = Array(25).fill(null);
@@ -93,42 +103,44 @@ board[nullPosition] = null;
 
 // The starting tile always starts at row 4, column 5.
 board[startingPosition] = {
-  id: startingPosition,
-  revealed: false,
-  ...startingTile,
+	id: startingPosition,
+	revealed: false,
+	...startingTile,
 };
 
 // Randomly assign the three greenth tiles to their three fixed positions.
 const shuffledGreenthTiles = shuffle(greenthTiles);
 
 greenthPositions.forEach((position, index) => {
-  board[position] = {
-    id: position,
-    revealed: false,
-    ...shuffledGreenthTiles[index],
-  };
+	board[position] = {
+		id: position,
+		revealed: false,
+		...shuffledGreenthTiles[index],
+	};
 });
 
 // Find every remaining open board position.
 const remainingPositions = Array.from(
-  { length: 25 },
-  (_, index) => index,
+	{
+		length: 25,
+	},
+	(_, index) => index,
 ).filter(
-  (position) =>
-    position !== nullPosition &&
-    position !== startingPosition &&
-    !greenthPositions.includes(position),
+	(position) =>
+		position !== nullPosition &&
+		position !== startingPosition &&
+		!greenthPositions.includes(position),
 );
 
 // Randomly place the 20 sand tiles in those remaining positions.
 const shuffledSandTiles = shuffle(sandTiles);
 
 remainingPositions.forEach((position, index) => {
-  board[position] = {
-    id: position,
-    revealed: false,
-    ...shuffledSandTiles[index],
-  };
+	board[position] = {
+		id: position,
+		revealed: false,
+		...shuffledSandTiles[index],
+	};
 });
 
 export const tiles = board;
