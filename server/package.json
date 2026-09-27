@@ -1,24 +1,20 @@
 {
-  "name": "server",
-  "type": "module",
-  "version": "1.0.50",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts",
-    "lint": "eslint ."
-  },
-  "dependencies": {
-    "elysia": "latest"
-  },
-  "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@eslint/json": "^2.1.0",
-    "bun-types": "latest",
-    "eslint": "^10.11.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-security": "^4.0.1",
-    "prettier": "^3.9.8",
-    "typescript-eslint": "^8.70.1"
-  },
-  "module": "src/index.js"
+	"name": "server",
+	"type": "module",
+	"version": "1.0.50",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"dev": "bun run --watch src/index.ts",
+		"format": "biome format --write .",
+		"lint": "biome lint --write .",
+		"check": "biome check --write ."
+	},
+	"dependencies": {
+		"elysia": "latest"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.5.14",
+		"bun-types": "latest"
+	},
+	"module": "src/index.js"
 }

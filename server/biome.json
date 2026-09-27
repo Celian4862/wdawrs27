@@ -8,8 +8,7 @@
 	"files": {
 		"ignoreUnknown": true,
 		"includes": [
-			"**",
-			"!!**/dist"
+			"**"
 		]
 	},
 	"formatter": {
@@ -26,15 +25,12 @@
 			"preset": "recommended"
 		},
 		"includes": [
-			"**",
-			"!dist"
+			"**"
 		]
 	},
 	"javascript": {
 		"formatter": {
-			"jsxQuoteStyle": "double",
 			"quoteStyle": "single",
-			"attributePosition": "auto",
 			"bracketSpacing": true
 		}
 	},
