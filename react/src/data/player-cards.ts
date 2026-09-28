@@ -1,6 +1,6 @@
 import type { Item } from './items';
 
-export type PlayerCount = 2 | 3 | 4 | 5;
+type PlayerCount = 2 | 3 | 4 | 5;
 
 export function assignPlayers(playerCount: PlayerCount) {
 	const players: PlayerType[] = [];

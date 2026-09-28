@@ -6,12 +6,10 @@ import PlayerInfo from './components/PlayerInfo';
 import type { Item } from './data/items';
 import {
 	assignPlayers,
-	type PlayerCount,
 	type PlayerType,
 } from './data/player-cards';
 
 export default function App() {
-	const [playerCount, setPlayerCount] = useState<PlayerCount | null>(null);
 	const [players, setPlayers] = useState<PlayerType[]>([]);
 	const [discardedItems] = useState<Partial<Record<Item['type'], number>>>({});
 	const [thirstCardsCount, setThirstCardsCount] = useState(0);
@@ -69,7 +67,7 @@ export default function App() {
 
 	return (
 		<>
-			{playerCount ? (
+			{players.length !== 0 ? (
 				<div className="grid w-fit grid-cols-2 items-start gap-15">
 					<div>
 						<Board />
@@ -123,7 +121,6 @@ export default function App() {
 									key={count}
 									type="button"
 									onClick={() => {
-										setPlayerCount(count);
 										setPlayers(assignPlayers(count));
 									}}
 									className="rounded-lg border border-cyan-300/30 bg-cyan-300/10 px-4 py-3 text-lg font-semibold text-cyan-100 transition hover:bg-cyan-300/20 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-300"
