@@ -18,7 +18,7 @@ export default function PlayerInfo({ players }: { players: PlayerType[] }) {
 					<ul className="mt-3 space-y-1 text-sm text-white/80">
 						{player.items.map((item) => {
 							if (!item) {
-								throw new Error('Item is null');
+								throw new Error('Item is undefined');
 							}
 							return <li key={`${item.type}-${item.id}`}>{item.type}</li>;
 						})}

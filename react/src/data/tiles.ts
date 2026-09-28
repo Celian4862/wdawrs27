@@ -16,16 +16,22 @@ type TileDefinition = {
 
 type Tile = {
 	id: number;
-	info:
-		| (TileDefinition & {
-				revealed: boolean;
-		  })
-		| null;
+	info?: TileDefinition & {
+		revealed: boolean;
+	};
 };
+
+const createTile = (id: number, tileDefinition?: TileDefinition): Tile => ({
+	id,
+	info: tileDefinition && {
+		revealed: false,
+		...tileDefinition,
+	},
+});
 
 const toIndex = (row: number, col: number) => row * 5 + col;
 
-const nullPosition = toIndex(2, 2); // center: 12
+const hurricanePosition = toIndex(2, 2); // center: 12
 const startingPosition = toIndex(3, 4); // 19
 
 const greenthPositions = [
@@ -101,10 +107,7 @@ const sandTiles: TileDefinition[] = [
 const board: Tile[] = Array(25).fill(null);
 
 // The center always starts empty.
-board[nullPosition] = {
-	id: nullPosition,
-	info: null,
-};
+board[hurricanePosition] = createTile(hurricanePosition);
 
 // The starting tile always starts at row 4, column 5.
 board[startingPosition] = {
@@ -136,7 +139,7 @@ const remainingPositions = Array.from(
 	(_, index) => index,
 ).filter(
 	(position) =>
-		position !== nullPosition &&
+		position !== hurricanePosition &&
 		position !== startingPosition &&
 		!greenthPositions.includes(position),
 );
