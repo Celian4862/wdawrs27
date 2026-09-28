@@ -14,12 +14,14 @@ type TileDefinition = {
 		| 'Fan Col';
 };
 
-type Tile =
-	| (TileDefinition & {
-			id: number;
-			revealed: boolean;
-	  })
-	| null;
+type Tile = {
+	id: number;
+	info:
+		| (TileDefinition & {
+				revealed: boolean;
+		  })
+		| null;
+};
 
 const toIndex = (row: number, col: number) => row * 5 + col;
 
@@ -99,13 +101,18 @@ const sandTiles: TileDefinition[] = [
 const board: Tile[] = Array(25).fill(null);
 
 // The center always starts empty.
-board[nullPosition] = null;
+board[nullPosition] = {
+	id: nullPosition,
+	info: null,
+};
 
 // The starting tile always starts at row 4, column 5.
 board[startingPosition] = {
 	id: startingPosition,
-	revealed: false,
-	...startingTile,
+	info: {
+		revealed: false,
+		...startingTile,
+	},
 };
 
 // Randomly assign the three greenth tiles to their three fixed positions.
@@ -114,8 +121,10 @@ const shuffledGreenthTiles = shuffle(greenthTiles);
 greenthPositions.forEach((position, index) => {
 	board[position] = {
 		id: position,
-		revealed: false,
-		...shuffledGreenthTiles[index],
+		info: {
+			revealed: false,
+			...shuffledGreenthTiles[index],
+		},
 	};
 });
 
@@ -138,8 +147,10 @@ const shuffledSandTiles = shuffle(sandTiles);
 remainingPositions.forEach((position, index) => {
 	board[position] = {
 		id: position,
-		revealed: false,
-		...shuffledSandTiles[index],
+		info: {
+			revealed: false,
+			...shuffledSandTiles[index],
+		},
 	};
 });
 
