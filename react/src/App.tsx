@@ -4,10 +4,7 @@ import HurricaneDeck from './components/HurricaneDeck';
 import ItemDeck from './components/ItemDeck';
 import PlayerInfo from './components/PlayerInfo';
 import type { Item } from './data/items';
-import {
-	assignPlayers,
-	type PlayerType,
-} from './data/player-cards';
+import { assignPlayers, type PlayerType } from './data/player-cards';
 
 export default function App() {
 	const [players, setPlayers] = useState<PlayerType[]>([]);
