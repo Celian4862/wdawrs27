@@ -1,11 +1,11 @@
 import type { hintVariants } from './hintVariants';
 
-export type TileType = {
+export interface TileType {
 	id: number;
 	info?: TileDefinition & {
 		revealed: boolean;
 	};
-};
+}
 
 export type TileDefinition =
 	| ((

@@ -14,13 +14,13 @@ export function assignPlayers(playerCount: PlayerCount) {
 	return players;
 }
 
-export type PlayerType = {
+export interface PlayerType {
 	title: string;
 	ability: string;
 	waterLevel: 3 | 4 | 5;
 	currentWaterLevel: number;
 	items: Item[];
-};
+}
 
 const playerCards: PlayerType[] = [
 	{

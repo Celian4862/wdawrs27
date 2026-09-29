@@ -9,10 +9,10 @@ export const itemTypes = [
 
 type ItemType = (typeof itemTypes)[number];
 
-export type Item = {
+export interface Item {
 	id: number;
 	type: ItemType;
-};
+}
 
 const itemsPartial: ItemType[] = [
 	'Sand Remover',
