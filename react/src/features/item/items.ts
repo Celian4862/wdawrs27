@@ -14,20 +14,21 @@ export interface Item {
 	type: ItemType;
 }
 
-const itemsPartial: ItemType[] = [
-	'Sand Remover',
-	'Sand Remover',
-	'Sand Remover',
-	'Flying Tool',
-	'Flying Tool',
-	'Flying Tool',
-	'Thirst Shield',
-	'Thirst Shield',
-	'X-Ray Goggles',
-	'X-Ray Goggles',
-	'Add 2 Water',
-	'Speed Boost',
-];
+export const itemMaxCounts: Record<ItemType, number> = {
+	'Sand Remover': 3,
+	'Flying Tool': 3,
+	'Thirst Shield': 2,
+	'X-Ray Goggles': 2,
+	'Add 2 Water': 1,
+	'Speed Boost': 1,
+};
+
+const itemsPartial: ItemType[] = (
+	Object.entries(itemMaxCounts) as [
+		ItemType,
+		number,
+	][]
+).flatMap(([item, count]) => Array(count).fill(item));
 
 export const items: Item[] = [];
 itemsPartial.forEach((itemName, index) => {

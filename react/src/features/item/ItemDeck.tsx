@@ -1,4 +1,4 @@
-import { type Item, items, itemTypes } from './items';
+import { type Item, items, itemTypes, itemMaxCounts } from './items';
 
 export default function ItemDeck({
 	discardedItems,
@@ -62,7 +62,7 @@ export default function ItemDeck({
 									{itemType}
 								</span>
 								<span className="text-white tabular-nums">
-									{discardedItems[itemType] ?? 0}
+									{discardedItems[itemType] ?? 0} / {itemMaxCounts[itemType]}
 								</span>
 							</div>
 						))}
