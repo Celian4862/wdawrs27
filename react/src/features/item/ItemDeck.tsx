@@ -1,4 +1,4 @@
-import { type Item, items, itemTypes, itemMaxCounts } from './items';
+import { type Item, itemMaxCounts, items, itemTypes } from './items';
 
 export default function ItemDeck({
 	discardedItems,

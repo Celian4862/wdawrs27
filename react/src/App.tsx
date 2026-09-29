@@ -14,10 +14,13 @@ import {
 	playerCounts,
 } from './features/player/player-cards';
 
-const CARD_MAX_LIMITS = hurricaneCards.reduce((acc, card) => {
-    acc[card] = (acc[card] || 0) + 1;
-    return acc;
-}, {} as Record<HurricaneCard, number>);
+const CARD_MAX_LIMITS = hurricaneCards.reduce(
+	(acc, card) => {
+		acc[card] = (acc[card] || 0) + 1;
+		return acc;
+	},
+	{} as Record<HurricaneCard, number>,
+);
 
 export default function App() {
 	const [players, setPlayers] = useState<PlayerType[]>([]);
@@ -44,32 +47,39 @@ export default function App() {
 	// 4. Clean up the testing incrementer to pick a random card type
 	const drawHurricaneCard = () => {
 		setCardCounts((prev) => {
-            const currentTotal = Object.values(prev).reduce((sum, count) => sum + count, 0);
+			const currentTotal = Object.values(prev).reduce(
+				(sum, count) => sum + count,
+				0,
+			);
 
 			let workingCounts = prev;
-            // Rule 2: If the deck hits 31 cards, reset everything back to 0
-            if (currentTotal >= hurricaneCards.length) {
-                workingCounts = cardTypes.reduce((acc, card) => {
-                    acc[card] = 0;
-                    return acc;
-                }, {} as Record<HurricaneCard, number>);
-            }
+			// Rule 2: If the deck hits 31 cards, reset everything back to 0
+			if (currentTotal >= hurricaneCards.length) {
+				workingCounts = cardTypes.reduce(
+					(acc, card) => {
+						acc[card] = 0;
+						return acc;
+					},
+					{} as Record<HurricaneCard, number>,
+				);
+			}
 
-            // Rule 1: Filter out cards that have already reached their max limit
-            const availableCards = cardTypes.filter(
-                (card) => workingCounts[card] < CARD_MAX_LIMITS[card]
-            );
+			// Rule 1: Filter out cards that have already reached their max limit
+			const availableCards = cardTypes.filter(
+				(card) => workingCounts[card] < CARD_MAX_LIMITS[card],
+			);
 
-            if (availableCards.length === 0) return workingCounts;
+			if (availableCards.length === 0) return workingCounts;
 
-            // Pick randomly only from cards that still have copies left in the deck
-            const randomCard = availableCards[Math.floor(Math.random() * availableCards.length)];
+			// Pick randomly only from cards that still have copies left in the deck
+			const randomCard =
+				availableCards[Math.floor(Math.random() * availableCards.length)];
 
-            return {
-                ...workingCounts,
-                [randomCard]: workingCounts[randomCard] + 1,
-            };
-        });
+			return {
+				...workingCounts,
+				[randomCard]: workingCounts[randomCard] + 1,
+			};
+		});
 	};
 
 	return (
@@ -79,7 +89,7 @@ export default function App() {
 					<div>
 						<div className="overflow-x-auto [-webkit-overflow-scrolling:touch]">
 							<div className="min-w-[450px]">
-							<Board />
+								<Board />
 							</div>
 						</div>
 						<PlayerInfo players={players} />
