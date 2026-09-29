@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import Board from './components/Board';
-import HurricaneDeck from './components/HurricaneDeck';
-import ItemDeck from './components/ItemDeck';
-import PlayerInfo from './components/PlayerInfo';
-import type { Item } from './data/items';
-import { assignPlayers, type PlayerType } from './data/player-cards';
+import Board from './features/board/Board';
+import HurricaneDeck from './features/hurricane/HurricaneDeck';
+import ItemDeck from './features/item/ItemDeck';
+import type { Item } from './features/item/items';
+import PlayerInfo from './features/player/PlayerInfo';
+import { assignPlayers, type PlayerType } from './features/player/player-cards';
 
 export default function App() {
 	const [players, setPlayers] = useState<PlayerType[]>([]);

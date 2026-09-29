@@ -1,4 +1,4 @@
-import { type Item, items, itemTypes } from '../data/items';
+import { type Item, items, itemTypes } from './items';
 
 export default function ItemDeck({
 	discardedItems,

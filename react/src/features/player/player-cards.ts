@@ -1,4 +1,4 @@
-import type { Item } from './items';
+import type { Item } from '../item/items';
 
 type PlayerCount = 2 | 3 | 4 | 5;
 

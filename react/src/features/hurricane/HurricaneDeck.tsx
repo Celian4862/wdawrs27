@@ -58,12 +58,14 @@ export default function HurricaneDeck({
 					<p className="text-sm text-amber-100/70">Thirst</p>
 					<p className="mt-1 text-2xl font-semibold text-amber-100 tabular-nums">
 						{thirstCardsCount}
+						<span className="text-base font-normal text-white/45"> / 4</span>
 					</p>
 				</div>
 				<div className="rounded-lg border border-cyan-300/20 bg-cyan-300/10 p-4">
 					<p className="text-sm text-cyan-100/70">Hurricane Up</p>
 					<p className="mt-1 text-2xl font-semibold text-cyan-100 tabular-nums">
 						{hurricaneUpCardsCount}
+						<span className="text-base font-normal text-white/45"> / 3</span>
 					</p>
 				</div>
 			</div>
@@ -87,28 +89,100 @@ export default function HurricaneDeck({
 							<span className="text-left text-sm font-medium text-white/80">
 								1 space
 							</span>
-							<span className="text-white">{moveOneUpCardsCount}</span>
-							<span className="text-white">{moveOneDownCardsCount}</span>
-							<span className="text-white">{moveOneLeftCardsCount}</span>
-							<span className="text-white">{moveOneRightCardsCount}</span>
+							<span className="text-white">
+								{moveOneUpCardsCount}
+								<span className="text-base font-normal text-white/45">
+									{' '}
+									/ 3
+								</span>
+							</span>
+							<span className="text-white">
+								{moveOneDownCardsCount}
+								<span className="text-base font-normal text-white/45">
+									{' '}
+									/ 3
+								</span>
+							</span>
+							<span className="text-white">
+								{moveOneLeftCardsCount}
+								<span className="text-base font-normal text-white/45">
+									{' '}
+									/ 3
+								</span>
+							</span>
+							<span className="text-white">
+								{moveOneRightCardsCount}
+								<span className="text-base font-normal text-white/45">
+									{' '}
+									/ 3
+								</span>
+							</span>
 						</div>
 						<div className="grid grid-cols-[minmax(4.5rem,1.2fr)_repeat(4,minmax(0,1fr))] items-center px-2 py-3 text-center">
 							<span className="text-left text-sm font-medium text-white/80">
 								2 spaces
 							</span>
-							<span className="text-white">{moveTwoUpCardsCount}</span>
-							<span className="text-white">{moveTwoDownCardsCount}</span>
-							<span className="text-white">{moveTwoLeftCardsCount}</span>
-							<span className="text-white">{moveTwoRightCardsCount}</span>
+							<span className="text-white">
+								{moveTwoUpCardsCount}
+								<span className="text-base font-normal text-white/45">
+									{' '}
+									/ 2
+								</span>
+							</span>
+							<span className="text-white">
+								{moveTwoDownCardsCount}
+								<span className="text-base font-normal text-white/45">
+									{' '}
+									/ 2
+								</span>
+							</span>
+							<span className="text-white">
+								{moveTwoLeftCardsCount}
+								<span className="text-base font-normal text-white/45">
+									{' '}
+									/ 2
+								</span>
+							</span>
+							<span className="text-white">
+								{moveTwoRightCardsCount}
+								<span className="text-base font-normal text-white/45">
+									{' '}
+									/ 2
+								</span>
+							</span>
 						</div>
 						<div className="grid grid-cols-[minmax(4.5rem,1.2fr)_repeat(4,minmax(0,1fr))] items-center px-2 py-3 text-center">
 							<span className="text-left text-sm font-medium text-white/80">
 								3 spaces
 							</span>
-							<span className="text-white">{moveThreeUpCardsCount}</span>
-							<span className="text-white">{moveThreeDownCardsCount}</span>
-							<span className="text-white">{moveThreeLeftCardsCount}</span>
-							<span className="text-white">{moveThreeRightCardsCount}</span>
+							<span className="text-white">
+								{moveThreeUpCardsCount}
+								<span className="text-base font-normal text-white/45">
+									{' '}
+									/ 1
+								</span>
+							</span>
+							<span className="text-white">
+								{moveThreeDownCardsCount}
+								<span className="text-base font-normal text-white/45">
+									{' '}
+									/ 1
+								</span>
+							</span>
+							<span className="text-white">
+								{moveThreeLeftCardsCount}
+								<span className="text-base font-normal text-white/45">
+									{' '}
+									/ 1
+								</span>
+							</span>
+							<span className="text-white">
+								{moveThreeRightCardsCount}
+								<span className="text-base font-normal text-white/45">
+									{' '}
+									/ 1
+								</span>
+							</span>
 						</div>
 					</div>
 				</div>

@@ -1,5 +1,5 @@
-import { tiles } from '../data/tiles';
 import Tile from './Tile';
+import { tiles } from './tiles';
 
 export default function Board() {
 	return (

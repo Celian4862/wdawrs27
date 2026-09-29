@@ -1,4 +1,4 @@
-import type { PlayerType } from '../data/player-cards';
+import type { PlayerType } from './player-cards';
 
 export default function PlayerInfo({ players }: { players: PlayerType[] }) {
 	return (
