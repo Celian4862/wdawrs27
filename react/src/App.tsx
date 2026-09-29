@@ -14,6 +14,11 @@ import {
 	playerCounts,
 } from './features/player/player-cards';
 
+const CARD_MAX_LIMITS = hurricaneCards.reduce((acc, card) => {
+    acc[card] = (acc[card] || 0) + 1;
+    return acc;
+}, {} as Record<HurricaneCard, number>);
+
 export default function App() {
 	const [players, setPlayers] = useState<PlayerType[]>([]);
 	const [discardedItems] = useState<Partial<Record<Item['type'], number>>>({});
@@ -37,13 +42,34 @@ export default function App() {
 		0,
 	);
 	// 4. Clean up the testing incrementer to pick a random card type
-	const incrementRandomCardCount = () => {
-		const randomCard = cardTypes[Math.floor(Math.random() * cardTypes.length)];
+	const drawHurricaneCard = () => {
+		setCardCounts((prev) => {
+            const currentTotal = Object.values(prev).reduce((sum, count) => sum + count, 0);
 
-		setCardCounts((prev) => ({
-			...prev,
-			[randomCard]: prev[randomCard] + 1,
-		}));
+			let workingCounts = prev;
+            // Rule 2: If the deck hits 31 cards, reset everything back to 0
+            if (currentTotal >= hurricaneCards.length) {
+                workingCounts = cardTypes.reduce((acc, card) => {
+                    acc[card] = 0;
+                    return acc;
+                }, {} as Record<HurricaneCard, number>);
+            }
+
+            // Rule 1: Filter out cards that have already reached their max limit
+            const availableCards = cardTypes.filter(
+                (card) => workingCounts[card] < CARD_MAX_LIMITS[card]
+            );
+
+            if (availableCards.length === 0) return workingCounts;
+
+            // Pick randomly only from cards that still have copies left in the deck
+            const randomCard = availableCards[Math.floor(Math.random() * availableCards.length)];
+
+            return {
+                ...workingCounts,
+                [randomCard]: workingCounts[randomCard] + 1,
+            };
+        });
 	};
 
 	return (
@@ -66,7 +92,7 @@ export default function App() {
 						{/* Button below is only for testing count increments */}
 						<button
 							type="button"
-							onClick={incrementRandomCardCount}
+							onClick={drawHurricaneCard}
 							className="rounded-lg border border-cyan-300/30 bg-cyan-300/10 px-4 py-2 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-300/20"
 						>
 							Draw random card
