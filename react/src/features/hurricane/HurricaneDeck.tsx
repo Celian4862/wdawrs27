@@ -46,7 +46,7 @@ export default function HurricaneDeck({
 				</div>
 			</header>
 
-			<div className="grid grid-cols-2 gap-3">
+			<div className="grid md:grid-cols-2 gap-3">
 				{(Object.keys(SPECIAL_CARDS) as (keyof typeof SPECIAL_CARDS)[]).map(
 					(cardName) => {
 						const count = cardCounts[cardName] ?? 0;

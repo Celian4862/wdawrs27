@@ -2,7 +2,7 @@ import type { PlayerType } from './player-cards';
 
 export default function PlayerInfo({ players }: { players: PlayerType[] }) {
 	return (
-		<section className="mt-6 grid gap-4 sm:grid-cols-2">
+		<section className="mt-6 grid gap-4 lg:grid-cols-2">
 			{players.map((player) => (
 				<article
 					key={player.title}

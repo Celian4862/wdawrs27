@@ -49,9 +49,13 @@ export default function App() {
 	return (
 		<>
 			{players.length !== 0 ? (
-				<div className="grid w-fit grid-cols-2 items-start gap-15">
+				<div className="grid w-fit md:grid-cols-2 grid-cols-1 items-start gap-15">
 					<div>
-						<Board />
+						<div className="overflow-x-auto [-webkit-overflow-scrolling:touch]">
+							<div className="min-w-[450px]">
+							<Board />
+							</div>
+						</div>
 						<PlayerInfo players={players} />
 					</div>
 					<div>
