@@ -19,18 +19,12 @@ export type HurricaneCard =
 export const hurricaneCards: HurricaneCard[] = [
 	...Array(4).fill('Thirst'),
 	...Array(3).fill('Hurricane Up'),
-	...(
-		[
-			1,
-			2,
-			3,
-		] as const
-	).flatMap((distance) => {
+	...distances.flatMap((distance) => {
 		// Move 1 = 3 copies, Move 2 = 2 copies, Move 3 = 1 copy
 		const count = 4 - distance;
 
 		return directions.flatMap((direction) =>
-			Array(count).fill(`Move ${distance} ${direction}` as HurricaneCard),
+			Array(count).fill(`Move ${distance} ${direction}`),
 		);
 	}),
 ];
