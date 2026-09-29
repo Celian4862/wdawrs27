@@ -1,4 +1,9 @@
-type Distance = 1 | 2 | 3;
+export const distances = [
+	1,
+	2,
+	3,
+] as const;
+type Distance = (typeof distances)[number];
 export const directions = [
 	'Up',
 	'Down',

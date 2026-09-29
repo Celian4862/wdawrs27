@@ -1,65 +1,49 @@
 import { useState } from 'react';
 import Board from './features/board/Board';
 import HurricaneDeck from './features/hurricane/HurricaneDeck';
+import {
+	type HurricaneCard,
+	hurricaneCards,
+} from './features/hurricane/hurricane-cards';
 import ItemDeck from './features/item/ItemDeck';
 import type { Item } from './features/item/items';
 import PlayerInfo from './features/player/PlayerInfo';
-import { assignPlayers, type PlayerType } from './features/player/player-cards';
+import {
+	assignPlayers,
+	type PlayerType,
+	playerCounts,
+} from './features/player/player-cards';
 
 export default function App() {
 	const [players, setPlayers] = useState<PlayerType[]>([]);
 	const [discardedItems] = useState<Partial<Record<Item['type'], number>>>({});
-	const [thirstCardsCount, setThirstCardsCount] = useState(0);
-	const [hurricaneUpCardsCount, setHurricaneUpCardsCount] = useState(0);
-	const [moveOneUpCardsCount, setMoveOneUpCardsCount] = useState(0);
-	const [moveOneDownCardsCount, setMoveOneDownCardsCount] = useState(0);
-	const [moveOneLeftCardsCount, setMoveOneLeftCardsCount] = useState(0);
-	const [moveOneRightCardsCount, setMoveOneRightCardsCount] = useState(0);
-	const [moveTwoUpCardsCount, setMoveTwoUpCardsCount] = useState(0);
-	const [moveTwoDownCardsCount, setMoveTwoDownCardsCount] = useState(0);
-	const [moveTwoLeftCardsCount, setMoveTwoLeftCardsCount] = useState(0);
-	const [moveTwoRightCardsCount, setMoveTwoRightCardsCount] = useState(0);
-	const [moveThreeUpCardsCount, setMoveThreeUpCardsCount] = useState(0);
-	const [moveThreeDownCardsCount, setMoveThreeDownCardsCount] = useState(0);
-	const [moveThreeLeftCardsCount, setMoveThreeLeftCardsCount] = useState(0);
-	const [moveThreeRightCardsCount, setMoveThreeRightCardsCount] = useState(0);
-	const drawnCardsCount =
-		thirstCardsCount +
-		hurricaneUpCardsCount +
-		moveOneUpCardsCount +
-		moveOneDownCardsCount +
-		moveOneLeftCardsCount +
-		moveOneRightCardsCount +
-		moveTwoUpCardsCount +
-		moveTwoDownCardsCount +
-		moveTwoLeftCardsCount +
-		moveTwoRightCardsCount +
-		moveThreeUpCardsCount +
-		moveThreeDownCardsCount +
-		moveThreeLeftCardsCount +
-		moveThreeRightCardsCount;
+	// 1. Extract a unique list of card types to initialize our state and testing logic
+	const cardTypes = Array.from(new Set(hurricaneCards)) as HurricaneCard[];
+	// 2. Replace 14 useState hooks with a single dictionary state
+	const [cardCounts, setCardCounts] = useState<Record<HurricaneCard, number>>(
+		() => {
+			return cardTypes.reduce(
+				(acc, card) => {
+					acc[card] = 0;
+					return acc;
+				},
+				{} as Record<HurricaneCard, number>,
+			);
+		},
+	);
+	// 3. Dynamically sum up all drawn cards automatically
+	const drawnCardsCount = Object.values(cardCounts).reduce(
+		(sum, count) => sum + count,
+		0,
+	);
+	// 4. Clean up the testing incrementer to pick a random card type
 	const incrementRandomCardCount = () => {
-		// Only for testing
-		const incrementers = [
-			setThirstCardsCount,
-			setHurricaneUpCardsCount,
-			setMoveOneUpCardsCount,
-			setMoveOneDownCardsCount,
-			setMoveOneLeftCardsCount,
-			setMoveOneRightCardsCount,
-			setMoveTwoUpCardsCount,
-			setMoveTwoDownCardsCount,
-			setMoveTwoLeftCardsCount,
-			setMoveTwoRightCardsCount,
-			setMoveThreeUpCardsCount,
-			setMoveThreeDownCardsCount,
-			setMoveThreeLeftCardsCount,
-			setMoveThreeRightCardsCount,
-		];
-		const randomIncrementer =
-			incrementers[Math.floor(Math.random() * incrementers.length)];
+		const randomCard = cardTypes[Math.floor(Math.random() * cardTypes.length)];
 
-		randomIncrementer((count) => count + 1);
+		setCardCounts((prev) => ({
+			...prev,
+			[randomCard]: prev[randomCard] + 1,
+		}));
 	};
 
 	return (
@@ -72,21 +56,8 @@ export default function App() {
 					</div>
 					<div>
 						<HurricaneDeck
+							cardCounts={cardCounts}
 							drawnCardsCount={drawnCardsCount}
-							thirstCardsCount={thirstCardsCount}
-							hurricaneUpCardsCount={hurricaneUpCardsCount}
-							moveOneUpCardsCount={moveOneUpCardsCount}
-							moveOneDownCardsCount={moveOneDownCardsCount}
-							moveOneLeftCardsCount={moveOneLeftCardsCount}
-							moveOneRightCardsCount={moveOneRightCardsCount}
-							moveTwoUpCardsCount={moveTwoUpCardsCount}
-							moveTwoDownCardsCount={moveTwoDownCardsCount}
-							moveTwoLeftCardsCount={moveTwoLeftCardsCount}
-							moveTwoRightCardsCount={moveTwoRightCardsCount}
-							moveThreeUpCardsCount={moveThreeUpCardsCount}
-							moveThreeDownCardsCount={moveThreeDownCardsCount}
-							moveThreeLeftCardsCount={moveThreeLeftCardsCount}
-							moveThreeRightCardsCount={moveThreeRightCardsCount}
 						/>
 						{/* Button below is only for testing count increments */}
 						<button
@@ -106,14 +77,7 @@ export default function App() {
 							How many players?
 						</p>
 						<div className="mt-6 grid grid-cols-2 gap-3">
-							{(
-								[
-									2,
-									3,
-									4,
-									5,
-								] as const
-							).map((count) => (
+							{playerCounts.map((count) => (
 								<button
 									key={count}
 									type="button"
