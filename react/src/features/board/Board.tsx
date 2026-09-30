@@ -13,7 +13,7 @@ export default function Board(props: { players: ActivePlayer[] }) {
 					<Tile
 						key={tile.id}
 						disabled={!tile.info}
-						excavated={false}
+						revealed={false}
 						playersOnTile={playersOnThisTile}
 						onClick={() => console.log(`Clicked tile ${tile.id}`)}
 					/>
