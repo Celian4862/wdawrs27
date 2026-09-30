@@ -6,7 +6,6 @@ import {
 
 const DISTANCE_CONFIG = distances.map((distance) => ({
 	distance: distance,
-	label: `${distance === 1 ? '1 space' : `${distance} spaces`}`,
 	max: 4 - distance,
 }));
 
@@ -83,28 +82,31 @@ export default function HurricaneDeck({
 					</h3>
 				</div>
 				<div className="overflow-hidden rounded-lg border border-white/10">
-					<div className="grid grid-cols-[minmax(4.5rem,1.2fr)_repeat(4,minmax(0,1fr))] bg-white/10 px-2 py-2 text-center text-xs font-semibold tracking-wider text-white/55 uppercase">
-						<span className="text-left">Move</span>
-						{DIRECTIONS.map((dir) => (
-							<span key={dir}>{dir}</span>
+					{/* Header row: Label column + 3 Distance columns */}
+					<div className="grid grid-cols-[minmax(5rem,1.2fr)_repeat(3,minmax(0,1fr))] bg-white/10 px-2 py-2 text-center text-xs font-semibold tracking-wider text-white/55 uppercase">
+						<span className="text-left">Direction</span>
+						{DISTANCE_CONFIG.map(({ distance }) => (
+							<span key={distance}>{distance}</span>
 						))}
 					</div>
+
+					{/* Body rows: 4 Directions */}
 					<div className="divide-y divide-white/10">
-						{DISTANCE_CONFIG.map(({ distance, label, max }) => (
+						{DIRECTIONS.map((direction) => (
 							<div
-								key={distance}
-								className="grid grid-cols-[minmax(4.5rem,1.2fr)_repeat(4,minmax(0,1fr))] items-center px-2 py-3 text-center"
+								key={direction}
+								className="grid grid-cols-[minmax(5rem,1.2fr)_repeat(3,minmax(0,1fr))] items-center px-2 py-3 text-center"
 							>
 								<span className="text-left text-sm font-medium text-white/80">
-									{label}
+									{direction}
 								</span>
-								{DIRECTIONS.map((direction) => {
+								{DISTANCE_CONFIG.map(({ distance, max }) => {
 									const cardKey =
 										`Move ${distance} ${direction}` as HurricaneCard;
 									const count = cardCounts[cardKey] ?? 0;
 
 									return (
-										<span key={direction} className="text-white">
+										<span key={distance} className="text-white">
 											{count}
 											<span className="text-base font-normal text-white/45">
 												{' '}
