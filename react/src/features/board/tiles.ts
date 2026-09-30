@@ -4,7 +4,7 @@ import { createTile, createTileDefinition, toIndex } from './tileHelpers';
 import type { TileDefinition, TileType } from './tileTypes';
 
 const hurricanePosition = toIndex(2, 2);
-const startingPosition = toIndex(3, 4);
+export const startingPosition = toIndex(3, 4);
 const greenthPositions = [
 	toIndex(0, 3),
 	toIndex(1, 0),

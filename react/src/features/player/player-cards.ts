@@ -42,7 +42,7 @@ interface RoleTemplate {
 	title: PlayerTitle;
 	ability: string;
 	maxWater: 3 | 4 | 5;
-	color: '#ef4444' | '#3b82f6' | '#10b981' | '#f59e0b' | '#8b5cf6' | '#06b6d4';
+	color: '#ef4444' | '#000000' | '#10b981' | '#f59e0b' | '#8b5cf6' | '#06b6d4';
 }
 
 export interface ActivePlayer {
@@ -64,7 +64,7 @@ const ROLE_TEMPLATES: RoleTemplate[] = [
 		title: 'Hiker',
 		ability: 'Never stuck in sand; can carry one other player while moving',
 		maxWater: 3,
-		color: '#3b82f6',
+		color: '#000000',
 	},
 	{
 		title: 'Traveler',
