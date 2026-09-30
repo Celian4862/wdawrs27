@@ -1,9 +1,7 @@
 import { shuffle } from '../shuffle';
 import { hintVariants } from './hintVariants';
-import { createTile, createTileDefinition } from './tileHelpers';
+import { createTile, createTileDefinition, toIndex } from './tileHelpers';
 import type { TileDefinition, TileType } from './tileTypes';
-
-const toIndex = (row: number, col: number) => row * 5 + col;
 
 const hurricanePosition = toIndex(2, 2);
 const startingPosition = toIndex(3, 4);

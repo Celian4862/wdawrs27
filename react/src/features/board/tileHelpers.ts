@@ -1,5 +1,7 @@
 import type { TileDefinition, TileType } from './tileTypes';
 
+export const toIndex = (row: number, col: number) => row * 5 + col;
+
 export const createTile = (
 	id: number,
 	tileDefinition?: TileDefinition,
