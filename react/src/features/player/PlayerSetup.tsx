@@ -1,5 +1,5 @@
 import { startingPosition } from '../board/tiles';
-import { assignPlayers, playerCounts, type ActivePlayer } from './player-cards';
+import { type ActivePlayer, assignPlayers, playerCounts } from './player-cards';
 
 interface PlayerSetupProps {
 	onSelectPlayers: (players: ActivePlayer[]) => void;
@@ -15,7 +15,9 @@ export default function PlayerSetup({ onSelectPlayers }: PlayerSetupProps) {
 						<button
 							key={count}
 							type="button"
-							onClick={() => onSelectPlayers(assignPlayers(count, startingPosition))}
+							onClick={() =>
+								onSelectPlayers(assignPlayers(count, startingPosition))
+							}
 							className="rounded-lg border border-cyan-300/30 bg-cyan-300/10 px-4 py-3 text-lg font-semibold text-cyan-100 transition hover:bg-cyan-300/20 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-300"
 						>
 							{count}
