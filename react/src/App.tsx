@@ -19,7 +19,7 @@ export default function App() {
 
 	return (
 		<>
-			<div className="grid w-fit md:grid-cols-2 grid-cols-1 items-start gap-15">
+			<div className="grid w-fit p-5 md:grid-cols-2 grid-cols-1 items-start gap-15">
 				<div>
 					<div className="overflow-x-auto [-webkit-overflow-scrolling:touch]">
 						<div className="min-w-[450px]">
