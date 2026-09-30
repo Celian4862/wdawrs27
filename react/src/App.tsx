@@ -4,12 +4,12 @@ import HurricaneDeck from './features/hurricane/HurricaneDeck';
 import ItemDeck from './features/item/ItemDeck';
 import type { Item } from './features/item/items';
 import PlayerInfo from './features/player/PlayerInfo';
-import { type PlayerType } from './features/player/player-cards';
 import PlayerSetup from './features/player/PlayerSetup';
 import { useHurricaneDeck } from './features/hurricane/useHurricaneDeck';
+import type { ActivePlayer } from './features/player/player-cards';
 
 export default function App() {
-	const [players, setPlayers] = useState<PlayerType[]>([]);
+	const [players, setPlayers] = useState<ActivePlayer[]>([]);
 	const [discardedItems] = useState<Partial<Record<Item['type'], number>>>({});
 	const { cardCounts, drawnCardsCount, drawHurricaneCard } = useHurricaneDeck();
 
@@ -23,7 +23,7 @@ export default function App() {
 				<div>
 					<div className="overflow-x-auto [-webkit-overflow-scrolling:touch]">
 						<div className="min-w-[450px]">
-							<Board />
+							<Board players={players} />
 						</div>
 					</div>
 					<PlayerInfo players={players} />

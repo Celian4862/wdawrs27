@@ -8,70 +8,89 @@ export const playerCounts = [
 ] as const;
 type PlayerCount = (typeof playerCounts)[number];
 
-export function assignPlayers(playerCount: PlayerCount) {
-	const players: PlayerType[] = [];
-	for (let i = 0; i < playerCount; ) {
-		const playerCard = playerCards[Math.floor(Math.random() * 6)];
-		if (!players.includes(playerCard)) {
-			players.push(playerCard);
-			i++;
-		}
-	}
-	return players;
+export function assignPlayers(
+	playerCount: PlayerCount,
+	startingTileId: number,
+): ActivePlayer[] {
+	// Shuffle or pick random unique roles from ROLE_TEMPLATES
+	const shuffledRoles = [
+		...ROLE_TEMPLATES,
+	].sort(() => 0.5 - Math.random());
+	const selectedRoles = shuffledRoles.slice(0, playerCount);
+
+	// Map them into active players with runtime state
+	return selectedRoles.map((role, index) => ({
+		id: `player-${index + 1}`,
+		role: role,
+		currentWaterLevel: role.maxWater, // Starts at max water
+		currentTileId: startingTileId, // Everyone starts on the crash site/helipad
+		items: [],
+	}));
 }
 
-export interface PlayerType {
-	title: string;
+const playerTitles = [
+	'Excavator',
+	'Hiker',
+	'Traveler',
+	'Cartographer',
+	'Weather forecaster',
+	'Water dispenser',
+] as const;
+type PlayerTitle = (typeof playerTitles)[number];
+
+interface RoleTemplate {
+	title: PlayerTitle;
 	ability: string;
-	waterLevel: 3 | 4 | 5;
+	maxWater: 3 | 4 | 5;
+	color: '#ef4444' | '#3b82f6' | '#10b981' | '#f59e0b' | '#8b5cf6' | '#06b6d4';
+}
+
+export interface ActivePlayer {
+	id: string; // e.g., 'player-1'
+	role: RoleTemplate;
 	currentWaterLevel: number;
+	currentTileId: number; // The ID of the tile they are standing on
 	items: Item[];
 }
 
-const playerCards: PlayerType[] = [
+const ROLE_TEMPLATES: RoleTemplate[] = [
 	{
 		title: 'Excavator',
 		ability: 'Digs two sand points at once',
-		waterLevel: 3,
-		currentWaterLevel: 3,
-		items: [],
+		maxWater: 3,
+		color: '#ef4444',
 	},
 	{
 		title: 'Hiker',
 		ability: 'Never stuck in sand; can carry one other player while moving',
-		waterLevel: 3,
-		currentWaterLevel: 3,
-		items: [],
+		maxWater: 3,
+		color: '#3b82f6',
 	},
 	{
 		title: 'Traveler',
 		ability: 'Can move and do things diagonally',
-		waterLevel: 4,
-		currentWaterLevel: 4,
-		items: [],
+		maxWater: 4,
+		color: '#10b981',
 	},
 	{
 		title: 'Cartographer',
 		ability:
 			'Can move other players up to three spaces away from their current tile according to their movement abilities',
-		waterLevel: 4,
-		currentWaterLevel: 4,
-		items: [],
+		maxWater: 4,
+		color: '#f59e0b',
 	},
 	{
 		title: 'Weather forecaster',
 		ability:
 			'Can spend an action looking at the next hurricane cards depending on the hurricane level and optionally defer the card to the end of the deck, and can spend an action to draw one less storm card',
-		waterLevel: 4,
-		currentWaterLevel: 4,
-		items: [],
+		maxWater: 4,
+		color: '#8b5cf6',
 	},
 	{
 		title: 'Water dispenser',
 		ability:
 			'Can share water to players on neighboring tiles, and can spend an action to increase their water level by one when standing on revealed Water tiles',
-		waterLevel: 5,
-		currentWaterLevel: 5,
-		items: [],
+		maxWater: 5,
+		color: '#06b6d4',
 	},
 ];
