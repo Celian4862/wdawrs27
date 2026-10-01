@@ -1,9 +1,9 @@
+import type { PlayerCount } from '../player/player-cards';
 import {
 	getCurrentCardDrawCount,
 	getStormConfig,
 	type StormLevelTier,
 } from './hurricane-meter';
-import type { PlayerCount } from '../player/player-cards';
 
 export default function HurricaneMeter({
 	playerCount,
@@ -46,12 +46,14 @@ export default function HurricaneMeter({
 				<div className="relative h-12 overflow-hidden rounded-full border border-white/10 bg-slate-900/80">
 					<div
 						className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-cyan-400 via-blue-400 to-rose-400 shadow-[0_0_20px_rgba(34,211,238,0.55)]"
-						style={{ width: `${activeMeterWidth}%` }}
+						style={{
+							width: `${activeMeterWidth}%`,
+						}}
 					/>
 
 					{config.map((tier, index) => {
 						const segmentWidth = (tier.tickCount / totalTicks) * 100;
-						const left = cumulativeTicks / totalTicks * 100;
+						const left = (cumulativeTicks / totalTicks) * 100;
 						cumulativeTicks += tier.tickCount;
 						const isActive = index === activeLevelIndex;
 						const isPast = index < activeLevelIndex;
@@ -60,7 +62,10 @@ export default function HurricaneMeter({
 							<div
 								key={`${tier.cardCount}-${tier.tickCount}`}
 								className="absolute inset-y-0"
-								style={{ left: `${left}%`, width: `${segmentWidth}%` }}
+								style={{
+									left: `${left}%`,
+									width: `${segmentWidth}%`,
+								}}
 							>
 								<div
 									className={`absolute inset-y-[10%] left-0 right-0 rounded-full border ${
@@ -77,24 +82,28 @@ export default function HurricaneMeter({
 
 					{config.map((tier, index) => {
 						const tickPosition =
-							((config
+							(config
 								.slice(0, index + 1)
 								.reduce((sum, level) => sum + level.tickCount, 0) /
 								totalTicks) *
-								100);
+							100;
 
 						return (
 							<div
 								key={`tick-${tier.cardCount}`}
 								className="absolute inset-y-0 w-px bg-white/60"
-								style={{ left: `${tickPosition}%` }}
+								style={{
+									left: `${tickPosition}%`,
+								}}
 							/>
 						);
 					})}
 
 					<div
 						className="absolute top-1/2 h-4 w-4 -translate-y-1/2 rounded-full border-2 border-white bg-cyan-300 shadow-[0_0_16px_rgba(34,211,238,0.9)]"
-						style={{ left: `${Math.min(activeMeterWidth, 98)}%` }}
+						style={{
+							left: `${Math.min(activeMeterWidth, 98)}%`,
+						}}
 					/>
 
 					<span className="absolute right-1 top-1/2 -translate-y-1/2 text-2xl drop-shadow-[0_0_12px_rgba(255,255,255,0.6)]">

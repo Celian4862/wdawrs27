@@ -2,7 +2,7 @@
 // 1. TYPES & CONFIGURATION (Static Rules)
 // ==========================================
 
-import type { PlayerCount } from "../player/player-cards";
+import type { PlayerCount } from '../player/player-cards';
 
 export interface StormLevelTier {
 	cardCount: number; // e.g., 2, 3, 4, 5, 6
