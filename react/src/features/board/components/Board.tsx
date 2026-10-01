@@ -1,13 +1,15 @@
 import type { ActivePlayer } from '../../player/player-cards';
-import { useTiles } from '../customHooks/useTiles';
+import type { TileType } from '../tileTypes';
 import Tile from './Tile';
 
-export default function Board(props: { players: ActivePlayer[] }) {
-	const { tiles, handleTileClick } = useTiles();
-
+export default function Board(props: {
+	players: ActivePlayer[];
+	tiles: TileType[];
+	handleTileClick: (tileId: number) => void;
+}) {
 	return (
 		<div className="grid w-fit grid-cols-5 gap-4">
-			{tiles.map((tile) => {
+			{props.tiles.map((tile) => {
 				const playersOnThisTile = props.players
 					.filter((player) => player.currentTileId === tile.id)
 					.map((player) => player.role.color);
@@ -16,8 +18,10 @@ export default function Board(props: { players: ActivePlayer[] }) {
 						key={tile.id}
 						disabled={!tile.info}
 						revealed={tile.info?.revealed ?? false}
+						tileInfo={tile.info}
+						sandMarks={tile.sandMarks}
 						playersOnTile={playersOnThisTile}
-						onClick={() => handleTileClick(tile.id)}
+						onClick={() => props.handleTileClick(tile.id)}
 					/>
 				);
 			})}

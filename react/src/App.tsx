@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Board from './features/board/components/Board';
 import LoseScreen from './features/board/components/LoseScreen';
 import TileInfo from './features/board/components/TileInfo';
+import { useTiles } from './features/board/customHooks/useTiles';
 import { loseConditions } from './features/board/win-lose-conditions';
 import HurricaneDeck from './features/hurricane/HurricaneDeck';
 import HurricaneMeter from './features/hurricane/HurricaneMeter';
@@ -17,7 +18,8 @@ export default function App() {
 	const [discardedItems] = useState<Partial<Record<Item['type'], number>>>({});
 	const [stormTrackTicks, setStormTrackTicks] = useState(0);
 	const [lastDrawnCard, setLastDrawnCard] = useState<string | null>(null);
-	const [sandMarksRemaining] = useState(48);
+	const { tiles, totalSandMarks, handleTileClick, applyHurricaneMove } =
+		useTiles();
 	const { cardCounts, drawnCardsCount, drawHurricaneCard } = useHurricaneDeck();
 	const playerCount = players.length as PlayerCount;
 	const isDefeated = loseConditions({
@@ -25,7 +27,7 @@ export default function App() {
 		currentIndex: stormTrackTicks,
 		players,
 		lastDrawnCard,
-		sandMarksRemaining,
+		sandMarksPlaced: totalSandMarks,
 	});
 
 	const handleDrawHurricaneCard = () => {
@@ -36,6 +38,10 @@ export default function App() {
 
 		if (drawnCard === 'Hurricane Up') {
 			setStormTrackTicks((prev) => prev + 1);
+		}
+
+		if (drawnCard?.startsWith('Move ')) {
+			applyHurricaneMove(drawnCard, players, setPlayers);
 		}
 	};
 
@@ -54,7 +60,11 @@ export default function App() {
 				<div>
 					<div className="overflow-x-auto [-webkit-overflow-scrolling:touch]">
 						<div className="min-w-[450px]">
-							<Board players={players} />
+							<Board
+								players={players}
+								tiles={tiles}
+								handleTileClick={handleTileClick}
+							/>
 						</div>
 					</div>
 					<TileInfo className="mt-7" />

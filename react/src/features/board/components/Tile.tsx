@@ -2,12 +2,52 @@ import PawnCircle from './PawnCircle';
 
 const hurricane = '🌪';
 
+const getTileEmoji = (tileInfo?: {
+	revealed: boolean;
+	unrevealedType?: string;
+	revealedType?: string;
+}) => {
+	if (!tileInfo) return null;
+
+	if (tileInfo.unrevealedType === 'Start') return '🚩';
+
+	if (tileInfo.revealed) {
+		switch (tileInfo.revealedType) {
+			case 'Water':
+				return '💧';
+			case 'Fake':
+				return '🥀';
+			case 'Exit':
+				return '🏁';
+			case 'Shade':
+				return '🕳️';
+			case 'Item':
+				return '⚙️';
+			case 'Hint':
+				return '🏜️';
+			default:
+				return '🏜️';
+		}
+	}
+
+	if (tileInfo.unrevealedType === 'Greenth') return '🌵';
+	return '🏜️';
+};
+
 export default function Tile(props: {
 	disabled: boolean;
 	revealed: boolean;
+	tileInfo?: {
+		revealed: boolean;
+		unrevealedType?: string;
+		revealedType?: string;
+	};
+	sandMarks: number;
 	playersOnTile: string[];
 	onClick: () => void;
 }) {
+	const tileEmoji = getTileEmoji(props.tileInfo);
+
 	return (
 		<button
 			type="button"
@@ -20,6 +60,18 @@ export default function Tile(props: {
 			onClick={props.onClick}
 		>
 			{props.disabled && <span className="text-lg">{hurricane}</span>}
+
+			{props.sandMarks > 0 && (
+				<span className="absolute left-1 top-1 rounded-full bg-amber-500/90 px-1.5 py-0.5 text-[10px] font-bold text-slate-950">
+					{props.sandMarks}
+				</span>
+			)}
+
+			{tileEmoji && (
+				<span className="absolute bottom-1 left-1 text-lg leading-none">
+					{tileEmoji}
+				</span>
+			)}
 
 			{props.playersOnTile.length > 0 && (
 				<div className="absolute right-1 top-1 grid grid-rows-3 grid-flow-col rtl gap-0.5 items-start pointer-events-none">

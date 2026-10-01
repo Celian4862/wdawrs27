@@ -7,6 +7,7 @@ export const createTile = (
 	tileDefinition?: TileDefinition,
 ): TileType => ({
 	id,
+	sandMarks: 0,
 	info: tileDefinition && {
 		revealed: false,
 		...tileDefinition,
