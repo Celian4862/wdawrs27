@@ -20,8 +20,9 @@ export default function Tile(props: {
 			onClick={props.onClick}
 		>
 			{props.disabled && <span className="text-lg">{hurricane}</span>}
+
 			{props.playersOnTile.length > 0 && (
-				<div className="absolute inset-0 p-1 flex items-start justify-end gap-0.5 pointer-events-none">
+				<div className="absolute right-1 top-1 bottom-1 flex flex-col flex-wrap justify-start items-end gap-0.5 rtl pointer-events-none">
 					{props.playersOnTile.map((playerColor) => (
 						<PawnCircle key={playerColor} color={playerColor} />
 					))}
