@@ -42,7 +42,7 @@ interface RoleTemplate {
 	title: PlayerTitle;
 	ability: string;
 	maxWater: 3 | 4 | 5;
-	color: '#ef4444' | '#000000' | '#10b981' | '#f59e0b' | '#8b5cf6' | '#06b6d4';
+	color: '#ef4444' | '#000000' | '#10b981' | '#f59e0b' | '#FFFFFF' | '#06b6d4';
 }
 
 export interface ActivePlayer {
@@ -84,7 +84,7 @@ const ROLE_TEMPLATES: RoleTemplate[] = [
 		ability:
 			'Can spend an action looking at the next hurricane cards depending on the hurricane level and optionally defer the card to the end of the deck, and can spend an action to draw one less storm card',
 		maxWater: 4,
-		color: '#8b5cf6',
+		color: '#FFFFFF',
 	},
 	{
 		title: 'Water dispenser',
