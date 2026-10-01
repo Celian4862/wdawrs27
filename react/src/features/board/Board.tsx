@@ -1,28 +1,9 @@
-import { useState } from 'react';
 import type { ActivePlayer } from '../player/player-cards';
+import { useTiles } from './customHooks/useTiles';
 import Tile from './Tile';
-import { tiles as TILES } from './tiles';
 
 export default function Board(props: { players: ActivePlayer[] }) {
-	const [tiles, setTiles] = useState(TILES);
-
-	const handleExcavate = (tileId: number) => {
-		setTiles((prevTiles) =>
-			prevTiles.map((tile) => {
-				// Check if this is the right tile AND it actually has info
-				if (tile.id === tileId && tile.info) {
-					return {
-						...tile,
-						info: {
-							...tile.info,
-							revealed: true, // Flip revealed to true
-						},
-					};
-				}
-				return tile;
-			}),
-		);
-	};
+	const { tiles, handleTileClick } = useTiles();
 
 	return (
 		<div className="grid w-fit grid-cols-5 gap-4">
@@ -36,7 +17,7 @@ export default function Board(props: { players: ActivePlayer[] }) {
 						disabled={!tile.info}
 						revealed={tile.info?.revealed ?? false}
 						playersOnTile={playersOnThisTile}
-						onClick={() => handleExcavate(tile.id)}
+						onClick={() => handleTileClick(tile.id)}
 					/>
 				);
 			})}
