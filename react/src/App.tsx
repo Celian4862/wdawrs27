@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Board from './features/board/components/Board';
+import TileInfo from './features/board/components/TileInfo';
 import HurricaneDeck from './features/hurricane/HurricaneDeck';
 import { useHurricaneDeck } from './features/hurricane/useHurricaneDeck';
 import ItemDeck from './features/item/ItemDeck';
@@ -25,6 +26,7 @@ export default function App() {
 						<Board players={players} />
 					</div>
 				</div>
+				<TileInfo className="mt-7" />
 				<PlayerInfo players={players} />
 			</div>
 			<div>
