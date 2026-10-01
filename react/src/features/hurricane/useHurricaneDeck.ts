@@ -30,32 +30,37 @@ export function useHurricaneDeck() {
 		0,
 	);
 
-	const drawHurricaneCard = () => {
+	const drawHurricaneCard = (): HurricaneCard | null => {
+		const currentTotal = Object.values(cardCounts).reduce(
+			(sum, count) => sum + count,
+			0,
+		);
+
+		const workingCounts =
+			currentTotal >= hurricaneCards.length ? INITIAL_COUNTS : cardCounts;
+		const availableCards = UNIQUE_CARD_TYPES.filter(
+			(card) => workingCounts[card] < CARD_MAX_LIMITS[card],
+		);
+
+		if (availableCards.length === 0) return null;
+
+		const drawnCard =
+			availableCards[Math.floor(Math.random() * availableCards.length)];
+
 		setCardCounts((prev) => {
-			const currentTotal = Object.values(prev).reduce(
-				(sum, count) => sum + count,
-				0,
-			);
-
-			let workingCounts = prev;
-			if (currentTotal >= hurricaneCards.length) {
-				workingCounts = INITIAL_COUNTS;
-			}
-
-			const availableCards = UNIQUE_CARD_TYPES.filter(
-				(card) => workingCounts[card] < CARD_MAX_LIMITS[card],
-			);
-
-			if (availableCards.length === 0) return workingCounts;
-
-			const randomCard =
-				availableCards[Math.floor(Math.random() * availableCards.length)];
+			const countsToUse =
+				Object.values(prev).reduce((sum, count) => sum + count, 0) >=
+				hurricaneCards.length
+					? INITIAL_COUNTS
+					: prev;
 
 			return {
-				...workingCounts,
-				[randomCard]: workingCounts[randomCard] + 1,
+				...countsToUse,
+				[drawnCard]: countsToUse[drawnCard] + 1,
 			};
 		});
+
+		return drawnCard;
 	};
 
 	return {

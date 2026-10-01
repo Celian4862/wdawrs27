@@ -6,7 +6,7 @@ export const playerCounts = [
 	4,
 	5,
 ] as const;
-type PlayerCount = (typeof playerCounts)[number];
+export type PlayerCount = (typeof playerCounts)[number];
 
 export function assignPlayers(
 	playerCount: PlayerCount,
