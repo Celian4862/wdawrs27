@@ -1,5 +1,5 @@
-import type { ActivePlayer } from '../player/player-cards';
-import { useTiles } from './customHooks/useTiles';
+import type { ActivePlayer } from '../../player/player-cards';
+import { useTiles } from '../customHooks/useTiles';
 import Tile from './Tile';
 
 export default function Board(props: { players: ActivePlayer[] }) {

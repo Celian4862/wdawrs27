@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Board from './features/board/Board';
+import Board from './features/board/components/Board';
 import HurricaneDeck from './features/hurricane/HurricaneDeck';
 import { useHurricaneDeck } from './features/hurricane/useHurricaneDeck';
 import ItemDeck from './features/item/ItemDeck';
