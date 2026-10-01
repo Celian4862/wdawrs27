@@ -1,3 +1,4 @@
+import PawnCircle from '../board/components/PawnCircle';
 import type { ActivePlayer } from './player-cards';
 
 export default function PlayerInfo({ players }: { players: ActivePlayer[] }) {
@@ -8,7 +9,12 @@ export default function PlayerInfo({ players }: { players: ActivePlayer[] }) {
 					key={player.role.title}
 					className="rounded-xl border border-white/15 bg-white/5 p-4"
 				>
-					<h2 className="text-xl font-bold text-white">{player.role.title}</h2>
+					<div className="flex justify-between">
+						<h2 className="text-xl font-bold text-white">
+							{player.role.title}
+						</h2>
+						<PawnCircle color={player.role.color} />
+					</div>
 					<h3 className="mt-1 text-sm font-medium text-white/65">
 						{player.role.ability}
 					</h3>
