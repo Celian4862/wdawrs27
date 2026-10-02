@@ -7,12 +7,7 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"includes": [
-			"**",
-			"!!**/dist",
-			"!!**/node_modules",
-			"!bun.lock"
-		]
+		"includes": ["**", "!!**/dist", "!!**/node_modules", "!bun.lock"]
 	},
 	"formatter": {
 		"enabled": true,
@@ -20,17 +15,14 @@
 		"formatWithErrors": true,
 		"lineEnding": "lf",
 		"lineWidth": 80,
-		"expand": "always"
+		"expand": "auto"
 	},
 	"linter": {
 		"enabled": true,
 		"rules": {
 			"preset": "recommended"
 		},
-		"includes": [
-			"**",
-			"!dist"
-		]
+		"includes": ["**", "!dist"]
 	},
 	"javascript": {
 		"formatter": {
