@@ -1,15 +1,6 @@
-export const distances = [
-	1,
-	2,
-	3,
-] as const;
+export const distances = [1, 2, 3] as const;
 type Distance = (typeof distances)[number];
-export const directions = [
-	'Up',
-	'Down',
-	'Left',
-	'Right',
-] as const;
+export const directions = ['Up', 'Down', 'Left', 'Right'] as const;
 type Direction = (typeof directions)[number];
 export type HurricaneCard =
 	| 'Thirst'

@@ -1,11 +1,6 @@
 import type { Item } from '../item/items';
 
-export const playerCounts = [
-	2,
-	3,
-	4,
-	5,
-] as const;
+export const playerCounts = [2, 3, 4, 5] as const;
 export type PlayerCount = (typeof playerCounts)[number];
 
 export function assignPlayers(
@@ -13,9 +8,7 @@ export function assignPlayers(
 	startingTileId: number,
 ): ActivePlayer[] {
 	// Shuffle or pick random unique roles from ROLE_TEMPLATES
-	const shuffledRoles = [
-		...ROLE_TEMPLATES,
-	].sort(() => 0.5 - Math.random());
+	const shuffledRoles = [...ROLE_TEMPLATES].sort(() => 0.5 - Math.random());
 	const selectedRoles = shuffledRoles.slice(0, playerCount);
 
 	// Map them into active players with runtime state

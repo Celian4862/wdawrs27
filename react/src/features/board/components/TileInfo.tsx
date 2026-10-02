@@ -1,11 +1,6 @@
 import type { TileType } from '../tileTypes';
 
-const actions = [
-	'Move',
-	'Remove Sand',
-	'Reveal',
-	'Collect Piece',
-] as const;
+const actions = ['Move', 'Remove Sand', 'Reveal', 'Collect Piece'] as const;
 
 export default function TileInfo(props: {
 	tile?: TileType;

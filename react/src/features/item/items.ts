@@ -24,10 +24,7 @@ export const itemMaxCounts: Record<ItemType, number> = {
 };
 
 const itemsPartial: ItemType[] = (
-	Object.entries(itemMaxCounts) as [
-		ItemType,
-		number,
-	][]
+	Object.entries(itemMaxCounts) as [ItemType, number][]
 ).flatMap(([item, count]) => Array(count).fill(item));
 
 export const items: Item[] = [];

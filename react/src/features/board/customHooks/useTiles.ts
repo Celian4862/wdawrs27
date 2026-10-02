@@ -3,22 +3,10 @@ import type { ActivePlayer } from '../../player/player-cards';
 import { tiles as TILES } from '../tiles';
 
 const DIRECTION_OFFSETS = {
-	Up: [
-		-1,
-		0,
-	],
-	Down: [
-		1,
-		0,
-	],
-	Left: [
-		0,
-		-1,
-	],
-	Right: [
-		0,
-		1,
-	],
+	Up: [-1, 0],
+	Down: [1, 0],
+	Left: [0, -1],
+	Right: [0, 1],
 } as const;
 
 export function useTiles() {
@@ -63,12 +51,7 @@ export function useTiles() {
 				sandMarks: tile?.sandMarks ?? 0,
 			}));
 			let currentIndex = nextTiles.findIndex((tile) => tile && !tile.info);
-			const swaps: Array<
-				[
-					number,
-					number,
-				]
-			> = [];
+			const swaps: Array<[number, number]> = [];
 
 			if (currentIndex === -1) return nextTiles;
 
@@ -88,10 +71,7 @@ export function useTiles() {
 
 				if (!hurricaneTile || !targetTile) break;
 
-				swaps.push([
-					currentIndex,
-					nextIndex,
-				]);
+				swaps.push([currentIndex, nextIndex]);
 				nextTiles[currentIndex] = {
 					...targetTile,
 					id: currentIndex,

@@ -5,26 +5,15 @@ import type { TileDefinition, TileType } from './tileTypes';
 
 const hurricanePosition = toIndex(2, 2);
 export const startingPosition = toIndex(3, 4);
-const greenthPositions = [
-	toIndex(0, 3),
-	toIndex(1, 0),
-	toIndex(4, 1),
-];
+const greenthPositions = [toIndex(0, 3), toIndex(1, 0), toIndex(4, 1)];
 
 const startingTile: TileDefinition = createTileDefinition('Start', 'Item');
 const greenthTiles: TileDefinition[] = (
-	[
-		...Array(2).fill('Water'),
-		'Fake',
-	] as const
+	[...Array(2).fill('Water'), 'Fake'] as const
 ).map((revealedType) => createTileDefinition('Greenth', revealedType));
 const sandTiles: TileDefinition[] = (() => {
 	const normalSandTiles = (
-		[
-			'Exit',
-			...Array(3).fill('Shade'),
-			...Array(8).fill('Item'),
-		] as const
+		['Exit', ...Array(3).fill('Shade'), ...Array(8).fill('Item')] as const
 	).map((revealedType) => createTileDefinition('Sand', revealedType));
 	return [
 		...normalSandTiles,
