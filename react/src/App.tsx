@@ -102,89 +102,93 @@ export default function App() {
 				 * Hurricane Meter
 				 *
 				 */}
-				<section className="mb-6 grid grid-rows-2">
+				<section className="mb-6">
 					<h1>Hurricane Meter (Cards to Draw)</h1>
 					{/**
 					 *
 					 * Hurricane Meter Overflow Container
 					 *
 					 */}
-					<div className="overflow-x-auto">
-						{/**
-						 *
-						 * Hurricane Meter Grid
-						 *
-						 */}
-						<div
-							className={`min-w-150 grid ${{ 2: 'grid-cols-14', 3: 'grid-cols-15', 4: 'grid-cols-15', 5: 'grid-cols-16' }[playerCount]}`}
-						>
+					<div className="grid">
+						<div className="overflow-x-auto">
 							{/**
 							 *
-							 * Hurricane Meter Loop
+							 * Hurricane Meter Grid
 							 *
 							 */}
-							{Array.from(new Set(hurricaneMeter)).map((hurricaneMeterTier) => {
-								const span =
-									{
-										2: 1,
-										3: { 2: 3, 3: 4, 4: 4, 5: 5 }[playerCount],
-										4: 4,
-										5: 3,
-										6: 2,
-										7: 1,
-									}[hurricaneMeterTier] ?? 0;
-								const edgeRoundingStyle =
-									{ 2: 'rounded-l-xl', 7: 'rounded-r-xl' }[
-										hurricaneMeterTier
-									] || '';
-								const startIndex = accumulatedTicksCount;
-								accumulatedTicksCount += span;
-								return (
-									/**
-									 *
-									 * Hurricane Meter Tier
-									 *
-									 */
-									<div
-										key={hurricaneMeterTier}
-										className={`h-12 relative py-2 flex justify-center text-2xl border ${edgeRoundingStyle}`}
-										style={{ gridColumn: `span ${span} / span ${span}` }}
-									>
-										{/**
-										 *
-										 * Hurricane Meter Tick
-										 *
-										 */}
-										<div className={`absolute inset-0 grid grid-flow-col`}>
-											{Array.from({ length: span }).map((_, tickIndex) => {
-												const globalIndex = startIndex + tickIndex;
-												const isFilled =
-													globalIndex <= currentHurricaneMeterProgress;
-												const fillColor = isFilled
-													? {
-															2: 'bg-amber-400/90',
-															3: 'bg-amber-500/90',
-															4: 'bg-amber-600/90',
-															5: 'bg-amber-700/90',
-															6: 'bg-amber-800/90',
-															7: 'bg-red-600/90',
-														}[hurricaneMeterTier]
-													: 'bg-transparent';
-												return (
-													<div
-														// biome-ignore lint/suspicious/noArrayIndexKey: Static array that never reorders or mutates
-														key={tickIndex}
-														className={`${edgeRoundingStyle} ${fillColor}`}
-													/>
-												);
-											})}
-										</div>
-										<span className="relative z-10 font-bold">
-											{hurricaneMeterTier === 7 ? '☠️' : hurricaneMeterTier}
-										</span>
-									</div>
-								);
-							})}
+							<div
+								className={`min-w-150 grid ${{ 2: 'grid-cols-14', 3: 'grid-cols-15', 4: 'grid-cols-15', 5: 'grid-cols-16' }[playerCount]}`}
+							>
+								{/**
+								 *
+								 * Hurricane Meter Loop
+								 *
+								 */}
+								{Array.from(new Set(hurricaneMeter)).map(
+									(hurricaneMeterTier) => {
+										const span =
+											{
+												2: 1,
+												3: { 2: 3, 3: 4, 4: 4, 5: 5 }[playerCount],
+												4: 4,
+												5: 3,
+												6: 2,
+												7: 1,
+											}[hurricaneMeterTier] ?? 0;
+										const edgeRoundingStyle =
+											{ 2: 'rounded-l-xl', 7: 'rounded-r-xl' }[
+												hurricaneMeterTier
+											] || '';
+										const startIndex = accumulatedTicksCount;
+										accumulatedTicksCount += span;
+										return (
+											/**
+											 *
+											 * Hurricane Meter Tier
+											 *
+											 */
+											<div
+												key={hurricaneMeterTier}
+												className={`h-12 relative py-2 flex justify-center text-2xl border ${edgeRoundingStyle}`}
+												style={{ gridColumn: `span ${span} / span ${span}` }}
+											>
+												{/**
+												 *
+												 * Hurricane Meter Tick
+												 *
+												 */}
+												<div className={`absolute inset-0 grid grid-flow-col`}>
+													{Array.from({ length: span }).map((_, tickIndex) => {
+														const globalIndex = startIndex + tickIndex;
+														const isFilled =
+															globalIndex <= currentHurricaneMeterProgress;
+														const fillColor = isFilled
+															? {
+																	2: 'bg-amber-400/90',
+																	3: 'bg-amber-500/90',
+																	4: 'bg-amber-600/90',
+																	5: 'bg-amber-700/90',
+																	6: 'bg-amber-800/90',
+																	7: 'bg-red-600/90',
+																}[hurricaneMeterTier]
+															: 'bg-transparent';
+														return (
+															<div
+																// biome-ignore lint/suspicious/noArrayIndexKey: Static array that never reorders or mutates
+																key={tickIndex}
+																className={`${edgeRoundingStyle} ${fillColor}`}
+															/>
+														);
+													})}
+												</div>
+												<span className="relative z-10 font-bold">
+													{hurricaneMeterTier === 7 ? '☠️' : hurricaneMeterTier}
+												</span>
+											</div>
+										);
+									},
+								)}
+							</div>
 						</div>
 					</div>
 				</section>
