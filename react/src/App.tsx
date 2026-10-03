@@ -92,51 +92,58 @@ export default function App() {
 			{/* Game Info Section */}
 			<section className="p-5">
 				{/* Hurricane Meter */}
-				<section
-					className={`h-fit grid ${{ 2: 'grid-cols-13', 3: 'grid-cols-14', 4: 'grid-cols-14', 5: 'grid-cols-15' }[playerCount]}`}
-				>
-					{/* Actual Hurricane Meter Display */}
-					{Array.from(new Set(hurricaneMeter.slice(0, -1))).map(
-						(hurricaneMeterTier) => {
-							const span =
-								{
-									2: 1,
-									3: { 2: 3, 3: 4, 4: 4, 5: 5 }[playerCount],
-									4: 4,
-									5: 3,
-									6: 2,
-								}[hurricaneMeterTier] ?? 0;
-							const startIndex = accumulatedTicksCount;
-							accumulatedTicksCount += span;
+				<section>
+					<h1 className="text-2xl pb-6">Hurricane Meter</h1>
+					<div
+						className={`h-fit grid ${{ 2: 'grid-cols-13', 3: 'grid-cols-14', 4: 'grid-cols-14', 5: 'grid-cols-15' }[playerCount]}`}
+					>
+						{/* Actual Hurricane Meter Display */}
+						{Array.from(new Set(hurricaneMeter.slice(0, -1))).map(
+							(hurricaneMeterTier) => {
+								const span =
+									{
+										2: 1,
+										3: { 2: 3, 3: 4, 4: 4, 5: 5 }[playerCount],
+										4: 4,
+										5: 3,
+										6: 2,
+									}[hurricaneMeterTier] ?? 0;
+								const edgeRoundingStyle =
+									{ 2: 'rounded-l-xl', 6: 'rounded-r-xl' }[
+										hurricaneMeterTier
+									] || '';
+								const startIndex = accumulatedTicksCount;
+								accumulatedTicksCount += span;
 
-							return (
-								<div
-									key={hurricaneMeterTier}
-									className={`h-12 relatve py-2 flex justify-center text-2xl border ${{ 2: 'rounded-l-xl', 6: 'rounded-r-xl' }[hurricaneMeterTier] || ''}`}
-									style={{ gridColumn: `span ${span} / span ${span}` }}
-								>
-									{/* Color Coding for Current Hurricane Meter */}
-									<div className="absolute grid grid-flow-col">
-										{Array.from({ length: span }).map((_, tickIndex) => {
-											const globalIndex = startIndex + tickIndex;
-											const isFilled =
-												globalIndex < currentHurricaneMeterProgress;
-											// biome-ignore lint/suspicious/noArrayIndexKey: Static array that never reorders or mutates
-											return (
-												<div
-													key={tickIndex}
-													className={`size-full ${
-														isFilled ? 'bg-blue-500/30' : 'bg-transparent'
-													}`}
-												/>
-											);
-										})}
+								return (
+									<div
+										key={hurricaneMeterTier}
+										className={`h-12 relative py-2 flex justify-center text-2xl border ${edgeRoundingStyle}`}
+										style={{ gridColumn: `span ${span} / span ${span}` }}
+									>
+										{/* Color Coding for Current Hurricane Meter */}
+										<div className={`absolute inset-0 grid grid-flow-col`}>
+											{Array.from({ length: span }).map((_, tickIndex) => {
+												const globalIndex = startIndex + tickIndex;
+												const isFilled =
+													globalIndex < currentHurricaneMeterProgress;
+												return (
+													<div
+														// biome-ignore lint/suspicious/noArrayIndexKey: Static array that never reorders or mutates
+														key={tickIndex}
+														className={`${edgeRoundingStyle} ${isFilled ? 'bg-blue-500/30' : 'bg-transparent'}`}
+													/>
+												);
+											})}
+										</div>
+										<span className="relative z-10 font-bold">
+											{hurricaneMeterTier}
+										</span>
 									</div>
-									<span className="relative z-10 font-bold">{hurricaneMeterTier}</span>
-								</div>
-							);
-						},
-					)}
+								);
+							},
+						)}
+					</div>
 				</section>
 				{/* SPACER */}
 				<div className="py-3" />
