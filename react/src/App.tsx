@@ -11,7 +11,7 @@ export default function App() {
 			<div className="h-screen flex justify-center">
 				<div className="flex flex-col justify-center">
 					<div className="md:w-100 text-center">
-						<h1 className="text-2xl pb-6">How many players?</h1>
+						<h1>How many players?</h1>
 						<div className="grid grid-cols-2 gap-3">
 							{[2, 3, 4, 5].map((playerCountInput) => (
 								<button
@@ -36,7 +36,7 @@ export default function App() {
 			<div className="h-screen flex justify-center">
 				<div className="flex flex-col justify-center">
 					<div className="md:w-100 text-center">
-						<h1 className="text-2xl pb-6">What difficulty level?</h1>
+						<h1>What difficulty level?</h1>
 						<div className="grid grid-cols-2 gap-3">
 							{['Easy', 'Normal', 'Difficult', 'Extreme'].map(
 								(difficultyInput, index) => (
@@ -105,73 +105,72 @@ export default function App() {
 				 *
 				 */}
 				<section className="mb-6">
-					<h1 className="text-2xl pb-6">Hurricane Meter (Cards to Draw)</h1>
+					<h1>Hurricane Meter (Cards to Draw)</h1>
 					<div
-						className={`h-fit grid ${{ 2: 'grid-cols-13', 3: 'grid-cols-14', 4: 'grid-cols-14', 5: 'grid-cols-15' }[playerCount]}`}
+						className={`h-fit grid ${{ 2: 'grid-cols-14', 3: 'grid-cols-15', 4: 'grid-cols-15', 5: 'grid-cols-16' }[playerCount]}`}
 					>
 						{/**
 						 *
 						 * Actual Hurricane Meter Display
 						 *
 						 */}
-						{Array.from(new Set(hurricaneMeter.slice(0, -1))).map(
-							(hurricaneMeterTier) => {
-								const span =
-									{
-										2: 1,
-										3: { 2: 3, 3: 4, 4: 4, 5: 5 }[playerCount],
-										4: 4,
-										5: 3,
-										6: 2,
-									}[hurricaneMeterTier] ?? 0;
-								const edgeRoundingStyle =
-									{ 2: 'rounded-l-xl', 6: 'rounded-r-xl' }[
-										hurricaneMeterTier
-									] || '';
-								const startIndex = accumulatedTicksCount;
-								accumulatedTicksCount += span;
+						{Array.from(new Set(hurricaneMeter)).map((hurricaneMeterTier) => {
+							const span =
+								{
+									2: 1,
+									3: { 2: 3, 3: 4, 4: 4, 5: 5 }[playerCount],
+									4: 4,
+									5: 3,
+									6: 2,
+									7: 1,
+								}[hurricaneMeterTier] ?? 0;
+							const edgeRoundingStyle =
+								{ 2: 'rounded-l-xl', 7: 'rounded-r-xl' }[hurricaneMeterTier] ||
+								'';
+							const startIndex = accumulatedTicksCount;
+							accumulatedTicksCount += span;
 
-								return (
-									<div
-										key={hurricaneMeterTier}
-										className={`h-12 relative py-2 flex justify-center text-2xl border ${edgeRoundingStyle}`}
-										style={{ gridColumn: `span ${span} / span ${span}` }}
-									>
-										{/**
-										 *
-										 * Color Coding for Current Hurricane Meter
-										 *
-										 */}
-										<div className={`absolute inset-0 grid grid-flow-col`}>
-											{Array.from({ length: span }).map((_, tickIndex) => {
-												const globalIndex = startIndex + tickIndex;
-												const isFilled =
-													globalIndex <= currentHurricaneMeterProgress;
-												const fillColor = isFilled
-													? {
-															2: 'bg-amber-400/90',
-															3: 'bg-amber-500/90',
-															4: 'bg-amber-600/90',
-															5: 'bg-amber-700/90',
-															6: 'bg-amber-800/90',
-														}[hurricaneMeterTier]
-													: 'bg-transparent';
-												return (
-													<div
-														// biome-ignore lint/suspicious/noArrayIndexKey: Static array that never reorders or mutates
-														key={tickIndex}
-														className={`${edgeRoundingStyle} ${fillColor}`}
-													/>
-												);
-											})}
-										</div>
-										<span className="relative z-10 font-bold">
-											{hurricaneMeterTier}
-										</span>
+							return (
+								<div
+									key={hurricaneMeterTier}
+									className={`h-12 relative py-2 flex justify-center text-2xl border ${edgeRoundingStyle}`}
+									style={{ gridColumn: `span ${span} / span ${span}` }}
+								>
+									{/**
+									 *
+									 * Color Coding for Current Hurricane Meter
+									 *
+									 */}
+									<div className={`absolute inset-0 grid grid-flow-col`}>
+										{Array.from({ length: span }).map((_, tickIndex) => {
+											const globalIndex = startIndex + tickIndex;
+											const isFilled =
+												globalIndex <= currentHurricaneMeterProgress;
+											const fillColor = isFilled
+												? {
+														2: 'bg-amber-400/90',
+														3: 'bg-amber-500/90',
+														4: 'bg-amber-600/90',
+														5: 'bg-amber-700/90',
+														6: 'bg-amber-800/90',
+														7: 'bg-red-600/90',
+													}[hurricaneMeterTier]
+												: 'bg-transparent';
+											return (
+												<div
+													// biome-ignore lint/suspicious/noArrayIndexKey: Static array that never reorders or mutates
+													key={tickIndex}
+													className={`${edgeRoundingStyle} ${fillColor}`}
+												/>
+											);
+										})}
 									</div>
-								);
-							},
-						)}
+									<span className="relative z-10 font-bold">
+										{hurricaneMeterTier === 7 ? '☠️' : hurricaneMeterTier}
+									</span>
+								</div>
+							);
+						})}
 					</div>
 				</section>
 				{/**
@@ -179,8 +178,16 @@ export default function App() {
 				 * Hurricane Deck
 				 *
 				 */}
-				<section className="border rounded-xl">
-					<h1 className="p-6 text-2xl">Hurricane Deck</h1>
+				<section className="border rounded-xl p-6">
+					<h1>Hurricane Deck</h1>
+				</section>
+				{/**
+				 *
+				 * Item Deck
+				 *
+				 */}
+				<section className="">
+					<h1>Item Deck</h1>
 				</section>
 			</section>
 		</div>
@@ -276,7 +283,7 @@ const initHurricaneMeter = (playerCount: number): number[] => [
 	...Array(4).fill(4),
 	...Array(3).fill(5),
 	...Array(2).fill(6),
-	-1,
+	7,
 ];
 
 function shuffle<T>(items: T[]): T[] {

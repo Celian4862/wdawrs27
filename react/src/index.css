@@ -4,3 +4,8 @@ body {
 	background-color: black;
 	color: white;
 }
+
+h1 {
+	padding-bottom: calc(var(--spacing) * 6);
+	font-size: 1.5rem;
+}
