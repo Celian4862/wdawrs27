@@ -1,96 +1,253 @@
 import { useState } from 'react';
-import Board from './features/board/components/Board';
-import LoseScreen from './features/board/components/LoseScreen';
-import TileInfo from './features/board/components/TileInfo';
-import { useTiles } from './features/board/customHooks/useTiles';
-import { loseConditions } from './features/board/win-lose-conditions';
-import HurricaneDeck from './features/hurricane/HurricaneDeck';
-import HurricaneMeter from './features/hurricane/HurricaneMeter';
-import { useHurricaneDeck } from './features/hurricane/useHurricaneDeck';
-import ItemDeck from './features/item/ItemDeck';
-import type { Item } from './features/item/items';
-import PlayerInfo from './features/player/PlayerInfo';
-import PlayerSetup from './features/player/PlayerSetup';
-import type { ActivePlayer, PlayerCount } from './features/player/player-cards';
 
 export default function App() {
-	const [players, setPlayers] = useState<ActivePlayer[]>([]);
-	const [discardedItems] = useState<Partial<Record<Item['type'], number>>>({});
-	const [stormTrackTicks, setStormTrackTicks] = useState(0);
-	const [lastDrawnCard, setLastDrawnCard] = useState<string | null>(null);
-	const { tiles, totalSandMarks, handleTileClick, applyHurricaneMove } =
-		useTiles();
-	const { cardCounts, drawnCardsCount, drawHurricaneCard } = useHurricaneDeck();
-	const playerCount = players.length as PlayerCount;
-	const isDefeated = loseConditions({
-		playerCount,
-		currentIndex: stormTrackTicks,
-		players,
-		lastDrawnCard,
-		sandMarksPlaced: totalSandMarks,
-	});
+	const [playerCount, setPlayerCount] = useState(0);
+	const [currentHurricaneMeter, setCurrentHurricaneMeter] = useState(
+		Array<boolean>(0),
+	);
+	const [currentHurricaneMeterProgress, setCurrentHurricaneMeterProgress] =
+		useState(0);
 
-	const handleDrawHurricaneCard = () => {
-		if (isDefeated) return;
-
-		const drawnCard = drawHurricaneCard();
-		setLastDrawnCard(drawnCard);
-
-		if (drawnCard === 'Hurricane Up') {
-			setStormTrackTicks((prev) => prev + 1);
-		}
-
-		if (drawnCard?.startsWith('Move ')) {
-			applyHurricaneMove(drawnCard, players, setPlayers);
-		}
-	};
-
-	if (players.length === 0) {
-		return <PlayerSetup onSelectPlayers={setPlayers} />;
-	}
-
-	return (
-		<div className="relative">
-			{isDefeated && <LoseScreen />}
-			<div
-				className={`grid w-fit p-5 md:grid-cols-2 grid-cols-1 items-start gap-15 ${
-					isDefeated ? 'pointer-events-none opacity-60' : ''
-				}`}
-			>
-				<div>
-					<div className="overflow-x-auto [-webkit-overflow-scrolling:touch]">
-						<div className="min-w-[450px]">
-							<Board
-								players={players}
-								tiles={tiles}
-								handleTileClick={handleTileClick}
-							/>
+	// Guarantees that playerCount will not be 0 by the time it initializes other game states
+	if (playerCount === 0) {
+		return (
+			<div className="h-screen flex justify-center">
+				<div className="flex flex-col justify-center">
+					<div className="md:w-100 text-center">
+						<h1 className="text-2xl pb-6">How many players?</h1>
+						<div className="grid grid-cols-2 gap-3">
+							{[2, 3, 4, 5].map((playerCountInput) => (
+								<button
+									key={playerCountInput}
+									type="button"
+									className="p-2 text-xl border rounded-lg"
+									onClick={() => setPlayerCount(playerCountInput)}
+								>
+									{playerCountInput}
+								</button>
+							))}
 						</div>
 					</div>
-					<TileInfo className="mt-7" />
-					<PlayerInfo players={players} />
-				</div>
-				<div>
-					<HurricaneMeter
-						playerCount={playerCount}
-						currentIndex={stormTrackTicks}
-					/>
-					<HurricaneDeck
-						cardCounts={cardCounts}
-						drawnCardsCount={drawnCardsCount}
-					/>
-					{/* Button below is only for testing count increments */}
-					<button
-						type="button"
-						onClick={handleDrawHurricaneCard}
-						disabled={isDefeated}
-						className="rounded-lg border border-cyan-300/30 bg-cyan-300/10 px-4 py-2 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-300/20 disabled:cursor-not-allowed disabled:opacity-50"
-					>
-						Draw random card
-					</button>
-					<ItemDeck discardedItems={discardedItems} />
 				</div>
 			</div>
+		);
+	}
+
+	const hurricaneMeter = initHurricaneMeter(playerCount);
+	if (currentHurricaneMeter.length === 0) {
+		return (
+			<div className="h-screen flex justify-center">
+				<div className="flex flex-col justify-center">
+					<div className="md:w-100 text-center">
+						<h1 className="text-2xl pb-6">What difficulty level?</h1>
+						<div className="grid grid-cols-2 gap-3">
+							{['Easy', 'Normal', 'Difficult', 'Extreme'].map(
+								(difficultyInput, index) => (
+									<button
+										key={difficultyInput}
+										type="button"
+										className="p-2 text-xl border rounded-lg"
+										onClick={() => {
+											const meterInput = Array.from(
+												{ length: hurricaneMeter.length },
+												(_, i) => i < index + 1,
+											);
+											setCurrentHurricaneMeter(meterInput);
+											setCurrentHurricaneMeterProgress(index + 1);
+										}}
+									>
+										{difficultyInput}
+									</button>
+								),
+							)}
+						</div>
+					</div>
+				</div>
+			</div>
+		);
+	}
+
+	let accumulatedTicksCount = 0;
+	return (
+		<div className="p-10 grid lg:grid-cols-2">
+			{/* Horizontal Scrolling Area */}
+			<section className="overflow-x-auto [-webkit-overflow-scrolling:touch]">
+				<div className="min-w-115">
+					{/* Board */}
+					<div className="lg:fixed w-fit grid grid-cols-5 gap-5">
+						{/* Tiles */}
+						{tiles.map((tile) => (
+							<button
+								key={tile.id}
+								type="button"
+								disabled={!tile.info}
+								className={`border rounded-lg size-20 motion-safe:transition ${!tile.info ? 'brightness-50' : 'hover:brightness-50'}`}
+							>
+								{!tile.info && '🌪'}
+							</button>
+						))}
+					</div>
+				</div>
+			</section>
+			{/* Game Info Section */}
+			<section className="p-5">
+				{/* Hurricane Meter */}
+				<section
+					className={`h-fit grid ${{ 2: 'grid-cols-13', 3: 'grid-cols-14', 4: 'grid-cols-14', 5: 'grid-cols-15' }[playerCount]}`}
+				>
+					{/* Actual Hurricane Meter Display */}
+					{Array.from(new Set(hurricaneMeter.slice(0, -1))).map(
+						(hurricaneMeterTier) => {
+							const span =
+								{
+									2: 1,
+									3: { 2: 3, 3: 4, 4: 4, 5: 5 }[playerCount],
+									4: 4,
+									5: 3,
+									6: 2,
+								}[hurricaneMeterTier] ?? 0;
+							const startIndex = accumulatedTicksCount;
+							accumulatedTicksCount += span;
+
+							return (
+								<div
+									key={hurricaneMeterTier}
+									className={`h-12 relatve py-2 flex justify-center text-2xl border ${{ 2: 'rounded-l-xl', 6: 'rounded-r-xl' }[hurricaneMeterTier] || ''}`}
+									style={{ gridColumn: `span ${span} / span ${span}` }}
+								>
+									{/* Color Coding for Current Hurricane Meter */}
+									<div className="absolute grid grid-flow-col">
+										{Array.from({ length: span }).map((_, tickIndex) => {
+											const globalIndex = startIndex + tickIndex;
+											const isFilled =
+												globalIndex < currentHurricaneMeterProgress;
+											// biome-ignore lint/suspicious/noArrayIndexKey: Static array that never reorders or mutates
+											return (
+												<div
+													key={tickIndex}
+													className={`size-full ${
+														isFilled ? 'bg-blue-500/30' : 'bg-transparent'
+													}`}
+												/>
+											);
+										})}
+									</div>
+									<span className="relative z-10 font-bold">{hurricaneMeterTier}</span>
+								</div>
+							);
+						},
+					)}
+				</section>
+				{/* SPACER */}
+				<div className="py-3" />
+				{/* Hurricane Deck */}
+				<section className="border rounded-xl">
+					<h1 className="p-6 text-2xl">Hurricane Deck</h1>
+				</section>
+			</section>
 		</div>
 	);
+}
+
+const tiles = (() => {
+	const tiles: {
+		id: number;
+		info?: {
+			sandMarks: number;
+			revealed: boolean;
+			unrevealedType: string;
+			revealedType: string;
+			hintVariant?: string;
+		};
+	}[] = Array(25);
+
+	// HURRICANE TILE
+	tiles[12] = {
+		id: 12,
+	};
+
+	// STARTING TILE
+	tiles[19] = {
+		id: 19,
+		info: {
+			sandMarks: 0,
+			revealed: false,
+			unrevealedType: 'Start',
+			revealedType: 'Item',
+		},
+	};
+
+	// GREENTH TILES
+	const greenthTiles = shuffle(['Water', 'Water', 'Fake']);
+	[3, 5, 21].forEach((greenthIndex, index) => {
+		tiles[greenthIndex] = {
+			id: greenthIndex,
+			info: {
+				sandMarks: 0,
+				revealed: false,
+				unrevealedType: 'Greenth',
+				revealedType: greenthTiles[index],
+			},
+		};
+	});
+
+	// REMAINING TILES
+	const sandTiles = shuffle<{
+		revealedType: string;
+		hintVariant?: string;
+	}>([
+		{ revealedType: 'Exit' },
+		...Array(3).fill({ revealedType: 'Shade' }),
+		...Array(8).fill({ revealedType: 'Item' }),
+		...[
+			'Pointer Row',
+			'Pointer Col',
+			'Motor Row',
+			'Motor Col',
+			'Core Row',
+			'Core Col',
+			'Fan Row',
+			'Fan Col',
+		].map((hintVariant) => ({ revealedType: 'Hint', hintVariant })),
+	]);
+	Array.from(
+		{
+			length: 25,
+		},
+		(_, index) => index,
+	)
+		.filter((position) => ![3, 5, 12, 19, 21].includes(position))
+		.forEach((position, index) => {
+			tiles[position] = {
+				id: position,
+				info: {
+					sandMarks: 0,
+					revealed: false,
+					unrevealedType: 'Sand',
+					revealedType: sandTiles[index].revealedType,
+					hintVariant: sandTiles[index].hintVariant,
+				},
+			};
+		});
+	return tiles;
+})();
+
+const initHurricaneMeter = (playerCount: number): number[] => [
+	2,
+	...Array({ 2: 3, 3: 4, 4: 4, 5: 5 }[playerCount]).fill(3),
+	...Array(4).fill(4),
+	...Array(3).fill(5),
+	...Array(2).fill(6),
+	-1,
+];
+
+function shuffle<T>(items: T[]): T[] {
+	const result = [...items];
+
+	for (let i = result.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[result[i], result[j]] = [result[j], result[i]];
+	}
+
+	return result;
 }
