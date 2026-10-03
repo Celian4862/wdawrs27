@@ -2,11 +2,8 @@ import { useState } from 'react';
 
 export default function App() {
 	const [playerCount, setPlayerCount] = useState(0);
-	const [currentHurricaneMeter, setCurrentHurricaneMeter] = useState(
-		Array<boolean>(0),
-	);
 	const [currentHurricaneMeterProgress, setCurrentHurricaneMeterProgress] =
-		useState(0);
+		useState(-1);
 
 	// Guarantees that playerCount will not be 0 by the time it initializes other game states
 	if (playerCount === 0) {
@@ -34,7 +31,7 @@ export default function App() {
 	}
 
 	const hurricaneMeter = initHurricaneMeter(playerCount);
-	if (currentHurricaneMeter.length === 0) {
+	if (currentHurricaneMeterProgress < 0) {
 		return (
 			<div className="h-screen flex justify-center">
 				<div className="flex flex-col justify-center">
@@ -48,12 +45,7 @@ export default function App() {
 										type="button"
 										className="p-2 text-xl border rounded-lg"
 										onClick={() => {
-											const meterInput = Array.from(
-												{ length: hurricaneMeter.length },
-												(_, i) => i < index + 1,
-											);
-											setCurrentHurricaneMeter(meterInput);
-											setCurrentHurricaneMeterProgress(index + 1);
+											setCurrentHurricaneMeterProgress(index);
 										}}
 									>
 										{difficultyInput}
@@ -70,12 +62,24 @@ export default function App() {
 	let accumulatedTicksCount = 0;
 	return (
 		<div className="p-10 grid lg:grid-cols-2">
-			{/* Horizontal Scrolling Area */}
+			{/**
+			 *
+			 * Horizontal Scrolling Area
+			 *
+			 */}
 			<section className="overflow-x-auto [-webkit-overflow-scrolling:touch]">
 				<div className="min-w-115">
-					{/* Board */}
+					{/**
+					 *
+					 * Board
+					 *
+					 */}
 					<div className="lg:fixed w-fit grid grid-cols-5 gap-5">
-						{/* Tiles */}
+						{/**
+						 *
+						 * Tiles
+						 *
+						 */}
 						{tiles.map((tile) => (
 							<button
 								key={tile.id}
@@ -89,15 +93,27 @@ export default function App() {
 					</div>
 				</div>
 			</section>
-			{/* Game Info Section */}
+			{/**
+			 *
+			 * Game Info Section
+			 *
+			 */}
 			<section className="p-5">
-				{/* Hurricane Meter */}
-				<section>
-					<h1 className="text-2xl pb-6">Hurricane Meter</h1>
+				{/**
+				 *
+				 * Hurricane Meter
+				 *
+				 */}
+				<section className="mb-6">
+					<h1 className="text-2xl pb-6">Hurricane Meter (Cards to Draw)</h1>
 					<div
 						className={`h-fit grid ${{ 2: 'grid-cols-13', 3: 'grid-cols-14', 4: 'grid-cols-14', 5: 'grid-cols-15' }[playerCount]}`}
 					>
-						{/* Actual Hurricane Meter Display */}
+						{/**
+						 *
+						 * Actual Hurricane Meter Display
+						 *
+						 */}
 						{Array.from(new Set(hurricaneMeter.slice(0, -1))).map(
 							(hurricaneMeterTier) => {
 								const span =
@@ -121,17 +137,30 @@ export default function App() {
 										className={`h-12 relative py-2 flex justify-center text-2xl border ${edgeRoundingStyle}`}
 										style={{ gridColumn: `span ${span} / span ${span}` }}
 									>
-										{/* Color Coding for Current Hurricane Meter */}
+										{/**
+										 *
+										 * Color Coding for Current Hurricane Meter
+										 *
+										 */}
 										<div className={`absolute inset-0 grid grid-flow-col`}>
 											{Array.from({ length: span }).map((_, tickIndex) => {
 												const globalIndex = startIndex + tickIndex;
 												const isFilled =
-													globalIndex < currentHurricaneMeterProgress;
+													globalIndex <= currentHurricaneMeterProgress;
+												const fillColor = isFilled
+													? {
+															2: 'bg-amber-400/90',
+															3: 'bg-amber-500/90',
+															4: 'bg-amber-600/90',
+															5: 'bg-amber-700/90',
+															6: 'bg-amber-800/90',
+														}[hurricaneMeterTier]
+													: 'bg-transparent';
 												return (
 													<div
 														// biome-ignore lint/suspicious/noArrayIndexKey: Static array that never reorders or mutates
 														key={tickIndex}
-														className={`${edgeRoundingStyle} ${isFilled ? 'bg-blue-500/30' : 'bg-transparent'}`}
+														className={`${edgeRoundingStyle} ${fillColor}`}
 													/>
 												);
 											})}
@@ -145,9 +174,11 @@ export default function App() {
 						)}
 					</div>
 				</section>
-				{/* SPACER */}
-				<div className="py-3" />
-				{/* Hurricane Deck */}
+				{/**
+				 *
+				 * Hurricane Deck
+				 *
+				 */}
 				<section className="border rounded-xl">
 					<h1 className="p-6 text-2xl">Hurricane Deck</h1>
 				</section>
