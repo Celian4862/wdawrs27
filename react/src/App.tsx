@@ -1,6 +1,11 @@
 import { useState } from 'react';
 
 export default function App() {
+	// Lose state
+	const [endGameState, setEndGameState] = useState<{
+		status?: string;
+		reason?: string;
+	}>({});
 	// Player Count - Set only at the start of the game
 	const [playerCount, setPlayerCount] = useState(0);
 
@@ -23,7 +28,21 @@ export default function App() {
 		0,
 	);
 	const [recentlyDrawn, setRecentlyDrawn] = useState('None');
+	const [isDrawing, setIsDrawing] = useState(false);
+	const [showConfirmModal, setShowConfirmModal] = useState(false);
+	// Status message at Hurricane Draw button
+	const [turnStatus, setTurnStatus] = useState<string | null>(null);
+	/**
+	 *
+	 * END HOOKS AND HELPERS
+	 *
+	 */
 
+	/**
+	 *
+	 * PLAYER COUNT INITIALIZATION
+	 *
+	 */
 	// Guarantees that playerCount will not be 0 by the time it initializes other game states
 	if (playerCount === 0) {
 		return (
@@ -49,6 +68,11 @@ export default function App() {
 		);
 	}
 
+	/**
+	 *
+	 * Difficulty Setting
+	 *
+	 */
 	const hurricaneMeter = initHurricaneMeter(playerCount);
 	if (currentHurricaneMeterProgress < 0) {
 		return (
@@ -82,6 +106,124 @@ export default function App() {
 	return (
 		<div className="p-10 grid lg:grid-cols-2">
 			{/**
+			 * 
+			 * End Game Screen
+			 * 
+			 */}
+			<PopUp
+				className={
+					!!endGameState.status
+						? 'opacity-100 pointer-events-auto'
+						: 'opacity-0 pointer-events-none'
+				}
+			>
+				<h3 className="text-2xl font-bold">{endGameState.status}</h3>
+				<p className="text-slate-300">{endGameState.reason}</p>
+			</PopUp>
+			{/**
+			 * 
+			 * Show Confirm Modal
+			 * 
+			 */}
+			<PopUp
+				className={
+					showConfirmModal
+						? 'opacity-100 pointer-events-auto'
+						: 'opacity-0 pointer-events-none'
+				}
+			>
+				<h3 className="text-2xl font-bold">End Your Turn?</h3>
+				<p className="text-slate-300">
+					This will automatically draw{' '}
+					<strong className="text-amber-400">
+						{hurricaneMeter[currentHurricaneMeterProgress]}
+					</strong>{' '}
+					Hurricane cards and advance to the next player.
+				</p>
+				<div className="pt-2 flex flex-col gap-3 justify-center md:flex-row">
+					<button
+						type="button"
+						className="px-5 py-2 bg-red-600 hover:bg-red-700 font-bold rounded-lg transition"
+						onClick={async () => {
+							setShowConfirmModal(false);
+							setIsDrawing(true);
+							setTurnStatus('Drawing cards...');
+
+							const delay = (ms: number) =>
+								new Promise((resolve) => setTimeout(resolve, ms));
+
+							try {
+								const drawCount = hurricaneMeter[currentHurricaneMeterProgress];
+
+								let activeIndex = currentHurricaneCardCounter;
+								let deck = currentHurricaneCards;
+								let localHurricaneMeterProgress = currentHurricaneMeterProgress;
+
+								for (let i = 0; i < drawCount; i++) {
+									await delay(1000); // 1-second interval between card reveals
+
+									if (activeIndex >= 31) {
+										deck = shuffleHurricaneCards();
+										activeIndex = 0;
+										setCurrentHurricaneCards(deck);
+										setDiscardedHurricaneCards(
+											Object.fromEntries(deck.map((card) => [card, 0])),
+										);
+									}
+
+									const drawnCard = deck[activeIndex];
+
+									if (drawnCard === 'Hurricane Up') {
+										localHurricaneMeterProgress += 1;
+										setCurrentHurricaneMeterProgress(localHurricaneMeterProgress);
+									}
+
+									setRecentlyDrawn(drawnCard);
+									setDiscardedHurricaneCards((prevDiscarded) => ({
+										...prevDiscarded,
+										[drawnCard]: (prevDiscarded[drawnCard] ?? 0) + 1,
+									}));
+
+									activeIndex += 1;
+									// Advance counter and evaluate deck reset cleanly
+									setCurrentHurricaneCardCounter(activeIndex);
+
+									// CHECK LOSE CONDITIONS
+									if (localHurricaneMeterProgress === hurricaneMeter.length - 1) {
+										// Must run before setting the end game state or else
+										// the End Game PopUp component will render during the
+										// delay.
+										await delay(1500);
+
+										setEndGameState({
+											status: 'You Lose',
+											reason: 'The Hurricane Meter reached its limit',
+										});
+										return;
+									}
+								}
+
+								// End of turn rest delay & notification phase
+								setTurnStatus('Turn complete! Passing to next player...');
+								await delay(1500); // Guard delay to display message before unlocking UI
+							} finally {
+								setIsDrawing(false);
+								setTurnStatus(null);
+							}
+						}}
+					>
+						Confirm & Draw
+					</button>
+					<button
+						type="button"
+						className="px-5 py-2 border rounded-lg hover:bg-slate-800 transition"
+						onClick={() => setShowConfirmModal(false)}
+					>
+						Cancel
+					</button>
+				</div>
+			</PopUp>
+			{/**
 			 *
 			 * Horizontal Scrolling Area
 			 *
@@ -103,7 +245,7 @@ export default function App() {
 							key={tile.id}
 							type="button"
 							disabled={!tile.info}
-							className={`border rounded-lg size-20 motion-safe:transition ${!tile.info ? 'brightness-50' : 'hover:brightness-50'}`}
+							className={`border rounded-lg size-20 motion-safe:transition ${!tile.info ? 'brightness-50 cursor-not-allowed' : 'hover:brightness-50'}`}
 						>
 							{!tile.info && '🌪'}
 						</button>
@@ -214,32 +356,6 @@ export default function App() {
 						</div>
 					</div>
 				</section>
-				<div className="p-3 flex justify-around border rounded-lg">
-					<button
-						onClick={() =>
-							setCurrentHurricaneMeterProgress(
-								(currentHurricaneMeterProgress) =>
-									hurricaneMeter[currentHurricaneMeterProgress] < 7
-										? currentHurricaneMeterProgress + 1
-										: currentHurricaneMeterProgress,
-							)
-						}
-					>
-						Increase Hurricane Meter
-					</button>
-					<button
-						onClick={() =>
-							setCurrentHurricaneMeterProgress(
-								(currentHurricaneMeterProgress) =>
-									hurricaneMeter[currentHurricaneMeterProgress] > 2
-										? currentHurricaneMeterProgress - 1
-										: currentHurricaneMeterProgress,
-							)
-						}
-					>
-						(For test) Lower Hurricane Meter
-					</button>
-				</div>
 				{/**
 				 *
 				 * Hurricane Deck
@@ -267,7 +383,7 @@ export default function App() {
 									className={`${recentlyDrawn === 'Thirst' ? 'bg-blue-700' : 'bg-none'} flex justify-around items-center`}
 								>
 									<h3 className="font-bold">Thirst</h3>
-									<span>{discardedHurricaneCards['Thirst']} / 4</span>
+									<span>{discardedHurricaneCards.Thirst} / 4</span>
 								</div>
 								<div
 									className={`${recentlyDrawn === 'Hurricane Up' ? 'bg-red-700/80' : 'bg-none'} flex justify-around items-center`}
@@ -323,29 +439,21 @@ export default function App() {
 						</div>
 					</div>
 
-					<div className="p-3 mt-4 bg-red-600/70 flex justify-center items-center border rounded-lg">
+					<div className="mt-4 flex flex-col gap-2 justify-center items-center">
+						{turnStatus && (
+							<p className="text-center text-amber-400 font-semibold animate-pulse">
+								{turnStatus}
+							</p>
+						)}
 						<button
-							onClick={() => {
-								if (currentHurricaneCardCounter === 31) {
-									return;
-								}
-								setDiscardedHurricaneCards((discardedHurricaneCards) => ({
-									...discardedHurricaneCards,
-									[currentHurricaneCards[currentHurricaneCardCounter]]:
-										discardedHurricaneCards[
-											currentHurricaneCards[currentHurricaneCardCounter]
-										] + 1,
-								}));
-								setRecentlyDrawn(
-									currentHurricaneCards[currentHurricaneCardCounter],
-								);
-								setCurrentHurricaneCardCounter(
-									(currentHurricaneCardCounter) =>
-										currentHurricaneCardCounter + 1,
-								);
-							}}
+							type="button"
+							disabled={isDrawing}
+							className={`p-3 bg-red-600/70 w-full rounded-lg font-semibold transition ${isDrawing ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-600'}`}
+							onClick={() => setShowConfirmModal(true)}
 						>
-							Draw Card (<strong>Warning: Ends your Turn</strong>)
+							{isDrawing
+								? 'Drawing Cards...'
+								: 'Draw Cards (Warning: Ends your Turn)'}
 						</button>
 					</div>
 				</section>
@@ -361,6 +469,18 @@ export default function App() {
 					<GameInfoHeading heading="Player Cards" subheading="" />
 				</section>
 			</section>
+		</div>
+	);
+}
+
+function PopUp(props: { className?: string; children: React.ReactNode }) {
+	return (
+		<div
+			className={`fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 motion-safe:transition-all motion-safe:ease-in-out ${props.className}`}
+		>
+			<div className="bg-slate-900 border border-slate-700 rounded-xl p-6 max-w-md w-full shadow-2xl text-center space-y-4">
+				{props.children}
+			</div>
 		</div>
 	);
 }
