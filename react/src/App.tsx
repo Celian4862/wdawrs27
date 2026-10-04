@@ -1,9 +1,28 @@
 import { useState } from 'react';
 
 export default function App() {
+	// Player Count - Set only at the start of the game
 	const [playerCount, setPlayerCount] = useState(0);
+
+	// Hurricane Meter Progress - To track how many cards should be drawn
 	const [currentHurricaneMeterProgress, setCurrentHurricaneMeterProgress] =
 		useState(-1);
+
+	// Current Hurricane Deck - Set every time the counter (below) reaches the end
+	const [currentHurricaneCards, setCurrentHurricaneCards] = useState(
+		shuffleHurricaneCards(),
+	);
+	// Current Hurricane Deck Counter - Tracks which Hurricane Card is next to draw
+	const [currentHurricaneCardCounter, setCurrentHurricaneCardCounter] =
+		useState(0);
+	const [discardedHurricaneCards, setDiscardedHurricaneCards] = useState<
+		Record<string, number>
+	>(Object.fromEntries(currentHurricaneCards.map((key) => [key, 0])));
+	const totalDiscarded = Object.values(discardedHurricaneCards).reduce(
+		(sum, val) => sum + val,
+		0,
+	);
+	const [recentlyDrawn, setRecentlyDrawn] = useState('None');
 
 	// Guarantees that playerCount will not be 0 by the time it initializes other game states
 	if (playerCount === 0) {
@@ -11,7 +30,7 @@ export default function App() {
 			<div className="h-screen flex justify-center">
 				<div className="flex flex-col justify-center">
 					<div className="md:w-100 text-center">
-						<h1>How many players?</h1>
+						<h1 className="text-2xl pb-6">How many players?</h1>
 						<div className="grid grid-cols-2 gap-3">
 							{[2, 3, 4, 5].map((playerCountInput) => (
 								<button
@@ -36,7 +55,7 @@ export default function App() {
 			<div className="h-screen flex justify-center">
 				<div className="flex flex-col justify-center">
 					<div className="md:w-100 text-center">
-						<h1>What difficulty level?</h1>
+						<h1 className="text-2xl pb-6">What difficulty level?</h1>
 						<div className="grid grid-cols-2 gap-3">
 							{['Easy', 'Normal', 'Difficult', 'Extreme'].map(
 								(difficultyInput, index) => (
@@ -96,14 +115,17 @@ export default function App() {
 			 * Game Info Section
 			 *
 			 */}
-			<section className="py-5 md:p-5 max-w-screen">
+			<section className="py-5 grid gap-5">
 				{/**
 				 *
 				 * Hurricane Meter
 				 *
 				 */}
-				<section className="border rounded-xl p-6 mb-6">
-					<h1>Hurricane Meter (Cards to Draw)</h1>
+				<section className="border rounded-xl p-6">
+					<GameInfoHeading
+						heading="Hurricane Meter"
+						subheading={`${hurricaneMeter[currentHurricaneMeterProgress] === 7 ? '☠️' : hurricaneMeter[currentHurricaneMeterProgress]} / turn`}
+					/>
 					{/**
 					 *
 					 * Hurricane Meter Overflow Container
@@ -192,13 +214,140 @@ export default function App() {
 						</div>
 					</div>
 				</section>
+				<div className="p-3 flex justify-around border rounded-lg">
+					<button
+						onClick={() =>
+							setCurrentHurricaneMeterProgress(
+								(currentHurricaneMeterProgress) =>
+									hurricaneMeter[currentHurricaneMeterProgress] < 7
+										? currentHurricaneMeterProgress + 1
+										: currentHurricaneMeterProgress,
+							)
+						}
+					>
+						Increase Hurricane Meter
+					</button>
+					<button
+						onClick={() =>
+							setCurrentHurricaneMeterProgress(
+								(currentHurricaneMeterProgress) =>
+									hurricaneMeter[currentHurricaneMeterProgress] > 2
+										? currentHurricaneMeterProgress - 1
+										: currentHurricaneMeterProgress,
+							)
+						}
+					>
+						(For test) Lower Hurricane Meter
+					</button>
+				</div>
 				{/**
 				 *
 				 * Hurricane Deck
 				 *
 				 */}
-				<section className="border rounded-xl p-6 mb-6">
-					<h1>Hurricane Deck</h1>
+				<section className="border rounded-xl p-6">
+					<GameInfoHeading
+						heading="Hurricane Deck"
+						subheading={`${totalDiscarded} / 31`}
+					/>
+					{/**
+					 *
+					 * Overflow Container
+					 *
+					 */}
+					<div className="grid">
+						<div className="overflow-x-auto">
+							{/**
+							 *
+							 * Actual Grid
+							 *
+							 */}
+							<div className="min-w-110 grid grid-cols-2 gap-3 *:py-1 *:text-lg *:border *:rounded-lg">
+								<div
+									className={`${recentlyDrawn === 'Thirst' ? 'bg-blue-700' : 'bg-none'} flex justify-around items-center`}
+								>
+									<h3 className="font-bold">Thirst</h3>
+									<span>{discardedHurricaneCards['Thirst']} / 4</span>
+								</div>
+								<div
+									className={`${recentlyDrawn === 'Hurricane Up' ? 'bg-red-700/80' : 'bg-none'} flex justify-around items-center`}
+								>
+									<h3 className="font-bold">Hurricane Up</h3>
+									<span>{discardedHurricaneCards['Hurricane Up']} / 3</span>
+								</div>
+								{/**
+								 *
+								 * Movement Cards Table
+								 *
+								 */}
+								<table className="border-separate border-spacing-2 text-center col-span-2 table-fixed">
+									<thead>
+										<tr>
+											<th>Direction</th>
+											<th>1</th>
+											<th>2</th>
+											<th>3</th>
+										</tr>
+									</thead>
+									<tbody>
+										{['Up', 'Down', 'Left', 'Right'].map((direction) => {
+											return (
+												<tr key={direction}>
+													<td>{direction}</td>
+													{[1, 2, 3].map((distance) => {
+														return (
+															<td
+																key={`Move ${distance} ${direction}`}
+																className={
+																	recentlyDrawn ===
+																	`Move ${distance} ${direction}`
+																		? 'bg-amber-500'
+																		: 'bg-none'
+																}
+															>
+																{
+																	discardedHurricaneCards[
+																		`Move ${distance} ${direction}`
+																	]
+																}{' '}
+																/ {4 - distance}
+															</td>
+														);
+													})}
+												</tr>
+											);
+										})}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+					<div className="p-3 mt-4 bg-red-600/70 flex justify-center items-center border rounded-lg">
+						<button
+							onClick={() => {
+								if (currentHurricaneCardCounter === 31) {
+									return;
+								}
+								setDiscardedHurricaneCards((discardedHurricaneCards) => ({
+									...discardedHurricaneCards,
+									[currentHurricaneCards[currentHurricaneCardCounter]]:
+										discardedHurricaneCards[
+											currentHurricaneCards[currentHurricaneCardCounter]
+										] + 1,
+								}));
+								setRecentlyDrawn(
+									currentHurricaneCards[currentHurricaneCardCounter],
+								);
+								setCurrentHurricaneCardCounter(
+									(currentHurricaneCardCounter) =>
+										currentHurricaneCardCounter + 1,
+								);
+							}}
+						>
+							Draw Card (<strong>Warning: Ends your Turn</strong>)
+						</button>
+					</div>
 				</section>
 				{/**
 				 *
@@ -206,9 +355,21 @@ export default function App() {
 				 *
 				 */}
 				<section className="border rounded-xl p-6">
-					<h1>Item Deck</h1>
+					<GameInfoHeading heading="Item Deck" subheading="" />
+				</section>
+				<section className="border rounded-xl p-6">
+					<GameInfoHeading heading="Player Cards" subheading="" />
 				</section>
 			</section>
+		</div>
+	);
+}
+
+function GameInfoHeading(props: { heading: string; subheading: string }) {
+	return (
+		<div className="flex flex-col md:flex-row md:items-center md:justify-between">
+			<h1 className="text-2xl md:pb-6">{props.heading}</h1>
+			<h2 className="pb-6 text-xl">{props.subheading}</h2>
 		</div>
 	);
 }
@@ -304,6 +465,23 @@ const initHurricaneMeter = (playerCount: number): number[] => [
 	...Array(2).fill(6),
 	7,
 ];
+
+const shuffleHurricaneCards = () => {
+	const distances = [1, 2, 3];
+	const directions = ['Up', 'Down', 'Left', 'Right'];
+
+	return shuffle<string>([
+		...Array(4).fill('Thirst'),
+		...Array(3).fill('Hurricane Up'),
+		...distances.flatMap((distance) => {
+			const count = 4 - distance;
+
+			return directions.flatMap((direction) =>
+				Array(count).fill(`Move ${distance} ${direction}`),
+			);
+		}),
+	]);
+};
 
 function shuffle<T>(items: T[]): T[] {
 	const result = [...items];
