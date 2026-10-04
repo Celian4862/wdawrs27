@@ -102,7 +102,7 @@ export default function App() {
 				 * Hurricane Meter
 				 *
 				 */}
-				<section className="mb-6">
+				<section className="border rounded-xl p-6 mb-6">
 					<h1>Hurricane Meter (Cards to Draw)</h1>
 					{/**
 					 *
@@ -117,7 +117,7 @@ export default function App() {
 							 *
 							 */}
 							<div
-								className={`min-w-150 grid ${{ 2: 'grid-cols-14', 3: 'grid-cols-15', 4: 'grid-cols-15', 5: 'grid-cols-16' }[playerCount]}`}
+								className={`min-w-150 grid ${{ 2: 'grid-cols-14', 3: 'grid-cols-15', 4: 'grid-cols-15', 5: 'grid-cols-16' }[playerCount]} md:min-w-0`}
 							>
 								{/**
 								 *
