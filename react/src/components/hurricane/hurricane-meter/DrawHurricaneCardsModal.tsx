@@ -64,8 +64,7 @@ export default function DrawHurricaneCardsModal() {
 
 				dispatch({ type: 'DRAW_SINGLE_CARD', card: deck[deckCounter] });
 
-
-				const drawnCard = deck[deckCounter]
+				const drawnCard = deck[deckCounter];
 				if (drawnCard === 'Hurricane Up') {
 					meterProgress++;
 				}

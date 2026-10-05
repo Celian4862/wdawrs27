@@ -26,7 +26,7 @@ type GameAction =
 	| { type: 'FINISH_DRAWING' }
 	| { type: 'SET_TURN_STATUS'; status: string | null }
 	| { type: 'DRAW_SINGLE_CARD'; card: string }
-	| { type: 'RESHUFFLE_DECK', deck: string[] }
+	| { type: 'RESHUFFLE_DECK'; deck: string[] }
 	| { type: 'GAME_OVER'; reason: string };
 
 const initialDeck = shuffleHurricaneCards();
@@ -89,7 +89,9 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 				...state,
 				hurricaneDeck: action.deck,
 				hurricaneDeckCounter: 0,
-				discardedHurricaneDeck: Object.fromEntries(action.deck.map((k) => [k, 0])),
+				discardedHurricaneDeck: Object.fromEntries(
+					action.deck.map((k) => [k, 0]),
+				),
 			};
 		}
 		case 'GAME_OVER':

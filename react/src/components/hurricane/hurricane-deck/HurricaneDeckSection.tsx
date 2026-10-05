@@ -1,5 +1,5 @@
-import { useGame } from "@/components/GameContext";
-import GameInfoHeading from "@/components/GameInfoHeading";
+import { useGame } from '@/components/GameContext';
+import GameInfoHeading from '@/components/GameInfoHeading';
 
 export default function HurricaneDeckSection() {
 	const { state, dispatch } = useGame();
@@ -69,7 +69,6 @@ export default function HurricaneDeckSection() {
 								})}
 							</tbody>
 						</table>
-
 					</div>
 				</div>
 			</div>

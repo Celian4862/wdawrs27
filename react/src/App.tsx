@@ -11,11 +11,11 @@ function GameContent() {
 	const { state } = useGame();
 
 	if (state.playerCount === 0) {
-		return <Setup player_setup={true} />;
+		return <Setup playerSetup={true} />;
 	}
 
 	if (state.meterProgress < 0) {
-		return <Setup player_setup={false} />;
+		return <Setup playerSetup={false} />;
 	}
 
 	return (
