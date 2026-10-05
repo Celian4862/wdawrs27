@@ -2,7 +2,7 @@
 import { createContext, type ReactNode, useContext, useReducer } from 'react';
 import type { EndGameState } from '@/components/EndGameScreen';
 import { initHurricaneMeter } from '@/data/initHurricaneMeter';
-import { items } from '@/data/items';
+import { shuffleItemDeck } from '@/data/items';
 import { shuffleHurricaneCards } from '@/data/shuffleHurricaneCards';
 
 interface GameState {
@@ -18,6 +18,7 @@ interface GameState {
 	turnStatus: string | null;
 	itemDeck: string[];
 	itemDeckCounter: number;
+	drawnItemDeck: Record<string, number>;
 	recentlyDrawnItemCard: string;
 	endGameState: EndGameState;
 }
@@ -50,8 +51,16 @@ const initialState: GameState = {
 	isDrawingHurricaneCards: false,
 	showConfirmEndTurnModal: false,
 	turnStatus: null,
-	itemDeck: items,
-	itemDeckCounter: 0,
+	itemDeck: shuffleItemDeck(),
+	itemDeckCounter: 12,
+	drawnItemDeck: {
+		'Sand Remover': 0,
+		'Flying Tool': 0,
+		'Thirst Shield': 0,
+		'X-Ray Goggles': 0,
+		'Add 2 Water': 0,
+		'Speed Boost': 0,
+	},
 	recentlyDrawnItemCard: 'None',
 	endGameState: {},
 };
@@ -116,7 +125,11 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 				endGameState: { status: 'Defeat', reason: action.reason },
 			};
 		case 'RESET_GAME':
-			return initialState;
+			return {
+				...initialState,
+				hurricaneDeck: shuffleHurricaneCards(),
+				itemDeck: shuffleItemDeck(),
+			};
 		default:
 			return state;
 	}
