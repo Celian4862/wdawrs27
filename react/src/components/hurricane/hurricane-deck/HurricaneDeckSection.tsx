@@ -14,8 +14,8 @@ export default function HurricaneDeckSection() {
 				heading="Hurricane Deck"
 				subheading={`${totalDiscarded} / 31`}
 			/>
-			<div className="grid">
-				<div className="overflow-x-auto">
+			<div className="grid min-h-65">
+				<div className="overflow-x-auto [-webkit-overflow-scrolling:touch]">
 					<div className="min-w-110 grid grid-cols-2 gap-3 *:py-1 *:text-lg *:border *:rounded-lg">
 						<div
 							className={`${state.recentlyDrawnHurricaneCard === 'Thirst' ? 'bg-blue-700' : 'bg-none'} flex justify-around items-center`}

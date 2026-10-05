@@ -19,12 +19,12 @@ function GameContent() {
 	}
 
 	return (
-		<div className="p-10 grid lg:grid-cols-2">
+		<div className="p-10 grid items-right lg:grid-cols-7 xl:grid-cols-2">
 			<EndGameScreen />
 			<DrawHurricaneCardsModal />
-			<Board />
+			<Board className='lg:col-span-4 xl:col-span-1' />
 
-			<section className="py-5 grid gap-5">
+			<section className="py-5 grid gap-5 lg:col-span-3 xl:col-span-1">
 				<HurricaneMeterSection />
 				<HurricaneDeckSection />
 				<section className="border rounded-xl p-6">
