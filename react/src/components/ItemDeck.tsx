@@ -24,7 +24,9 @@ export default function ItemDeck() {
 						return (
 							<tr key={drawnItem}>
 								<td>{drawnItem}</td>
-								<td>{maxItemCounts[drawnItem] - state.drawnItemDeck[drawnItem]}</td>
+								<td>
+									{maxItemCounts[drawnItem] - state.drawnItemDeck[drawnItem]}
+								</td>
 							</tr>
 						);
 					})}
