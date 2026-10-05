@@ -12,7 +12,7 @@ export default function ItemDeck() {
 				heading="Item Deck"
 				subheading={`${state.itemDeckCounter} / 12`}
 			/>
-			<table className="py-1 min-w-110 w-full text-lg text-center border rounded-lg border-separate border-spacing-2 table-fixed">
+			<table className="py-1 w-full text-lg text-center border rounded-lg border-separate border-spacing-2 table-fixed">
 				<thead>
 					<tr>
 						<th>Items</th>

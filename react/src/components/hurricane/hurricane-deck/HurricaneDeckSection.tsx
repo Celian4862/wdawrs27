@@ -10,26 +10,26 @@ export default function HurricaneDeckSection() {
 				heading="Hurricane Deck"
 				subheading={`${state.hurricaneDeckCounter} / 31`}
 			/>
-			<div className="grid min-h-65">
-				<div className="overflow-x-auto [-webkit-overflow-scrolling:touch]">
-					<div className="min-w-110 grid grid-cols-2 gap-3 *:py-1 *:text-lg *:border *:rounded-lg">
-						<div
-							className={`${state.recentlyDrawnHurricaneCard === 'Thirst' ? 'bg-blue-700' : 'bg-none'} flex justify-around items-center`}
-						>
-							<h3 className="font-bold">Thirst</h3>
-							<span>{state.discardedHurricaneDeck.Thirst} / 4</span>
-						</div>
-						<div
-							className={`${state.recentlyDrawnHurricaneCard === 'Hurricane Up' ? 'bg-red-700/80' : 'bg-none'} flex justify-around items-center`}
-						>
-							<h3 className="font-bold">Hurricane Up</h3>
-							<span>{state.discardedHurricaneDeck['Hurricane Up']} / 3</span>
-						</div>
+			<div className="grid md:grid-cols-2 gap-3 *:py-1 *:text-lg *:border *:rounded-lg">
+				<div
+					className={`${state.recentlyDrawnHurricaneCard === 'Thirst' ? 'bg-blue-700' : 'bg-none'} flex justify-around items-center`}
+				>
+					<h3 className="font-bold">Thirst</h3>
+					<span>{state.discardedHurricaneDeck.Thirst} / 4</span>
+				</div>
+				<div
+					className={`${state.recentlyDrawnHurricaneCard === 'Hurricane Up' ? 'bg-red-700/80' : 'bg-none'} flex justify-around items-center`}
+				>
+					<h3 className="font-bold">Hurricane Up</h3>
+					<span>{state.discardedHurricaneDeck['Hurricane Up']} / 3</span>
+				</div>
 
-						<table className="border-separate border-spacing-2 text-center col-span-2 table-fixed">
+				<div className="grid">
+					<div className="overflow-x-auto [-webkit-overflow-scrolling:touch]">
+						<table className="min-w-70 border-separate border-spacing-2 text-center md:col-span-2 table-fixed">
 							<thead>
 								<tr>
-									<th>Direction</th>
+									<th>{/* Empty Cell */}</th>
 									<th>1</th>
 									<th>2</th>
 									<th>3</th>
