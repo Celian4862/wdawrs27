@@ -1,18 +1,14 @@
 import { useGame } from '@/components/GameContext';
-import GameInfoHeading from '@/components/GameInfoHeading';
+import GameInfoHeading from '@/components/game-info/GameInfoHeading';
 
 export default function HurricaneDeckSection() {
 	const { state, dispatch } = useGame();
-	const totalDiscarded = Object.values(state.discardedHurricaneDeck).reduce(
-		(sum, val) => sum + val,
-		0,
-	);
 
 	return (
 		<section className="border rounded-xl p-6">
 			<GameInfoHeading
 				heading="Hurricane Deck"
-				subheading={`${totalDiscarded} / 31`}
+				subheading={`${state.hurricaneDeckCounter} / 31`}
 			/>
 			<div className="grid min-h-65">
 				<div className="overflow-x-auto [-webkit-overflow-scrolling:touch]">
@@ -81,15 +77,15 @@ export default function HurricaneDeckSection() {
 				)}
 				<button
 					type="button"
-					disabled={state.isDrawingHurricaneCards}
-					className={`p-3 bg-red-600/70 w-full rounded-lg font-semibold transition ${state.isDrawingHurricaneCards ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-600'}`}
+					disabled={
+						state.isDrawingHurricaneCards || state.showConfirmEndTurnModal
+					}
+					className={`p-3 bg-red-600/70 w-full rounded-lg font-semibold motion-safe:transition ${state.isDrawingHurricaneCards || state.showConfirmEndTurnModal ? 'brightness-50 cursor-not-allowed' : 'hover:bg-red-600 active:brightness-50'}`}
 					onClick={() =>
 						dispatch({ type: 'SET_SHOW_CONFIRM_MODAL', show: true })
 					}
 				>
-					{state.isDrawingHurricaneCards
-						? 'Drawing Cards...'
-						: 'Draw Cards (Warning: Ends your Turn)'}
+					Draw Cards (Warning: Ends your Turn)
 				</button>
 			</div>
 		</section>

@@ -5,7 +5,7 @@ export default function Setup({ playerSetup }: { playerSetup: boolean }) {
 
 	return (
 		<div className="min-h-lvh flex justify-center items-center box-border">
-			<div className="w-full max-w-sm text-center">
+			<div className="md:w-full max-w-sm text-center">
 				<h1 className="text-2xl pb-6">
 					{playerSetup ? 'How many players?' : 'What difficulty level?'}
 				</h1>
@@ -17,7 +17,7 @@ export default function Setup({ playerSetup }: { playerSetup: boolean }) {
 						<button
 							key={element}
 							type="button"
-							className="p-2 text-xl border rounded-lg touch-manipulation active:bg-gray-100 motion-safe:transition"
+							className="p-2 text-xl border rounded-lg touch-manipulation active:bg-gray-100"
 							onClick={() =>
 								playerSetup
 									? dispatch({

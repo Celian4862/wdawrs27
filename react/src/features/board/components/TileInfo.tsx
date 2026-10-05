@@ -41,7 +41,7 @@ export default function TileInfo(props: {
 					<button
 						key={action}
 						type="button"
-						className="min-h-11 rounded-lg border border-cyan-300/30 bg-cyan-300/10 px-3 py-2 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-300/20"
+						className="min-h-11 rounded-lg border border-cyan-300/30 bg-cyan-300/10 px-3 py-2 text-sm font-semibold text-cyan-100 motion-safe:transition hover:bg-cyan-300/20"
 					>
 						{action}
 					</button>

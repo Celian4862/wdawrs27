@@ -2,6 +2,7 @@
 import { createContext, type ReactNode, useContext, useReducer } from 'react';
 import type { EndGameState } from '@/components/EndGameScreen';
 import { initHurricaneMeter } from '@/data/initHurricaneMeter';
+import { items } from '@/data/items';
 import { shuffleHurricaneCards } from '@/data/shuffleHurricaneCards';
 
 interface GameState {
@@ -15,6 +16,9 @@ interface GameState {
 	isDrawingHurricaneCards: boolean;
 	showConfirmEndTurnModal: boolean;
 	turnStatus: string | null;
+	itemDeck: string[];
+	itemDeckCounter: number;
+	recentlyDrawnItemCard: string;
 	endGameState: EndGameState;
 }
 
@@ -25,25 +29,30 @@ type GameAction =
 	| { type: 'START_DRAWING' }
 	| { type: 'FINISH_DRAWING' }
 	| { type: 'SET_TURN_STATUS'; status: string | null }
-	| { type: 'DRAW_SINGLE_CARD'; card: string }
+	| { type: 'DRAW_HURRICANE_CARD'; card: string }
 	| { type: 'RESHUFFLE_DECK'; deck: string[] }
-	| { type: 'GAME_OVER'; reason: string };
+	| { type: 'DRAW_ITEM_CARD'; card: string }
+	| { type: 'GAME_OVER'; reason: string }
+	| { type: 'RESET_GAME' };
 
-const initialDeck = shuffleHurricaneCards();
+const initialHurricaneDeck = shuffleHurricaneCards();
 
 const initialState: GameState = {
 	playerCount: 0,
 	hurricaneMeter: [],
 	meterProgress: -1,
-	hurricaneDeck: initialDeck,
+	hurricaneDeck: initialHurricaneDeck,
 	hurricaneDeckCounter: 0,
 	discardedHurricaneDeck: Object.fromEntries(
-		initialDeck.map((key) => [key, 0]),
+		initialHurricaneDeck.map((key) => [key, 0]),
 	),
 	recentlyDrawnHurricaneCard: 'None',
 	isDrawingHurricaneCards: false,
 	showConfirmEndTurnModal: false,
 	turnStatus: null,
+	itemDeck: items,
+	itemDeckCounter: 0,
+	recentlyDrawnItemCard: 'None',
 	endGameState: {},
 };
 
@@ -70,7 +79,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 			return { ...state, isDrawingHurricaneCards: false, turnStatus: null };
 		case 'SET_TURN_STATUS':
 			return { ...state, turnStatus: action.status };
-		case 'DRAW_SINGLE_CARD':
+		case 'DRAW_HURRICANE_CARD':
 			return {
 				...state,
 				recentlyDrawnHurricaneCard: action.card,
@@ -94,11 +103,20 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 				),
 			};
 		}
+		case 'DRAW_ITEM_CARD': {
+			return {
+				...state,
+				recentlyDrawnItemCard: action.card,
+				itemDeckCounter: state.itemDeckCounter + 1,
+			};
+		}
 		case 'GAME_OVER':
 			return {
 				...state,
 				endGameState: { status: 'Defeat', reason: action.reason },
 			};
+		case 'RESET_GAME':
+			return initialState;
 		default:
 			return state;
 	}

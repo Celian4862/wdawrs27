@@ -1,8 +1,10 @@
 import { tiles } from '../data/tiles';
 
-export default function Board({ className }: { className?: string; }) {
+export default function Board({ className }: { className?: string }) {
 	return (
-		<section className={`overflow-x-auto [-webkit-overflow-scrolling:touch] ${className ?? ''}`}>
+		<section
+			className={`overflow-x-auto [-webkit-overflow-scrolling:touch] ${className ?? ''}`}
+		>
 			<div className="min-w-115 lg:fixed w-fit grid grid-cols-5 gap-5">
 				{tiles.map((tile) => (
 					<button

@@ -52,7 +52,7 @@ export default function Tile(props: {
 		<button
 			type="button"
 			disabled={props.disabled}
-			className={`relative size-20 border border-slate-600 rounded-md flex flex-col items-center justify-center transition-colors ${
+			className={`relative size-20 border border-slate-600 rounded-md flex flex-col items-center justify-center motion-safe:transition-colors ${
 				props.revealed
 					? 'bg-yellow-600/80 text-white'
 					: 'bg-slate-800 text-white/70'

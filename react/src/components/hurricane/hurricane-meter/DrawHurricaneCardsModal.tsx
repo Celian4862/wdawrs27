@@ -24,14 +24,14 @@ export default function DrawHurricaneCardsModal() {
 			<div className="pt-2 flex flex-col gap-3 justify-center md:flex-row">
 				<button
 					type="button"
-					className="px-5 py-2 bg-red-600 hover:bg-red-700 font-bold rounded-lg transition"
+					className="px-5 py-2 bg-red-600 hover:bg-red-700 font-bold rounded-lg motion-safe:transition"
 					onClick={handleDrawHurricaneCards}
 				>
 					Confirm & Draw
 				</button>
 				<button
 					type="button"
-					className="px-5 py-2 border rounded-lg hover:bg-slate-800 transition"
+					className="px-5 py-2 border rounded-lg hover:bg-slate-800 motion-safe:transition"
 					onClick={() =>
 						dispatch({ type: 'SET_SHOW_CONFIRM_MODAL', show: false })
 					}
@@ -62,7 +62,7 @@ export default function DrawHurricaneCardsModal() {
 					dispatch({ type: 'RESHUFFLE_DECK', deck });
 				}
 
-				dispatch({ type: 'DRAW_SINGLE_CARD', card: deck[deckCounter] });
+				dispatch({ type: 'DRAW_HURRICANE_CARD', card: deck[deckCounter] });
 
 				const drawnCard = deck[deckCounter];
 				if (drawnCard === 'Hurricane Up') {
