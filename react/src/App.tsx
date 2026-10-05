@@ -1,11 +1,16 @@
 import { useState } from 'react';
+import DrawHurricaneCardsModal from './components/DrawHurricaneCardsModal';
+import type { EndGameState } from './components/EndGameScreen';
+import EndGameScreen from './components/EndGameScreen';
+import GameInfoHeading from './components/GameInfoHeading';
+import Setup from './components/Setup';
+import { initHurricaneMeter } from './data/initHurricaneMeter';
+import { shuffleHurricaneCards } from './data/shuffleHurricaneCards';
+import { tiles } from './data/tiles';
 
 export default function App() {
 	// Lose state
-	const [endGameState, setEndGameState] = useState<{
-		status?: string;
-		reason?: string;
-	}>({});
+	const [endGameState, setEndGameState] = useState<EndGameState>({});
 	// Player Count - Set only at the start of the game
 	const [playerCount, setPlayerCount] = useState(0);
 
@@ -34,7 +39,7 @@ export default function App() {
 	const [turnStatus, setTurnStatus] = useState<string | null>(null);
 	/**
 	 *
-	 * END HOOKS AND HELPERS
+	 * END OF HOOKS AND HELPERS
 	 *
 	 */
 
@@ -46,25 +51,18 @@ export default function App() {
 	// Guarantees that playerCount will not be 0 by the time it initializes other game states
 	if (playerCount === 0) {
 		return (
-			<div className="h-screen flex justify-center">
-				<div className="flex flex-col justify-center">
-					<div className="md:w-100 text-center">
-						<h1 className="text-2xl pb-6">How many players?</h1>
-						<div className="grid grid-cols-2 gap-3">
-							{[2, 3, 4, 5].map((playerCountInput) => (
-								<button
-									key={playerCountInput}
-									type="button"
-									className="p-2 text-xl border rounded-lg"
-									onClick={() => setPlayerCount(playerCountInput)}
-								>
-									{playerCountInput}
-								</button>
-							))}
-						</div>
-					</div>
-				</div>
-			</div>
+			<Setup heading="How many players?">
+				{[2, 3, 4, 5].map((playerCountInput) => (
+					<button
+						key={playerCountInput}
+						type="button"
+						className="p-2 text-xl border rounded-lg"
+						onClick={() => setPlayerCount(playerCountInput)}
+					>
+						{playerCountInput}
+					</button>
+				))}
+			</Setup>
 		);
 	}
 
@@ -76,29 +74,22 @@ export default function App() {
 	const hurricaneMeter = initHurricaneMeter(playerCount);
 	if (currentHurricaneMeterProgress < 0) {
 		return (
-			<div className="h-screen flex justify-center">
-				<div className="flex flex-col justify-center">
-					<div className="md:w-100 text-center">
-						<h1 className="text-2xl pb-6">What difficulty level?</h1>
-						<div className="grid grid-cols-2 gap-3">
-							{['Easy', 'Normal', 'Difficult', 'Extreme'].map(
-								(difficultyInput, index) => (
-									<button
-										key={difficultyInput}
-										type="button"
-										className="p-2 text-xl border rounded-lg"
-										onClick={() => {
-											setCurrentHurricaneMeterProgress(index);
-										}}
-									>
-										{difficultyInput}
-									</button>
-								),
-							)}
-						</div>
-					</div>
-				</div>
-			</div>
+			<Setup heading="What difficulty level?">
+				{['Easy', 'Normal', 'Difficult', 'Extreme'].map(
+					(difficultyInput, index) => (
+						<button
+							key={difficultyInput}
+							type="button"
+							className="p-2 text-xl border rounded-lg"
+							onClick={() => {
+								setCurrentHurricaneMeterProgress(index);
+							}}
+						>
+							{difficultyInput}
+						</button>
+					),
+				)}
+			</Setup>
 		);
 	}
 
@@ -106,123 +97,22 @@ export default function App() {
 	return (
 		<div className="p-10 grid lg:grid-cols-2">
 			{/**
-			 * 
+			 *
 			 * End Game Screen
-			 * 
+			 *
 			 */}
-			<PopUp
-				className={
-					!!endGameState.status
-						? 'opacity-100 pointer-events-auto'
-						: 'opacity-0 pointer-events-none'
-				}
-			>
-				<h3 className="text-2xl font-bold">{endGameState.status}</h3>
-				<p className="text-slate-300">{endGameState.reason}</p>
-			</PopUp>
+			<EndGameScreen endGameState={endGameState} />
 			{/**
-			 * 
+			 *
 			 * Show Confirm Modal
-			 * 
+			 *
 			 */}
-			<PopUp
-				className={
-					showConfirmModal
-						? 'opacity-100 pointer-events-auto'
-						: 'opacity-0 pointer-events-none'
-				}
-			>
-				<h3 className="text-2xl font-bold">End Your Turn?</h3>
-				<p className="text-slate-300">
-					This will automatically draw{' '}
-					<strong className="text-amber-400">
-						{hurricaneMeter[currentHurricaneMeterProgress]}
-					</strong>{' '}
-					Hurricane cards and advance to the next player.
-				</p>
-				<div className="pt-2 flex flex-col gap-3 justify-center md:flex-row">
-					<button
-						type="button"
-						className="px-5 py-2 bg-red-600 hover:bg-red-700 font-bold rounded-lg transition"
-						onClick={async () => {
-							setShowConfirmModal(false);
-							setIsDrawing(true);
-							setTurnStatus('Drawing cards...');
-
-							const delay = (ms: number) =>
-								new Promise((resolve) => setTimeout(resolve, ms));
-
-							try {
-								const drawCount = hurricaneMeter[currentHurricaneMeterProgress];
-
-								let activeIndex = currentHurricaneCardCounter;
-								let deck = currentHurricaneCards;
-								let localHurricaneMeterProgress = currentHurricaneMeterProgress;
-
-								for (let i = 0; i < drawCount; i++) {
-									await delay(1000); // 1-second interval between card reveals
-
-									if (activeIndex >= 31) {
-										deck = shuffleHurricaneCards();
-										activeIndex = 0;
-										setCurrentHurricaneCards(deck);
-										setDiscardedHurricaneCards(
-											Object.fromEntries(deck.map((card) => [card, 0])),
-										);
-									}
-
-									const drawnCard = deck[activeIndex];
-
-									if (drawnCard === 'Hurricane Up') {
-										localHurricaneMeterProgress += 1;
-										setCurrentHurricaneMeterProgress(localHurricaneMeterProgress);
-									}
-
-									setRecentlyDrawn(drawnCard);
-									setDiscardedHurricaneCards((prevDiscarded) => ({
-										...prevDiscarded,
-										[drawnCard]: (prevDiscarded[drawnCard] ?? 0) + 1,
-									}));
-
-									activeIndex += 1;
-									// Advance counter and evaluate deck reset cleanly
-									setCurrentHurricaneCardCounter(activeIndex);
-
-									// CHECK LOSE CONDITIONS
-									if (localHurricaneMeterProgress === hurricaneMeter.length - 1) {
-										// Must run before setting the end game state or else
-										// the End Game PopUp component will render during the
-										// delay.
-										await delay(1500);
-
-										setEndGameState({
-											status: 'You Lose',
-											reason: 'The Hurricane Meter reached its limit',
-										});
-										return;
-									}
-								}
-
-								// End of turn rest delay & notification phase
-								setTurnStatus('Turn complete! Passing to next player...');
-								await delay(1500); // Guard delay to display message before unlocking UI
-							} finally {
-								setIsDrawing(false);
-								setTurnStatus(null);
-							}
-						}}
-					>
-						Confirm & Draw
-					</button>
-					<button
-						type="button"
-						className="px-5 py-2 border rounded-lg hover:bg-slate-800 transition"
-						onClick={() => setShowConfirmModal(false)}
-					>
-						Cancel
-					</button>
-				</div>
-			</PopUp>
+			<DrawHurricaneCardsModal
+				showConfirmModal={showConfirmModal}
+				cardsToDrawCount={hurricaneMeter[currentHurricaneMeterProgress]}
+				onConfirm={handleDrawHurricaneCards}
+				onCancel={() => setShowConfirmModal(false)}
+			/>
 			{/**
 			 *
 			 * Horizontal Scrolling Area
@@ -471,145 +361,72 @@ export default function App() {
 			</section>
 		</div>
 	);
-}
 
-function PopUp(props: { className?: string; children: React.ReactNode }) {
-	return (
-		<div
-			className={`fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 motion-safe:transition-all motion-safe:ease-in-out ${props.className}`}
-		>
-			<div className="bg-slate-900 border border-slate-700 rounded-xl p-6 max-w-md w-full shadow-2xl text-center space-y-4">
-				{props.children}
-			</div>
-		</div>
-	);
-}
+	async function handleDrawHurricaneCards() {
+		setShowConfirmModal(false);
+		setIsDrawing(true);
+		setTurnStatus('Drawing cards...');
 
-function GameInfoHeading(props: { heading: string; subheading: string }) {
-	return (
-		<div className="flex flex-col md:flex-row md:items-center md:justify-between">
-			<h1 className="text-2xl md:pb-6">{props.heading}</h1>
-			<h2 className="pb-6 text-xl">{props.subheading}</h2>
-		</div>
-	);
-}
+		const delay = (ms: number) =>
+			new Promise((resolve) => setTimeout(resolve, ms));
 
-const tiles = (() => {
-	const tiles: {
-		id: number;
-		info?: {
-			sandMarks: number;
-			revealed: boolean;
-			unrevealedType: string;
-			revealedType: string;
-			hintVariant?: string;
-		};
-	}[] = Array(25);
+		try {
+			const drawCount = hurricaneMeter[currentHurricaneMeterProgress];
 
-	// HURRICANE TILE
-	tiles[12] = {
-		id: 12,
-	};
+			let activeIndex = currentHurricaneCardCounter;
+			let deck = currentHurricaneCards;
+			let localHurricaneMeterProgress = currentHurricaneMeterProgress;
 
-	// STARTING TILE
-	tiles[19] = {
-		id: 19,
-		info: {
-			sandMarks: 0,
-			revealed: false,
-			unrevealedType: 'Start',
-			revealedType: 'Item',
-		},
-	};
+			for (let i = 0; i < drawCount; i++) {
+				await delay(1000); // 1-second interval between card reveals
 
-	// GREENTH TILES
-	const greenthTiles = shuffle(['Water', 'Water', 'Fake']);
-	[3, 5, 21].forEach((greenthIndex, index) => {
-		tiles[greenthIndex] = {
-			id: greenthIndex,
-			info: {
-				sandMarks: 0,
-				revealed: false,
-				unrevealedType: 'Greenth',
-				revealedType: greenthTiles[index],
-			},
-		};
-	});
+				if (activeIndex >= 31) {
+					deck = shuffleHurricaneCards();
+					activeIndex = 0;
+					setCurrentHurricaneCards(deck);
+					setDiscardedHurricaneCards(
+						Object.fromEntries(deck.map((card) => [card, 0])),
+					);
+				}
 
-	// REMAINING TILES
-	const sandTiles = shuffle<{
-		revealedType: string;
-		hintVariant?: string;
-	}>([
-		{ revealedType: 'Exit' },
-		...Array(3).fill({ revealedType: 'Shade' }),
-		...Array(8).fill({ revealedType: 'Item' }),
-		...[
-			'Pointer Row',
-			'Pointer Col',
-			'Motor Row',
-			'Motor Col',
-			'Core Row',
-			'Core Col',
-			'Fan Row',
-			'Fan Col',
-		].map((hintVariant) => ({ revealedType: 'Hint', hintVariant })),
-	]);
-	Array.from(
-		{
-			length: 25,
-		},
-		(_, index) => index,
-	)
-		.filter((position) => ![3, 5, 12, 19, 21].includes(position))
-		.forEach((position, index) => {
-			tiles[position] = {
-				id: position,
-				info: {
-					sandMarks: 0,
-					revealed: false,
-					unrevealedType: 'Sand',
-					revealedType: sandTiles[index].revealedType,
-					hintVariant: sandTiles[index].hintVariant,
-				},
-			};
-		});
-	return tiles;
-})();
+				const drawnCard = deck[activeIndex];
 
-const initHurricaneMeter = (playerCount: number): number[] => [
-	2,
-	...Array({ 2: 3, 3: 4, 4: 4, 5: 5 }[playerCount]).fill(3),
-	...Array(4).fill(4),
-	...Array(3).fill(5),
-	...Array(2).fill(6),
-	7,
-];
+				if (drawnCard === 'Hurricane Up') {
+					localHurricaneMeterProgress += 1;
+					setCurrentHurricaneMeterProgress(localHurricaneMeterProgress);
+				}
 
-const shuffleHurricaneCards = () => {
-	const distances = [1, 2, 3];
-	const directions = ['Up', 'Down', 'Left', 'Right'];
+				setRecentlyDrawn(drawnCard);
+				setDiscardedHurricaneCards((prevDiscarded) => ({
+					...prevDiscarded,
+					[drawnCard]: (prevDiscarded[drawnCard] ?? 0) + 1,
+				}));
 
-	return shuffle<string>([
-		...Array(4).fill('Thirst'),
-		...Array(3).fill('Hurricane Up'),
-		...distances.flatMap((distance) => {
-			const count = 4 - distance;
+				activeIndex += 1;
+				// Advance counter and evaluate deck reset cleanly
+				setCurrentHurricaneCardCounter(activeIndex);
 
-			return directions.flatMap((direction) =>
-				Array(count).fill(`Move ${distance} ${direction}`),
-			);
-		}),
-	]);
-};
+				// CHECK LOSE CONDITIONS
+				if (localHurricaneMeterProgress === hurricaneMeter.length - 1) {
+					// Must run before setting the end game state or else
+					// the End Game PopUp component will render during the
+					// delay.
+					await delay(1500);
 
-function shuffle<T>(items: T[]): T[] {
-	const result = [...items];
+					setEndGameState({
+						status: 'You Lose',
+						reason: 'The Hurricane Meter reached its limit',
+					});
+					return;
+				}
+			}
 
-	for (let i = result.length - 1; i > 0; i--) {
-		const j = Math.floor(Math.random() * (i + 1));
-		[result[i], result[j]] = [result[j], result[i]];
+			// End of turn rest delay & notification phase
+			setTurnStatus('Turn complete! Passing to next player...');
+			await delay(1500); // Guard delay to display message before unlocking UI
+		} finally {
+			setIsDrawing(false);
+			setTurnStatus(null);
+		}
 	}
-
-	return result;
 }
