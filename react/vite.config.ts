@@ -13,4 +13,7 @@ export default defineConfig({
 		tailwindcss(),
 	],
 	base: '/wdawrs27/',
+	resolve: {
+		tsconfigPaths: true,
+	},
 });
