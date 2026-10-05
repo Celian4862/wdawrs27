@@ -24,12 +24,12 @@ export default function HurricaneDeckSection() {
 					<span>{state.discardedHurricaneDeck['Hurricane Up']} / 3</span>
 				</div>
 
-				<div className="grid">
+				<div className="grid md:col-span-2">
 					<div className="overflow-x-auto [-webkit-overflow-scrolling:touch]">
-						<table className="min-w-70 border-separate border-spacing-2 text-center md:col-span-2 table-fixed">
+						<table className="min-w-70 w-full border-separate border-spacing-2 text-center table-fixed">
 							<thead>
 								<tr>
-									<th>{/* Empty Cell */}</th>
+									<th>Move</th>
 									<th>1</th>
 									<th>2</th>
 									<th>3</th>
