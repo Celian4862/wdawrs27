@@ -29,10 +29,10 @@ function GameContent() {
 			<Board className="lg:col-span-4 xl:col-span-1" />
 
 			<section className="py-5 grid gap-5 lg:col-span-3 xl:col-span-1">
-				<HurricaneMeterSection />
 				<HurricaneDeckSection />
-				<ItemDeck />
 				<PlayerCards />
+				<HurricaneMeterSection />
+				<ItemDeck />
 				<ResetButton />
 			</section>
 		</div>
