@@ -1,7 +1,7 @@
 import { useGame } from '@/components/GameContext';
 
 export default function ResetButton() {
-	const { dispatch } = useGame();
+	const { state, dispatch } = useGame();
 
 	return (
 		<button
@@ -9,7 +9,7 @@ export default function ResetButton() {
 			onClick={() =>
 				dispatch({ type: 'SET_SHOW_CONFIRM_RESET_MODAL', show: true })
 			}
-			className="p-3 bg-red-700 text-xl text-center rounded-lg hover:brightness-150 active:brightness-50 motion-safe:transition"
+			className={`p-3 bg-red-700 text-xl text-center rounded-lg motion-safe:transition ${state.showConfirmResetModal ? 'brightness-50 cursor-not-allowed' : 'hover:brightness-150 active:brightness-50'}`}
 		>
 			Reset Game
 		</button>
