@@ -1,5 +1,5 @@
-import GameInfoHeading from './game-info/GameInfoHeading';
-import GameInfoSection from './game-info/GameInfoSection';
+import GameInfoHeading from '@/components/game-info/GameInfoHeading';
+import GameInfoSection from '@/components/game-info/GameInfoSection';
 
 export default function PlayerCards() {
 	return (

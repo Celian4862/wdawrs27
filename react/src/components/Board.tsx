@@ -1,4 +1,4 @@
-import { tiles } from '../data/tiles';
+import { tiles } from '@/data/tiles';
 
 export default function Board({ className }: { className?: string }) {
 	return (

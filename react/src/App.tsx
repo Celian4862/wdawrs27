@@ -1,8 +1,8 @@
 import Board from '@/components/Board';
 import EndGameScreen from '@/components/EndGameScreen';
 import { GameProvider, useGame } from '@/components/GameContext';
-import HurricaneDeckSection from '@/components/hurricane/hurricane-deck/HurricaneDeckSection';
 import DrawHurricaneCardsModal from '@/components/hurricane/hurricane-deck/DrawHurricaneCardsModal';
+import HurricaneDeckSection from '@/components/hurricane/hurricane-deck/HurricaneDeckSection';
 import HurricaneMeterSection from '@/components/hurricane/hurricane-meter/HurricaneMeterSection';
 import ItemDeck from '@/components/ItemDeck';
 import ResetButton from '@/components/reset/ResetButton';
