@@ -14,7 +14,7 @@ export default function DrawHurricaneCardsModal() {
 				<>
 					This will automatically draw{' '}
 					<strong className="text-amber-400">
-						{state.hurricaneMeter[state.hurricaneDeckCounter]}
+						{state.hurricaneMeter[state.meterProgress]}
 					</strong>{' '}
 					Hurricane cards and advance to the next player.
 				</>
