@@ -4,6 +4,7 @@ import {
 	hurricaneDirections,
 	hurricaneDistances,
 } from '@/data/shuffleHurricaneDeck';
+import { sumSandMarks } from '@/data/tiles';
 
 export default function HurricaneDeckSection() {
 	const { state, dispatch } = useGame();
@@ -74,7 +75,7 @@ export default function HurricaneDeckSection() {
 				</div>
 				<div className="flex justify-around items-center md:col-span-2">
 					<h3 className="font-bold">Sand Mark Count: </h3>
-					{state.sandMarkCount} / 48
+					{sumSandMarks(state.board)} / 48
 				</div>
 			</div>
 

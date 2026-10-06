@@ -1,5 +1,12 @@
 // src/context/GameContext.tsx
-import { createContext, type ReactNode, useContext, useReducer } from 'react';
+import {
+	createContext,
+	type ReactNode,
+	useContext,
+	useEffect,
+	useReducer,
+	useRef,
+} from 'react';
 import type { EndGameState } from '@/components/EndGameScreen';
 import { initHurricaneMeter } from '@/data/initHurricaneMeter';
 import { shuffleItemDeck } from '@/data/items';
@@ -8,9 +15,10 @@ import {
 	shuffleHurricaneDeck,
 	specialCards,
 } from '@/data/shuffleHurricaneDeck';
-import { shuffleBoard, type Tile } from '@/data/tiles';
+import { shuffleBoard, sumSandMarks, type Tile } from '@/data/tiles';
 
 interface GameState {
+	gameId: boolean;
 	playerCount: number;
 	board: Tile[];
 	sandMarkCount: number;
@@ -38,6 +46,7 @@ type GameAction =
 	| { type: 'START_DRAWING' }
 	| { type: 'FINISH_DRAWING' }
 	| { type: 'SET_TURN_STATUS'; status: string | null }
+	| { type: 'MOVE_HURRICANE'; board: Tile[] }
 	| { type: 'DRAW_HURRICANE_CARD'; card: HurricaneCard }
 	| { type: 'RESHUFFLE_DECK'; deck: HurricaneCard[] }
 	| { type: 'DRAW_ITEM_CARD'; card: string }
@@ -46,22 +55,19 @@ type GameAction =
 	| { type: 'RESET_GAME' };
 
 const initialHurricaneDeck = shuffleHurricaneDeck();
+const initialBoard = shuffleBoard();
 
 const initialState: GameState = {
+	gameId: false,
 	playerCount: 0,
-	board: shuffleBoard(),
-	sandMarkCount: 0,
+	board: initialBoard,
+	sandMarkCount: sumSandMarks(initialBoard),
 	hurricaneMeter: [],
 	meterProgress: -1,
 	hurricaneDeck: initialHurricaneDeck,
 	hurricaneDeckCounter: 0,
 	discardedHurricaneDeck: Object.fromEntries(
-		initialHurricaneDeck.map((key) => {
-			if (specialCards.includes(key.type)) {
-				return [key.type, 0];
-			}
-			return [`Move ${key.distance} ${key.direction}`, 0];
-		}),
+		initialHurricaneDeck.map((key) => initHurricaneDiscard(key)),
 	),
 	recentlyDrawnHurricaneCard: { type: 'None' },
 	isDrawingHurricaneCards: false,
@@ -81,6 +87,13 @@ const initialState: GameState = {
 	endGameState: {},
 	showConfirmResetModal: false,
 };
+
+function initHurricaneDiscard(key: HurricaneCard) {
+	if (specialCards.includes(key.type)) {
+		return [key.type, 0];
+	}
+	return [`Move ${key.distance} ${key.direction}`, 0];
+}
 
 function gameReducer(state: GameState, action: GameAction): GameState {
 	switch (action.type) {
@@ -110,6 +123,12 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 			return { ...state, isDrawingHurricaneCards: false, turnStatus: null };
 		case 'SET_TURN_STATUS':
 			return { ...state, turnStatus: action.status };
+		case 'MOVE_HURRICANE': {
+			return {
+				...state,
+				board: action.board,
+			};
+		}
 		case 'DRAW_HURRICANE_CARD': {
 			const discardKey = specialCards.includes(action.card.type)
 				? action.card.type
@@ -134,7 +153,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 				hurricaneDeck: action.deck,
 				hurricaneDeckCounter: 0,
 				discardedHurricaneDeck: Object.fromEntries(
-					action.deck.map((k) => [k, 0]),
+					action.deck.map((key) => initHurricaneDiscard(key)),
 				),
 			};
 		}
@@ -153,6 +172,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 		case 'RESET_GAME':
 			return {
 				...initialState,
+				gameId: !state.gameId,
 				board: shuffleBoard(),
 				hurricaneDeck: shuffleHurricaneDeck(),
 				itemDeck: shuffleItemDeck(),
@@ -165,12 +185,21 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 const GameContext = createContext<{
 	state: GameState;
 	dispatch: React.Dispatch<GameAction>;
+	getGameState: () => GameState;
 } | null>(null);
 
 export function GameProvider({ children }: { children: ReactNode }) {
 	const [state, dispatch] = useReducer(gameReducer, initialState);
+	const stateRef = useRef(state);
+
+	useEffect(() => {
+		stateRef.current = state;
+	}, [state]);
+
+	const getGameState = () => stateRef.current;
+
 	return (
-		<GameContext.Provider value={{ state, dispatch }}>
+		<GameContext.Provider value={{ state, dispatch, getGameState }}>
 			{children}
 		</GameContext.Provider>
 	);

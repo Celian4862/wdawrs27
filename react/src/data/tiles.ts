@@ -14,6 +14,18 @@ export interface Tile {
 	};
 }
 
+export function toIndex(row: number, col: number) {
+	return row * 5 + col;
+}
+
+export function toCoordinates(index: number) {
+	return [Math.floor(index / 5), index % 5];
+}
+
+export function sumSandMarks(board: Tile[]) {
+	return board.reduce((sum, tile) => sum + (tile.info?.sandMarks ?? 0), 0);
+}
+
 export function shuffleBoard() {
 	const board: Tile[] = Array(25);
 
