@@ -1,12 +1,16 @@
-import ConfirmModalButtons from './ConfirmModalButtons';
-import { useGame } from './GameContext';
-import PopUp from './PopUp';
+import ConfirmModalButtons from '@/components/ConfirmModalButtons';
+import { useGame } from '@/components/GameContext';
+import PopUp from '@/components/PopUp';
 
 export default function ResetButtonModal() {
 	const { state, dispatch } = useGame();
 
 	return (
-		<PopUp show={state.showConfirmResetModal} heading="Reset game?" description="This will destroy all progress made during this session.">
+		<PopUp
+			show={state.showConfirmResetModal}
+			heading="Reset game?"
+			description="This will destroy all progress made during this session."
+		>
 			<ConfirmModalButtons
 				confirmMessage="Confirm & Reset"
 				onCancel={() =>
