@@ -1,3 +1,4 @@
+import ConfirmModalButtons from '@/components/ConfirmModalButtons';
 import { useGame } from '@/components/GameContext';
 import PopUp from '@/components/PopUp';
 import { shuffleHurricaneCards } from '@/data/shuffleHurricaneCards';
@@ -7,38 +8,25 @@ export default function DrawHurricaneCardsModal() {
 
 	return (
 		<PopUp
-			className={
-				state.showConfirmEndTurnModal
-					? 'opacity-100 pointer-events-auto'
-					: 'opacity-0 pointer-events-none'
+			show={state.showConfirmEndTurnModal}
+			heading="End Your Turn?"
+			description={
+				<>
+					This will automatically draw{' '}
+					<strong className="text-amber-400">
+						{state.hurricaneMeter[state.hurricaneDeckCounter]}
+					</strong>{' '}
+					Hurricane cards and advance to the next player.
+				</>
 			}
 		>
-			<h3 className="text-2xl font-bold">End Your Turn?</h3>
-			<p className="text-slate-300">
-				This will automatically draw{' '}
-				<strong className="text-amber-400">
-					{state.hurricaneMeter[state.hurricaneDeckCounter]}
-				</strong>{' '}
-				Hurricane cards and advance to the next player.
-			</p>
-			<div className="pt-2 flex flex-col gap-3 justify-center md:flex-row">
-				<button
-					type="button"
-					className="px-5 py-2 bg-red-600 hover:bg-red-700 font-bold rounded-lg motion-safe:transition"
-					onClick={handleDrawHurricaneCards}
-				>
-					Confirm & Draw
-				</button>
-				<button
-					type="button"
-					className="px-5 py-2 border rounded-lg hover:bg-slate-800 motion-safe:transition"
-					onClick={() =>
-						dispatch({ type: 'SET_SHOW_CONFIRM_MODAL', show: false })
-					}
-				>
-					Cancel
-				</button>
-			</div>
+			<ConfirmModalButtons
+				confirmMessage="Confirm & Draw"
+				onCancel={() =>
+					dispatch({ type: 'SET_SHOW_CONFIRM_END_TURN_MODAL', show: false })
+				}
+				onConfirm={handleDrawHurricaneCards}
+			/>
 		</PopUp>
 	);
 

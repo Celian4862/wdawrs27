@@ -15,6 +15,7 @@ interface GameState {
 	recentlyDrawnHurricaneCard: string;
 	isDrawingHurricaneCards: boolean;
 	showConfirmEndTurnModal: boolean;
+	showConfirmResetModal: boolean;
 	turnStatus: string | null;
 	itemDeck: string[];
 	itemDeckCounter: number;
@@ -26,7 +27,8 @@ interface GameState {
 type GameAction =
 	| { type: 'SET_PLAYER_COUNT'; count: number }
 	| { type: 'SET_DIFFICULTY'; index: number }
-	| { type: 'SET_SHOW_CONFIRM_MODAL'; show: boolean }
+	| { type: 'SET_SHOW_CONFIRM_END_TURN_MODAL'; show: boolean }
+	| { type: 'SET_SHOW_CONFIRM_RESET_MODAL'; show: boolean }
 	| { type: 'START_DRAWING' }
 	| { type: 'FINISH_DRAWING' }
 	| { type: 'SET_TURN_STATUS'; status: string | null }
@@ -50,6 +52,7 @@ const initialState: GameState = {
 	recentlyDrawnHurricaneCard: 'None',
 	isDrawingHurricaneCards: false,
 	showConfirmEndTurnModal: false,
+	showConfirmResetModal: false,
 	turnStatus: null,
 	itemDeck: shuffleItemDeck(),
 	itemDeckCounter: 12,
@@ -75,8 +78,13 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 			};
 		case 'SET_DIFFICULTY':
 			return { ...state, meterProgress: action.index };
-		case 'SET_SHOW_CONFIRM_MODAL':
+		case 'SET_SHOW_CONFIRM_END_TURN_MODAL':
 			return { ...state, showConfirmEndTurnModal: action.show };
+		case 'SET_SHOW_CONFIRM_RESET_MODAL':
+			return {
+				...state,
+				showConfirmResetModal: action.show,
+			};
 		case 'START_DRAWING':
 			return {
 				...state,
