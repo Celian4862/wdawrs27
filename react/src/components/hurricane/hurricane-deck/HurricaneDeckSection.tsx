@@ -1,5 +1,9 @@
 import { useGame } from '@/components/GameContext';
 import GameInfoHeading from '@/components/game-info/GameInfoHeading';
+import {
+	hurricaneDirections,
+	hurricaneDistances,
+} from '@/data/shuffleHurricaneDeck';
 
 export default function HurricaneDeckSection() {
 	const { state, dispatch } = useGame();
@@ -12,13 +16,13 @@ export default function HurricaneDeckSection() {
 			/>
 			<div className="grid md:grid-cols-2 gap-3 *:py-1 *:text-lg *:border *:rounded-lg">
 				<div
-					className={`${state.recentlyDrawnHurricaneCard === 'Thirst' ? 'bg-blue-700' : 'bg-none'} flex justify-around items-center`}
+					className={`${state.recentlyDrawnHurricaneCard.type === 'Thirst' ? 'bg-blue-700' : 'bg-none'} flex justify-around items-center`}
 				>
 					<h3 className="font-bold">Thirst</h3>
 					<span>{state.discardedHurricaneDeck.Thirst} / 4</span>
 				</div>
 				<div
-					className={`${state.recentlyDrawnHurricaneCard === 'Hurricane Up' ? 'bg-red-700/80' : 'bg-none'} flex justify-around items-center`}
+					className={`${state.recentlyDrawnHurricaneCard.type === 'Hurricane Up' ? 'bg-red-700/80' : 'bg-none'} flex justify-around items-center`}
 				>
 					<h3 className="font-bold">Hurricane Up</h3>
 					<span>{state.discardedHurricaneDeck['Hurricane Up']} / 3</span>
@@ -36,27 +40,28 @@ export default function HurricaneDeckSection() {
 								</tr>
 							</thead>
 							<tbody>
-								{['Up', 'Down', 'Left', 'Right'].map((direction) => {
+								{hurricaneDirections.map((direction) => {
 									return (
 										<tr key={direction}>
 											<td>{direction}</td>
-											{[1, 2, 3].map((distance) => {
+
+											{hurricaneDistances.map((distance) => {
+												const moveString = `Move ${distance} ${direction}`;
+
 												return (
 													<td
-														key={`Move ${distance} ${direction}`}
+														key={moveString}
 														className={
-															state.recentlyDrawnHurricaneCard ===
-															`Move ${distance} ${direction}`
+															state.recentlyDrawnHurricaneCard.distance ===
+																distance &&
+															state.recentlyDrawnHurricaneCard.direction ===
+																direction
 																? 'bg-amber-500'
-																: 'bg-none'
+																: 'bg-black'
 														}
 													>
-														{
-															state.discardedHurricaneDeck[
-																`Move ${distance} ${direction}`
-															]
-														}{' '}
-														/ {4 - distance}
+														{state.discardedHurricaneDeck[moveString]} /{' '}
+														{4 - distance}
 													</td>
 												);
 											})}
@@ -66,6 +71,10 @@ export default function HurricaneDeckSection() {
 							</tbody>
 						</table>
 					</div>
+				</div>
+				<div className="flex justify-around items-center md:col-span-2">
+					<h3 className="font-bold">Sand Mark Count: </h3>
+					{state.sandMarkCount} / 48
 				</div>
 			</div>
 

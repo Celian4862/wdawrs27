@@ -3,56 +3,69 @@ import { createContext, type ReactNode, useContext, useReducer } from 'react';
 import type { EndGameState } from '@/components/EndGameScreen';
 import { initHurricaneMeter } from '@/data/initHurricaneMeter';
 import { shuffleItemDeck } from '@/data/items';
-import { shuffleHurricaneCards } from '@/data/shuffleHurricaneCards';
+import {
+	type HurricaneCard,
+	shuffleHurricaneDeck,
+	specialCards,
+} from '@/data/shuffleHurricaneDeck';
+import { shuffleBoard, type Tile } from '@/data/tiles';
 
 interface GameState {
 	playerCount: number;
+	board: Tile[];
+	sandMarkCount: number;
 	hurricaneMeter: number[];
 	meterProgress: number;
-	hurricaneDeck: string[];
+	hurricaneDeck: HurricaneCard[];
 	hurricaneDeckCounter: number;
 	discardedHurricaneDeck: Record<string, number>;
-	recentlyDrawnHurricaneCard: string;
+	recentlyDrawnHurricaneCard: HurricaneCard;
 	isDrawingHurricaneCards: boolean;
 	showConfirmEndTurnModal: boolean;
-	showConfirmResetModal: boolean;
 	turnStatus: string | null;
 	itemDeck: string[];
 	itemDeckCounter: number;
 	drawnItemDeck: Record<string, number>;
 	recentlyDrawnItemCard: string;
 	endGameState: EndGameState;
+	showConfirmResetModal: boolean;
 }
 
 type GameAction =
 	| { type: 'SET_PLAYER_COUNT'; count: number }
 	| { type: 'SET_DIFFICULTY'; index: number }
 	| { type: 'SET_SHOW_CONFIRM_END_TURN_MODAL'; show: boolean }
-	| { type: 'SET_SHOW_CONFIRM_RESET_MODAL'; show: boolean }
 	| { type: 'START_DRAWING' }
 	| { type: 'FINISH_DRAWING' }
 	| { type: 'SET_TURN_STATUS'; status: string | null }
-	| { type: 'DRAW_HURRICANE_CARD'; card: string }
-	| { type: 'RESHUFFLE_DECK'; deck: string[] }
+	| { type: 'DRAW_HURRICANE_CARD'; card: HurricaneCard }
+	| { type: 'RESHUFFLE_DECK'; deck: HurricaneCard[] }
 	| { type: 'DRAW_ITEM_CARD'; card: string }
 	| { type: 'GAME_OVER'; reason: string }
+	| { type: 'SET_SHOW_CONFIRM_RESET_MODAL'; show: boolean }
 	| { type: 'RESET_GAME' };
 
-const initialHurricaneDeck = shuffleHurricaneCards();
+const initialHurricaneDeck = shuffleHurricaneDeck();
 
 const initialState: GameState = {
 	playerCount: 0,
+	board: shuffleBoard(),
+	sandMarkCount: 0,
 	hurricaneMeter: [],
 	meterProgress: -1,
 	hurricaneDeck: initialHurricaneDeck,
 	hurricaneDeckCounter: 0,
 	discardedHurricaneDeck: Object.fromEntries(
-		initialHurricaneDeck.map((key) => [key, 0]),
+		initialHurricaneDeck.map((key) => {
+			if (specialCards.includes(key.type)) {
+				return [key.type, 0];
+			}
+			return [`Move ${key.distance} ${key.direction}`, 0];
+		}),
 	),
-	recentlyDrawnHurricaneCard: 'None',
+	recentlyDrawnHurricaneCard: { type: 'None' },
 	isDrawingHurricaneCards: false,
 	showConfirmEndTurnModal: false,
-	showConfirmResetModal: false,
 	turnStatus: null,
 	itemDeck: shuffleItemDeck(),
 	itemDeckCounter: 12,
@@ -66,6 +79,7 @@ const initialState: GameState = {
 	},
 	recentlyDrawnItemCard: 'None',
 	endGameState: {},
+	showConfirmResetModal: false,
 };
 
 function gameReducer(state: GameState, action: GameAction): GameState {
@@ -96,20 +110,24 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 			return { ...state, isDrawingHurricaneCards: false, turnStatus: null };
 		case 'SET_TURN_STATUS':
 			return { ...state, turnStatus: action.status };
-		case 'DRAW_HURRICANE_CARD':
+		case 'DRAW_HURRICANE_CARD': {
+			const discardKey = specialCards.includes(action.card.type)
+				? action.card.type
+				: `Move ${action.card.distance} ${action.card.direction}`;
 			return {
 				...state,
 				recentlyDrawnHurricaneCard: action.card,
 				hurricaneDeckCounter: state.hurricaneDeckCounter + 1,
 				meterProgress:
-					action.card === 'Hurricane Up'
+					action.card.type === 'Hurricane Up'
 						? state.meterProgress + 1
 						: state.meterProgress,
 				discardedHurricaneDeck: {
 					...state.discardedHurricaneDeck,
-					[action.card]: (state.discardedHurricaneDeck[action.card] ?? 0) + 1,
+					[discardKey]: (state.discardedHurricaneDeck[discardKey] ?? 0) + 1,
 				},
 			};
+		}
 		case 'RESHUFFLE_DECK': {
 			return {
 				...state,
@@ -135,7 +153,8 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 		case 'RESET_GAME':
 			return {
 				...initialState,
-				hurricaneDeck: shuffleHurricaneCards(),
+				board: shuffleBoard(),
+				hurricaneDeck: shuffleHurricaneDeck(),
 				itemDeck: shuffleItemDeck(),
 			};
 		default:

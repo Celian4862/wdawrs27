@@ -5,10 +5,10 @@ import DrawHurricaneCardsModal from '@/components/hurricane/hurricane-deck/DrawH
 import HurricaneDeckSection from '@/components/hurricane/hurricane-deck/HurricaneDeckSection';
 import HurricaneMeterSection from '@/components/hurricane/hurricane-meter/HurricaneMeterSection';
 import ItemDeck from '@/components/ItemDeck';
+import PlayerCards from '@/components/player/PlayerCards';
 import ResetButton from '@/components/reset/ResetButton';
 import ResetButtonModal from '@/components/reset/ResetButtonModal';
 import Setup from '@/components/Setup';
-import PlayerCards from './components/PlayerCards';
 
 function GameContent() {
 	const { state } = useGame();

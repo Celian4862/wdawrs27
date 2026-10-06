@@ -1,19 +1,42 @@
-import { tiles } from '@/data/tiles';
+import { useGame } from '@/components/GameContext';
 
 export default function Board({ className }: { className?: string }) {
+	const { state } = useGame();
+
 	return (
 		<section
 			className={`overflow-x-auto [-webkit-overflow-scrolling:touch] ${className ?? ''}`}
 		>
 			<div className="min-w-115 lg:fixed w-fit grid grid-cols-5 gap-5">
-				{tiles.map((tile) => (
+				{state.board.map((tile) => (
 					<button
 						key={tile.id}
 						type="button"
 						disabled={!tile.info}
-						className={`border rounded-lg size-20 motion-safe:transition ${!tile.info ? 'brightness-50 cursor-not-allowed' : 'hover:brightness-50'}`}
+						className={`relative border rounded-lg size-20 motion-safe:transition ${!tile.info ? 'brightness-50 cursor-not-allowed' : 'hover:brightness-50'}`}
 					>
 						{!tile.info && '🌪'}
+						{tile.info && tile.info.sandMarks > 0 && (
+							<span className="absolute left-1 top-1 rounded-full bg-amber-500/90 px-1.5 py-0.5 text-[10px] font-bold text-slate-950">
+								{tile.info.sandMarks}
+							</span>
+						)}
+
+						{tile.info && (
+							<span className="absolute bottom-1 left-1 text-lg leading-none">
+								{tile.info.revealed
+									? tile.info.revealedTileEmoji
+									: tile.info.unrevealedTileEmoji}
+							</span>
+						)}
+
+						{false && (
+							<div className="absolute right-1 top-1 grid grid-rows-3 grid-flow-col rtl gap-0.5 items-start pointer-events-none">
+								{/* {props.playersOnTile.map((playerColor) => ( */}
+								{/* <PawnCircle key={playerColor} color={playerColor} /> */}
+								{/* ))} */}
+							</div>
+						)}
 					</button>
 				))}
 			</div>

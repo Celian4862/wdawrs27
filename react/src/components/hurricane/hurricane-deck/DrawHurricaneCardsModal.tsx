@@ -1,7 +1,7 @@
 import ConfirmModalButtons from '@/components/ConfirmModalButtons';
 import { useGame } from '@/components/GameContext';
 import PopUp from '@/components/PopUp';
-import { shuffleHurricaneCards } from '@/data/shuffleHurricaneCards';
+import { shuffleHurricaneDeck } from '@/data/shuffleHurricaneDeck';
 
 export default function DrawHurricaneCardsModal() {
 	const { state, dispatch } = useGame();
@@ -45,7 +45,7 @@ export default function DrawHurricaneCardsModal() {
 				await delay(1000);
 
 				if (deckCounter >= 31) {
-					deck = shuffleHurricaneCards();
+					deck = shuffleHurricaneDeck();
 					deckCounter = 0;
 					dispatch({ type: 'RESHUFFLE_DECK', deck });
 				}
@@ -53,7 +53,7 @@ export default function DrawHurricaneCardsModal() {
 				dispatch({ type: 'DRAW_HURRICANE_CARD', card: deck[deckCounter] });
 
 				const drawnCard = deck[deckCounter];
-				if (drawnCard === 'Hurricane Up') {
+				if (drawnCard.type === 'Hurricane Up') {
 					meterProgress++;
 				}
 				deckCounter++;
