@@ -22,7 +22,7 @@ function GameContent() {
 	}
 
 	return (
-		<div className="p-10 grid items-right lg:grid-cols-7 xl:grid-cols-2">
+		<div className="p-10 pb-40 grid items-right sm:pb-30 lg:pb-10 lg:grid-cols-7 xl:grid-cols-2">
 			<EndGameScreen />
 			<DrawHurricaneCardsModal />
 			<ResetButtonModal />
