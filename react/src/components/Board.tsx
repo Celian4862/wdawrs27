@@ -19,7 +19,7 @@ export default function Board({ className }: { className?: string }) {
 						>
 							{!tile.info && '🌪'}
 							{tile.info && tile.info.sandMarks > 0 && (
-								<span className="absolute left-1 top-1 rounded-full bg-amber-500/90 px-1.5 py-0.5 text-[10px] font-bold text-slate-950">
+								<span className={`absolute left-1 top-1 rounded-full px-1.5 py-0.5 text-[10px] font-bold text-slate-950 ${tile.info.sandMarks > 1 ? 'bg-orange-600' : 'bg-amber-500/90'}`}>
 									{tile.info.sandMarks}
 								</span>
 							)}
