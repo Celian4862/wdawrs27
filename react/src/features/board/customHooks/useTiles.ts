@@ -11,8 +11,8 @@ const DIRECTION_OFFSETS = {
 
 export function useTiles() {
 	const [tiles, setTiles] = useState(TILES);
-	const totalSandMarks = tiles.reduce(
-		(sum, tile) => sum + (tile?.sandMarks ?? 0),
+	const totalSandPoints = tiles.reduce(
+		(sum, tile) => sum + (tile?.sandPoints ?? 0),
 		0,
 	);
 
@@ -48,7 +48,7 @@ export function useTiles() {
 		setTiles((prevTiles) => {
 			const nextTiles = prevTiles.map((tile) => ({
 				...tile,
-				sandMarks: tile?.sandMarks ?? 0,
+				sandPoints: tile?.sandPoints ?? 0,
 			}));
 			let currentIndex = nextTiles.findIndex((tile) => tile && !tile.info);
 			const swaps: Array<[number, number]> = [];
@@ -75,7 +75,7 @@ export function useTiles() {
 				nextTiles[currentIndex] = {
 					...targetTile,
 					id: currentIndex,
-					sandMarks: (targetTile.sandMarks ?? 0) + 1,
+					sandPoints: (targetTile.sandPoints ?? 0) + 1,
 				};
 				nextTiles[nextIndex] = {
 					...hurricaneTile,
@@ -113,7 +113,7 @@ export function useTiles() {
 
 	return {
 		tiles,
-		totalSandMarks,
+		totalSandPoints,
 		handleTileClick,
 		applyHurricaneMove,
 	};

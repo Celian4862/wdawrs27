@@ -4,7 +4,7 @@ import {
 	hurricaneDirections,
 	hurricaneDistances,
 } from '@/data/shuffleHurricaneDeck';
-import { sumSandMarks } from '@/data/tiles';
+import { sumSandPoints } from '@/data/tiles';
 
 export default function HurricaneDeckSection() {
 	const { state, dispatch } = useGame();
@@ -75,7 +75,7 @@ export default function HurricaneDeckSection() {
 				</div>
 				<div className="flex justify-around items-center md:col-span-2">
 					<h3 className="font-bold">Sand Mark Count: </h3>
-					{sumSandMarks(state.board)} / 48
+					{sumSandPoints(state.board)} / 48
 				</div>
 			</div>
 
@@ -86,8 +86,9 @@ export default function HurricaneDeckSection() {
 					<div className="w-full text-center py-1 px-3 bg-slate-800/80 rounded-lg border border-slate-700 text-sm flex justify-between items-center lg:hidden">
 						<span className="text-slate-400 font-medium">Last Card:</span>
 						<span className="font-bold text-amber-400">
-							{state.recentlyDrawnHurricaneCard.type !== 'Move' ? state.recentlyDrawnHurricaneCard.type :
-								`Move ${state.recentlyDrawnHurricaneCard.distance} ${state.recentlyDrawnHurricaneCard.direction}`}
+							{state.recentlyDrawnHurricaneCard.type !== 'Move'
+								? state.recentlyDrawnHurricaneCard.type
+								: `Move ${state.recentlyDrawnHurricaneCard.distance} ${state.recentlyDrawnHurricaneCard.direction}`}
 						</span>
 					</div>
 				)}

@@ -19,7 +19,7 @@ export default function Board(props: {
 						disabled={!tile.info}
 						revealed={tile.info?.revealed ?? false}
 						tileInfo={tile.info}
-						sandMarks={tile.sandMarks}
+						sandPoints={tile.sandPoints}
 						playersOnTile={playersOnThisTile}
 						onClick={() => props.handleTileClick(tile.id)}
 					/>

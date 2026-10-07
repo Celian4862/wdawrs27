@@ -2,7 +2,7 @@ import type { hintVariants } from './hintVariants';
 
 export interface TileType {
 	id: number;
-	sandMarks: number;
+	sandPoints: number;
 	info?: TileDefinition & {
 		revealed: boolean;
 	};

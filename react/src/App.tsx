@@ -13,7 +13,7 @@ import Setup from '@/components/Setup';
 function GameContent() {
 	const { state } = useGame();
 
-	if (state.playerCount === 0) {
+	if (state.players.length === 0) {
 		return <Setup playerSetup={true} />;
 	}
 
@@ -29,9 +29,9 @@ function GameContent() {
 			<Board className="lg:col-span-4 xl:col-span-1" />
 
 			<section className="py-5 grid gap-5 lg:col-span-3 xl:col-span-1">
+				<HurricaneMeterSection />
 				<HurricaneDeckSection />
 				<PlayerCards />
-				<HurricaneMeterSection />
 				<ItemDeck />
 				<ResetButton />
 			</section>

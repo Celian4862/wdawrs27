@@ -9,17 +9,18 @@ import {
 } from 'react';
 import type { EndGameState } from '@/components/EndGameScreen';
 import { initHurricaneMeter } from '@/data/initHurricaneMeter';
-import { shuffleItemDeck } from '@/data/items';
+import { type ItemType, shuffleItemDeck } from '@/data/items';
+import { type ActivePlayer, assignPlayers } from '@/data/players';
 import {
 	type HurricaneCard,
 	shuffleHurricaneDeck,
 	specialCards,
 } from '@/data/shuffleHurricaneDeck';
-import { shuffleBoard, sumSandMarks, type Tile } from '@/data/tiles';
+import { shuffleBoard, sumSandPoints, type Tile } from '@/data/tiles';
 
 interface GameState {
 	gameId: boolean;
-	playerCount: number;
+	players: ActivePlayer[];
 	board: Tile[];
 	sandMarkCount: number;
 	hurricaneMeter: number[];
@@ -31,7 +32,7 @@ interface GameState {
 	isDrawingHurricaneCards: boolean;
 	showConfirmEndTurnModal: boolean;
 	turnStatus: string | null;
-	itemDeck: string[];
+	itemDeck: ItemType[];
 	itemDeckCounter: number;
 	drawnItemDeck: Record<string, number>;
 	recentlyDrawnItemCard: string;
@@ -40,7 +41,7 @@ interface GameState {
 }
 
 type GameAction =
-	| { type: 'SET_PLAYER_COUNT'; count: number }
+	| { type: 'SET_PLAYERS'; count: number }
 	| { type: 'SET_DIFFICULTY'; index: number }
 	| { type: 'SET_SHOW_CONFIRM_END_TURN_MODAL'; show: boolean }
 	| { type: 'START_DRAWING' }
@@ -59,9 +60,9 @@ const initialBoard = shuffleBoard();
 
 const initialState: GameState = {
 	gameId: false,
-	playerCount: 0,
+	players: [],
 	board: initialBoard,
-	sandMarkCount: sumSandMarks(initialBoard),
+	sandMarkCount: sumSandPoints(initialBoard),
 	hurricaneMeter: [],
 	meterProgress: -1,
 	hurricaneDeck: initialHurricaneDeck,
@@ -97,10 +98,10 @@ function initHurricaneDiscard(key: HurricaneCard) {
 
 function gameReducer(state: GameState, action: GameAction): GameState {
 	switch (action.type) {
-		case 'SET_PLAYER_COUNT':
+		case 'SET_PLAYERS':
 			return {
 				...state,
-				playerCount: action.count,
+				players: assignPlayers(action.count),
 				hurricaneMeter: initHurricaneMeter(action.count),
 			};
 		case 'SET_DIFFICULTY':

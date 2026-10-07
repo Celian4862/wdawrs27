@@ -3,7 +3,7 @@ import { shuffle } from './shuffle';
 export interface Tile {
 	id: number;
 	info?: {
-		sandMarks: number;
+		sandPoints: number;
 		revealed: boolean;
 		unrevealedType: string;
 		revealedType: string;
@@ -22,8 +22,8 @@ export function toCoordinates(index: number) {
 	return [Math.floor(index / 5), index % 5];
 }
 
-export function sumSandMarks(board: Tile[]) {
-	return board.reduce((sum, tile) => sum + (tile.info?.sandMarks ?? 0), 0);
+export function sumSandPoints(board: Tile[]) {
+	return board.reduce((sum, tile) => sum + (tile.info?.sandPoints ?? 0), 0);
 }
 
 export function shuffleBoard() {
@@ -38,7 +38,7 @@ export function shuffleBoard() {
 	board[19] = {
 		id: 19,
 		info: {
-			sandMarks: 0,
+			sandPoints: 0,
 			revealed: false,
 			unrevealedType: 'Start',
 			revealedType: 'Item',
@@ -53,7 +53,7 @@ export function shuffleBoard() {
 		board[greenthIndex] = {
 			id: greenthIndex,
 			info: {
-				sandMarks: 0,
+				sandPoints: 0,
 				revealed: false,
 				unrevealedType: 'Greenth',
 				revealedType: greenthTiles[index],
@@ -97,7 +97,7 @@ export function shuffleBoard() {
 			board[position] = {
 				id: position,
 				info: {
-					sandMarks: [2, 6, 8, 10, 14, 16, 18, 22].includes(position) ? 1 : 0,
+					sandPoints: [2, 6, 8, 10, 14, 16, 18, 22].includes(position) ? 1 : 0,
 					revealed: false,
 					unrevealedType: 'Sand',
 					revealedType: sandTiles[index].revealedType,

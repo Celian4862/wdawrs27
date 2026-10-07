@@ -8,8 +8,8 @@ interface LoseConditionsInput {
 		currentWaterLevel: number;
 	}>;
 	lastDrawnCard?: string | null;
-	sandMarksPlaced?: number;
-	sandMarksRemaining?: number;
+	sandPointsPlaced?: number;
+	sandPointsRemaining?: number;
 }
 
 export function winCondition(): boolean {
@@ -21,8 +21,8 @@ export function loseConditions({
 	currentIndex,
 	players = [],
 	lastDrawnCard,
-	sandMarksPlaced,
-	sandMarksRemaining,
+	sandPointsPlaced,
+	sandPointsRemaining,
 }: LoseConditionsInput): boolean {
 	const config = getStormConfig(playerCount);
 	const totalTicks = config.reduce((sum, tier) => sum + tier.tickCount, 0);
@@ -30,8 +30,8 @@ export function loseConditions({
 	const thirstFailure =
 		lastDrawnCard === 'Thirst' &&
 		players.some((player) => player.currentWaterLevel <= 0);
-	const placedMarks = sandMarksPlaced ?? 48 - (sandMarksRemaining ?? 0);
-	const tooManySandMarks = placedMarks >= 49;
+	const placedMarks = sandPointsPlaced ?? 48 - (sandPointsRemaining ?? 0);
+	const tooManySandPoints = placedMarks >= 49;
 
-	return reachedSkull || thirstFailure || tooManySandMarks;
+	return reachedSkull || thirstFailure || tooManySandPoints;
 }

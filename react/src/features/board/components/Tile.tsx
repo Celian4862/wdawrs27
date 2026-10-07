@@ -42,7 +42,7 @@ export default function Tile(props: {
 		unrevealedType?: string;
 		revealedType?: string;
 	};
-	sandMarks: number;
+	sandPoints: number;
 	playersOnTile: string[];
 	onClick: () => void;
 }) {
@@ -61,9 +61,9 @@ export default function Tile(props: {
 		>
 			{props.disabled && <span className="text-lg">{hurricane}</span>}
 
-			{props.sandMarks > 0 && (
+			{props.sandPoints > 0 && (
 				<span className="absolute left-1 top-1 rounded-full bg-amber-500/90 px-1.5 py-0.5 text-[10px] font-bold text-slate-950">
-					{props.sandMarks}
+					{props.sandPoints}
 				</span>
 			)}
 

@@ -21,7 +21,7 @@ export default function Setup({ playerSetup }: { playerSetup: boolean }) {
 							onClick={() =>
 								playerSetup
 									? dispatch({
-											type: 'SET_PLAYER_COUNT',
+											type: 'SET_PLAYERS',
 											count: element as number,
 										})
 									: dispatch({ type: 'SET_DIFFICULTY', index })

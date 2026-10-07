@@ -19,14 +19,14 @@ export default function HurricaneMeter({
 							3: 'grid-cols-15',
 							4: 'grid-cols-15',
 							5: 'grid-cols-16',
-						}[state.playerCount]
+						}[state.players.length]
 					} md:min-w-0`}
 				>
 					{Array.from(new Set(hurricaneMeter)).map((hurricaneMeterTier) => {
 						const span =
 							{
 								2: 1,
-								3: { 2: 3, 3: 4, 4: 4, 5: 5 }[state.playerCount],
+								3: { 2: 3, 3: 4, 4: 4, 5: 5 }[state.players.length],
 								4: 4,
 								5: 3,
 								6: 2,

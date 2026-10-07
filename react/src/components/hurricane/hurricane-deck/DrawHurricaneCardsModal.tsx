@@ -2,7 +2,7 @@ import ConfirmModalButtons from '@/components/ConfirmModalButtons';
 import { useGame } from '@/components/GameContext';
 import PopUp from '@/components/PopUp';
 import { shuffleHurricaneDeck } from '@/data/shuffleHurricaneDeck';
-import { sumSandMarks, toCoordinates, toIndex } from '@/data/tiles';
+import { sumSandPoints, toCoordinates, toIndex } from '@/data/tiles';
 
 export default function DrawHurricaneCardsModal() {
 	const { state, dispatch, getGameState } = useGame();
@@ -92,7 +92,7 @@ export default function DrawHurricaneCardsModal() {
 
 						const nextBoard = [...currentBoard];
 						if (nextBoard[otherTile].info) {
-							nextBoard[otherTile].info.sandMarks++;
+							nextBoard[otherTile].info.sandPoints++;
 						}
 						[nextBoard[stormPosition], nextBoard[otherTile]] = [
 							nextBoard[otherTile],
@@ -102,13 +102,13 @@ export default function DrawHurricaneCardsModal() {
 						currentBoard = nextBoard;
 						dispatch({ type: 'MOVE_HURRICANE', board: currentBoard });
 
-						if (sumSandMarks(currentBoard) > 48) {
+						if (sumSandPoints(currentBoard) > 48) {
 							await delay(1500);
 							if (getGameState().gameId !== currentGameId) return;
 
 							dispatch({
 								type: 'GAME_OVER',
-								reason: 'You had too many sand marks',
+								reason: 'You had too many sand points',
 							});
 							return;
 						}
