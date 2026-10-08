@@ -38,7 +38,7 @@ const roleTemplates = [
 		title: 'Traveler',
 		ability: 'Can move, do actions, and use Sand Removers diagonally.',
 		maxWater: 4,
-		color: '#10b981',
+		color: '#0b7f59',
 	},
 	{
 		title: 'Cartographer',

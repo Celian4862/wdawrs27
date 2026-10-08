@@ -28,15 +28,15 @@ function GameContent() {
 			<DrawHurricaneCardsModal />
 			<ResetButtonModal />
 			<div className="h-dvh w-screen p-10 box-border grid grid-cols-1 gap-6  lg:grid-cols-11 lg:gap-10 xl:grid-cols-2">
-				<div className="lg:col-span-5 xl:col-span-1 h-full flex flex-col lg:min-h-0 lg:overflow-hidden gap-4">
+				<div className="h-full flex flex-col gap-4 lg:min-h-0 lg:overflow-hidden lg:col-span-5 xl:col-span-1">
 					<HurricaneMeter hurricaneMeter={state.hurricaneMeter} />
-					<div className="flex-1 min-h-0 flex items-center justify-center overflow-hidden">
+					<div className="flex-1 min-h-0 flex items-center justify-center">
 						<Board />
 					</div>
 				</div>
 
 				<div className="h-full min-h-0 lg:flex lg:flex-col lg:col-span-6 xl:col-span-1">
-					<div className="lg:h-full lg:overflow-y-auto pr-2">
+					<div className="pr-2 lg:h-full lg:overflow-y-auto">
 						<section className="py-5 grid gap-5">
 							<HurricaneDeckSection />
 							<PlayerCards />
