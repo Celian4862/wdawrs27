@@ -43,6 +43,7 @@ export default function DrawHurricaneCardsModal() {
 			let deck = state.hurricaneDeck;
 			let meterProgress = state.meterProgress;
 			let currentBoard = [...state.board];
+			let currentPlayers = [...state.players];
 
 			for (let i = 0; i < state.hurricaneMeter[state.meterProgress]; i++) {
 				await delay(1000);
@@ -62,7 +63,29 @@ export default function DrawHurricaneCardsModal() {
 				if (drawnCard.type === 'Hurricane Up') {
 					meterProgress++;
 				} else if (drawnCard.type === 'Thirst') {
-					// Player water goes down
+					let endGame = false;
+
+					for (let j = 0; j < currentPlayers.length; j++) {
+						if (getGameState().gameId !== currentGameId) return;
+
+						if (currentBoard[currentBoard.findIndex((tile) => tile.id === currentPlayers[j].currentTileId)].info?.revealedType !== 'Shade') {
+							if (currentPlayers[j].currentWaterLevel-- < 0) {
+								endGame = true;
+							}
+						}
+					}
+					currentPlayers = [...currentPlayers];
+					dispatch({ type: 'DRINK_WATER', players: currentPlayers })
+					if (endGame) {
+						await delay(1500);
+						if (getGameState().gameId !== currentGameId) return;
+
+						dispatch({
+							type: 'GAME_OVER',
+							reason: 'One or more players died of thirst',
+						});
+						return;
+					}
 				} else {
 					await delay(500);
 					for (let j = 0; j < (drawnCard.distance ?? 0); j++) {

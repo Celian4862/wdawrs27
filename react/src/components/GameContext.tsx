@@ -49,7 +49,8 @@ type GameAction =
 	| { type: 'FINISH_DRAWING' }
 	| { type: 'SET_TURN_STATUS'; status: string | null }
 	| { type: 'MOVE_HURRICANE'; board: Tile[] }
-	| { type: 'DRAW_HURRICANE_CARD'; card: HurricaneCard }
+	| { type: 'DRINK_WATER'; players: ActivePlayer[] }
+	| { type: 'DRAW_HURRICANE_CARD'; card: HurricaneCard; }
 	| { type: 'RESHUFFLE_DECK'; deck: HurricaneCard[] }
 	| { type: 'DRAW_ITEM_CARD'; card: string }
 	| { type: 'GAME_OVER'; reason: string }
@@ -86,7 +87,7 @@ const initialState: GameState = {
 		'Speed Boost': 0,
 	},
 	recentlyDrawnItemCard: 'None',
-	partsCollected: ['Motor', 'Fan', 'Core', 'Pointer'],
+	partsCollected: [],
 	endGameState: {},
 	showConfirmResetModal: false,
 };
@@ -141,6 +142,12 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 				...state,
 				board: action.board,
 			};
+		}
+		case 'DRINK_WATER': {
+			return {
+				...state,
+				players: action.players
+			}
 		}
 		case 'DRAW_HURRICANE_CARD': {
 			const discardKey = specialCards.includes(action.card.type)
