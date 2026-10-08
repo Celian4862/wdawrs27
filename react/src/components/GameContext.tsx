@@ -50,7 +50,7 @@ type GameAction =
 	| { type: 'SET_TURN_STATUS'; status: string | null }
 	| { type: 'MOVE_HURRICANE'; board: Tile[] }
 	| { type: 'DRINK_WATER'; players: ActivePlayer[] }
-	| { type: 'DRAW_HURRICANE_CARD'; card: HurricaneCard; }
+	| { type: 'DRAW_HURRICANE_CARD'; card: HurricaneCard }
 	| { type: 'RESHUFFLE_DECK'; deck: HurricaneCard[] }
 	| { type: 'DRAW_ITEM_CARD'; card: string }
 	| { type: 'GAME_OVER'; reason: string }
@@ -146,8 +146,8 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 		case 'DRINK_WATER': {
 			return {
 				...state,
-				players: action.players
-			}
+				players: action.players,
+			};
 		}
 		case 'DRAW_HURRICANE_CARD': {
 			const discardKey = specialCards.includes(action.card.type)

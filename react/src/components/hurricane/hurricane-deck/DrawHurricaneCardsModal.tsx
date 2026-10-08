@@ -68,14 +68,20 @@ export default function DrawHurricaneCardsModal() {
 					for (let j = 0; j < currentPlayers.length; j++) {
 						if (getGameState().gameId !== currentGameId) return;
 
-						if (currentBoard[currentBoard.findIndex((tile) => tile.id === currentPlayers[j].currentTileId)].info?.revealedType !== 'Shade') {
+						if (
+							currentBoard[
+								currentBoard.findIndex(
+									(tile) => tile.id === currentPlayers[j].currentTileId,
+								)
+							].info?.revealedType !== 'Shade'
+						) {
 							if (currentPlayers[j].currentWaterLevel-- < 0) {
 								endGame = true;
 							}
 						}
 					}
 					currentPlayers = [...currentPlayers];
-					dispatch({ type: 'DRINK_WATER', players: currentPlayers })
+					dispatch({ type: 'DRINK_WATER', players: currentPlayers });
 					if (endGame) {
 						await delay(1500);
 						if (getGameState().gameId !== currentGameId) return;
