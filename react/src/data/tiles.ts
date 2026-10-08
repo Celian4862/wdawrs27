@@ -1,3 +1,4 @@
+import { parts } from './parts';
 import { shuffle } from './shuffle';
 
 export interface Tile {
@@ -7,10 +8,11 @@ export interface Tile {
 		revealed: boolean;
 		unrevealedType: string;
 		revealedType: string;
-		hintVariant?: string;
-		hintOrientation?: string;
-		unrevealedTileEmoji: string;
-		revealedTileEmoji: string;
+		partHint?: string;
+		partOrientation?: string;
+		unrevealedTileColor: string;
+		revealedTileColor: string;
+		orientationEmoji?: string;
 	};
 }
 
@@ -42,8 +44,8 @@ export function shuffleBoard() {
 			revealed: false,
 			unrevealedType: 'Start',
 			revealedType: 'Item',
-			unrevealedTileEmoji: '🚩',
-			revealedTileEmoji: '⚙️',
+			unrevealedTileColor: 'bg-red-700',
+			revealedTileColor: 'bg-slate-700',
 		},
 	};
 
@@ -57,33 +59,35 @@ export function shuffleBoard() {
 				revealed: false,
 				unrevealedType: 'Greenth',
 				revealedType: greenthTiles[index],
-				unrevealedTileEmoji: '🌵',
-				revealedTileEmoji: greenthTiles[index] === 'Water' ? '💧' : '🥀',
+				unrevealedTileColor: 'bg-lime-600',
+				revealedTileColor:
+					greenthTiles[index] === 'Water' ? 'bg-blue-700' : 'bg-amber-700',
 			},
 		};
 	});
 
 	// REMAINING TILES
-	const hintVariants = [
-		'Pointer Row',
-		'Pointer Col',
-		'Motor Row',
-		'Motor Col',
-		'Core Row',
-		'Core Col',
-		'Fan Row',
-		'Fan Col',
-	];
+	const partOrientations = parts.flatMap((part) => [
+		{ ...part, orientation: 'Row' },
+		{ ...part, orientation: 'Col' },
+	]);
 	const sandTiles = shuffle<{
 		revealedType: string;
-		hintVariant?: string;
+		partHint?: string;
+		revealedTileColor: string;
+		partOrientation?: string;
 	}>([
-		{ revealedType: 'Exit' },
-		...Array(3).fill({ revealedType: 'Shade' }),
-		...Array(8).fill({ revealedType: 'Item' }),
-		...hintVariants.map((hintVariant) => ({
+		{ revealedType: 'Exit', revealedTileColor: 'bg-white/80' },
+		...Array(3).fill({ revealedType: 'Shade', revealedTileColor: 'bg-black' }),
+		...Array(8).fill({
+			revealedType: 'Item',
+			revealedTileColor: 'bg-slate-700',
+		}),
+		...partOrientations.map((partOrientation) => ({
 			revealedType: 'Hint',
-			hintVariant,
+			partHint: partOrientation.part,
+			revealedTileColor: partOrientation.color,
+			partOrientation: partOrientation.orientation,
 		})),
 	]);
 	Array.from(
@@ -101,42 +105,16 @@ export function shuffleBoard() {
 					revealed: false,
 					unrevealedType: 'Sand',
 					revealedType: sandTiles[index].revealedType,
-					hintVariant: sandTiles[index].hintVariant,
-					unrevealedTileEmoji: '🏜️',
-					revealedTileEmoji:
-						sandTiles[index].revealedType !== 'Hint'
-							? (
-									{ Exit: '🏁', Shade: '🕳️', Item: '⚙️' } as Record<
-										string,
-										string
-									>
-								)[sandTiles[index].revealedType]
-							: sandTiles[index].hintVariant
-								? (
-										{
-											'Pointer Row': '🧭',
-											'Pointer Col': '🧭',
-											'Motor Row': '⚡',
-											'Motor Col': '⚡',
-											'Core Row': '💎',
-											'Core Col': '💎',
-											'Fan Row': '🪭',
-											'Fan Col': '🪭',
-										} as Record<string, string>
-									)[sandTiles[index].hintVariant]
+					partHint: sandTiles[index].partHint,
+					partOrientation: sandTiles[index].partOrientation,
+					unrevealedTileColor: 'bg-yellow-300/80',
+					revealedTileColor: sandTiles[index].revealedTileColor,
+					orientationEmoji:
+						sandTiles[index].partOrientation === 'Row'
+							? '↔️'
+							: sandTiles[index].partOrientation === 'Col'
+								? '↕️'
 								: '',
-					hintOrientation: sandTiles[index].hintVariant
-						? {
-								'Pointer Row': '↔️',
-								'Pointer Col': '↕️',
-								'Motor Row': '↔️',
-								'Motor Col': '↕️',
-								'Core Row': '↔️',
-								'Core Col': '↕️',
-								'Fan Row': '↔️',
-								'Fan Col': '↕️',
-							}[sandTiles[index].hintVariant]
-						: undefined,
 				},
 			};
 		});

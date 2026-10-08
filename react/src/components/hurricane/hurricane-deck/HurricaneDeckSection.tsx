@@ -1,5 +1,6 @@
 import { useGame } from '@/components/GameContext';
 import GameInfoHeading from '@/components/game-info/GameInfoHeading';
+import GameInfoSection from '@/components/game-info/GameInfoSection';
 import {
 	hurricaneDirections,
 	hurricaneDistances,
@@ -10,7 +11,7 @@ export default function HurricaneDeckSection() {
 	const { state, dispatch } = useGame();
 
 	return (
-		<section className="border rounded-xl p-6 relative">
+		<GameInfoSection>
 			<GameInfoHeading
 				heading="Hurricane Deck"
 				subheading={`${state.hurricaneDeckCounter} / 31`}
@@ -23,7 +24,7 @@ export default function HurricaneDeckSection() {
 					<span>{state.discardedHurricaneDeck.Thirst} / 4</span>
 				</div>
 				<div
-					className={`${state.recentlyDrawnHurricaneCard.type === 'Hurricane Up' ? 'bg-red-700/80' : 'bg-none'} flex justify-around items-center`}
+					className={`${state.recentlyDrawnHurricaneCard.type === 'Hurricane Up' ? 'bg-red-700/80' : 'bg-none'} flex flex-wrap justify-around items-center`}
 				>
 					<h3 className="font-bold">Hurricane Up</h3>
 					<span>{state.discardedHurricaneDeck['Hurricane Up']} / 3</span>
@@ -73,7 +74,7 @@ export default function HurricaneDeckSection() {
 						</table>
 					</div>
 				</div>
-				<div className="flex justify-around items-center md:col-span-2">
+				<div className="flex flex-wrap justify-around items-center md:col-span-2">
 					<h3 className="font-bold">Sand Mark Count: </h3>
 					{sumSandPoints(state.board)} / 48
 				</div>
@@ -116,6 +117,6 @@ export default function HurricaneDeckSection() {
 					Draw Cards (Warning: Ends your Turn)
 				</button>
 			</div>
-		</section>
+		</GameInfoSection>
 	);
 }

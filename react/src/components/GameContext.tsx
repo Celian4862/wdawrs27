@@ -1,4 +1,3 @@
-// src/context/GameContext.tsx
 import {
 	createContext,
 	type ReactNode,
@@ -36,6 +35,7 @@ interface GameState {
 	itemDeckCounter: number;
 	drawnItemDeck: Record<string, number>;
 	recentlyDrawnItemCard: string;
+	partsCollected: string[];
 	endGameState: EndGameState;
 	showConfirmResetModal: boolean;
 }
@@ -43,6 +43,7 @@ interface GameState {
 type GameAction =
 	| { type: 'SET_PLAYERS'; count: number }
 	| { type: 'SET_DIFFICULTY'; index: number }
+	| { type: 'REVEAL_TILE'; tile: number }
 	| { type: 'SET_SHOW_CONFIRM_END_TURN_MODAL'; show: boolean }
 	| { type: 'START_DRAWING' }
 	| { type: 'FINISH_DRAWING' }
@@ -85,6 +86,7 @@ const initialState: GameState = {
 		'Speed Boost': 0,
 	},
 	recentlyDrawnItemCard: 'None',
+	partsCollected: ['Motor', 'Fan', 'Core', 'Pointer'],
 	endGameState: {},
 	showConfirmResetModal: false,
 };
@@ -106,6 +108,16 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 			};
 		case 'SET_DIFFICULTY':
 			return { ...state, meterProgress: action.index };
+		case 'REVEAL_TILE': {
+			const newBoard = [...state.board];
+			const targetTileIndex = newBoard.findIndex(
+				(tile) => tile.id === action.tile,
+			);
+			if (newBoard[targetTileIndex].info) {
+				newBoard[targetTileIndex].info.revealed = true;
+			}
+			return { ...state, board: newBoard };
+		}
 		case 'SET_SHOW_CONFIRM_END_TURN_MODAL':
 			return { ...state, showConfirmEndTurnModal: action.show };
 		case 'SET_SHOW_CONFIRM_RESET_MODAL':

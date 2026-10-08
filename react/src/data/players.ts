@@ -43,21 +43,21 @@ const roleTemplates = [
 	{
 		title: 'Cartographer',
 		ability:
-			'Can move other players up to three spaces away from their current tile. Hiker and Traveler can still use their movement abilities when moved by Cartographer.',
+			'Can use an action to move other players up to three spaces away from their current tile. Hiker and Traveler can still use their movement abilities when moved by Cartographer.',
 		maxWater: 4,
 		color: '#f59e0b',
 	},
 	{
 		title: 'Weather Forecaster',
 		ability:
-			'Can spend an action to look at the next set of hurricane cards and optionally defer one card to the end of the deck. Can spend an action to draw one less storm card.',
+			'Can use an action to look at the next set of hurricane cards and optionally defer one card to the end of the deck. Can use an action to draw one less storm card.',
 		maxWater: 4,
 		color: '#FFFFFF',
 	},
 	{
 		title: 'Water Dispenser',
 		ability:
-			'Can share water to players on neighboring tiles, and can spend an action to increase their water level by one when standing on revealed Water tiles.',
+			'Can share water to players on neighboring tiles, and can use an action to increase their water level by one when standing on revealed Water tiles.',
 		maxWater: 5,
 		color: '#06b6d4',
 	},
