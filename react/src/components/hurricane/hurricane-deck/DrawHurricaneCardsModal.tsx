@@ -75,7 +75,7 @@ export default function DrawHurricaneCardsModal() {
 								)
 							].info?.revealedType !== 'Shade'
 						) {
-							if (currentPlayers[j].currentWaterLevel-- < 0) {
+							if (--currentPlayers[j].currentWaterLevel < 0) {
 								endGame = true;
 							}
 						}
