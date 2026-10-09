@@ -13,10 +13,14 @@ export interface Tile {
 		unrevealedTileColor: string;
 		revealedTileColor: string;
 		orientationEmoji?: string;
+		partCount: number;
 	};
 }
 
 export function toIndex(row: number, col: number) {
+	if (row < 0 || row > 4 || col < 0 || col > 4) {
+		return -1;
+	}
 	return row * 5 + col;
 }
 
@@ -26,6 +30,28 @@ export function toCoordinates(index: number) {
 
 export function sumSandPoints(board: Tile[]) {
 	return board.reduce((sum, tile) => sum + (tile.info?.sandPoints ?? 0), 0);
+}
+
+// export function isInvalidTile(action: string, playerPosition: number, tilePosition: number, isTraveler: boolean = false, isHiker: boolean = false) {
+// 	switch (action) {
+// 		case 'Move':
+// 			findNeighboring()
+// 	}
+// }
+
+export function findNeighboring(board: Tile[], mainTilePosition: number) {
+	const [mainRow, mainCol] = toCoordinates(mainTilePosition);
+
+	return {
+		up: board[toIndex(mainRow - 1, mainCol)],
+		down: board[toIndex(mainRow + 1, mainCol)],
+		left: board[toIndex(mainRow, mainCol - 1)],
+		right: board[toIndex(mainRow, mainCol + 1)],
+		up_left: board[toIndex(mainRow - 1, mainCol - 1)],
+		up_right: board[toIndex(mainRow - 1, mainCol + 1)],
+		down_left: board[toIndex(mainRow + 1, mainCol - 1)],
+		down_right: board[toIndex(mainRow + 1, mainCol + 1)],
+	};
 }
 
 export function shuffleBoard() {
@@ -46,6 +72,7 @@ export function shuffleBoard() {
 			revealedType: 'Item',
 			unrevealedTileColor: 'bg-red-700',
 			revealedTileColor: 'bg-slate-700',
+			partCount: 0,
 		},
 	};
 
@@ -62,6 +89,7 @@ export function shuffleBoard() {
 				unrevealedTileColor: 'bg-lime-600',
 				revealedTileColor:
 					greenthTiles[index] === 'Water' ? 'bg-blue-700' : 'bg-amber-700',
+				partCount: 0,
 			},
 		};
 	});
@@ -115,6 +143,7 @@ export function shuffleBoard() {
 							: sandTiles[index].partOrientation === 'Col'
 								? '↕️'
 								: '',
+					partCount: 0,
 				},
 			};
 		});

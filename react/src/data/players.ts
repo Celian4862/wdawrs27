@@ -2,7 +2,7 @@ import type { ItemType } from './items';
 import { shuffle } from './shuffle';
 
 export function assignPlayers(playerCount: number) {
-	return shuffle(roleTemplates)
+	const activePlayers = shuffle(roleTemplates)
 		.slice(0, playerCount)
 		.map<ActivePlayer>((role, index) => ({
 			id: index,
@@ -10,7 +10,20 @@ export function assignPlayers(playerCount: number) {
 			currentWaterLevel: role.maxWater,
 			currentTileId: 19,
 			items: [],
+			isTurn: false,
 		}));
+
+	const minWater = activePlayers.reduce((min, current) =>
+		current.role.maxWater < min.role.maxWater ? current : min,
+	);
+
+	return activePlayers.map((player) =>
+		player === minWater ? { ...player, isTurn: true } : player,
+	);
+}
+
+export function findCurrentPlayer(players: ActivePlayer[]) {
+	return players.find((player) => player.isTurn);
 }
 
 export interface ActivePlayer {
@@ -19,6 +32,7 @@ export interface ActivePlayer {
 	currentWaterLevel: number;
 	currentTileId: number;
 	items: ItemType[];
+	isTurn: boolean;
 }
 
 const roleTemplates = [

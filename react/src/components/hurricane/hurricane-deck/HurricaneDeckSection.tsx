@@ -103,15 +103,15 @@ export default function HurricaneDeck() {
 				<button
 					type="button"
 					disabled={
-						state.isDrawingHurricaneCards || state.showConfirmEndTurnModal
+						state.isDrawingHurricaneCards || state.showEndTurnModal
 					}
 					className={`p-3 bg-red-600/70 w-full rounded-lg font-semibold motion-safe:transition ${
-						state.isDrawingHurricaneCards || state.showConfirmEndTurnModal
+						state.isDrawingHurricaneCards || state.showEndTurnModal
 							? 'brightness-50 cursor-not-allowed'
 							: 'hover:bg-red-600 active:brightness-50'
 					}`}
 					onClick={() =>
-						dispatch({ type: 'SET_SHOW_CONFIRM_END_TURN_MODAL', show: true })
+						dispatch({ type: 'SET_SHOW_END_TURN_MODAL', show: true })
 					}
 				>
 					Draw Cards (Warning: Ends your Turn)

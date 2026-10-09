@@ -28,7 +28,7 @@ export default function PlayerCards() {
 							</h3>
 						</details>
 						<p className="my-1 text-lg font-semibold text-cyan-200 tabular-nums">
-							{player.currentWaterLevel}/{player.role.maxWater}
+							Water: {player.currentWaterLevel}/{player.role.maxWater}
 						</p>
 						<details>
 							<summary className="cursor-pointer">Items</summary>

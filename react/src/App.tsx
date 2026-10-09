@@ -8,9 +8,10 @@ import PlayerCards from '@/components/player/PlayerCards';
 import ResetButton from '@/components/reset/ResetButton';
 import ResetButtonModal from '@/components/reset/ResetButtonModal';
 import Setup from '@/components/Setup';
-import ActionPanel from './components/ActionPanel';
+import ActionPanel from './components/actions/ActionPanel';
 import HurricaneMeter from './components/hurricane/hurricane-meter/HurricaneMeter';
 import Parts from './components/Parts';
+import RevealTileModal from './components/actions/RevealTileModal';
 
 function GameContent() {
 	const { state } = useGame();
@@ -28,7 +29,8 @@ function GameContent() {
 			<EndGameScreen />
 			<DrawHurricaneCardsModal />
 			<ResetButtonModal />
-			<div className="h-dvh w-screen p-10 box-border grid grid-cols-1 gap-6  lg:grid-cols-11 lg:gap-10 xl:grid-cols-2">
+			<RevealTileModal />
+			<div className="lg:h-dvh w-screen p-10 pb-40 box-border grid grid-cols-1 gap-6 lg:pb-10 lg:grid-cols-11 lg:gap-10 xl:grid-cols-2">
 				<div className="h-full flex flex-col gap-4 lg:min-h-0 lg:overflow-hidden lg:col-span-5 xl:col-span-1">
 					<HurricaneMeter hurricaneMeter={state.hurricaneMeter} />
 					<div className="flex-1 min-h-0 flex items-center justify-center">

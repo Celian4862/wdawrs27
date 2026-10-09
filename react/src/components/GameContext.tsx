@@ -21,6 +21,8 @@ interface GameState {
 	gameId: boolean;
 	players: ActivePlayer[];
 	board: Tile[];
+	selectedAction: string | null;
+	showRevealModal: boolean;
 	sandMarkCount: number;
 	hurricaneMeter: number[];
 	meterProgress: number;
@@ -29,7 +31,7 @@ interface GameState {
 	discardedHurricaneDeck: Record<string, number>;
 	recentlyDrawnHurricaneCard: HurricaneCard;
 	isDrawingHurricaneCards: boolean;
-	showConfirmEndTurnModal: boolean;
+	showEndTurnModal: boolean;
 	turnStatus: string | null;
 	itemDeck: ItemType[];
 	itemDeckCounter: number;
@@ -37,25 +39,8 @@ interface GameState {
 	recentlyDrawnItemCard: string;
 	partsCollected: string[];
 	endGameState: EndGameState;
-	showConfirmResetModal: boolean;
+	showResetModal: boolean;
 }
-
-type GameAction =
-	| { type: 'SET_PLAYERS'; count: number }
-	| { type: 'SET_DIFFICULTY'; index: number }
-	| { type: 'REVEAL_TILE'; tile: number }
-	| { type: 'SET_SHOW_CONFIRM_END_TURN_MODAL'; show: boolean }
-	| { type: 'START_DRAWING' }
-	| { type: 'FINISH_DRAWING' }
-	| { type: 'SET_TURN_STATUS'; status: string | null }
-	| { type: 'MOVE_HURRICANE'; board: Tile[] }
-	| { type: 'DRINK_WATER'; players: ActivePlayer[] }
-	| { type: 'DRAW_HURRICANE_CARD'; card: HurricaneCard }
-	| { type: 'RESHUFFLE_DECK'; deck: HurricaneCard[] }
-	| { type: 'DRAW_ITEM_CARD'; card: string }
-	| { type: 'GAME_OVER'; reason: string }
-	| { type: 'SET_SHOW_CONFIRM_RESET_MODAL'; show: boolean }
-	| { type: 'RESET_GAME' };
 
 const initialHurricaneDeck = shuffleHurricaneDeck();
 const initialBoard = shuffleBoard();
@@ -64,6 +49,8 @@ const initialState: GameState = {
 	gameId: false,
 	players: [],
 	board: initialBoard,
+	selectedAction: null,
+	showRevealModal: false,
 	sandMarkCount: sumSandPoints(initialBoard),
 	hurricaneMeter: [],
 	meterProgress: -1,
@@ -74,7 +61,7 @@ const initialState: GameState = {
 	),
 	recentlyDrawnHurricaneCard: { type: 'None' },
 	isDrawingHurricaneCards: false,
-	showConfirmEndTurnModal: false,
+	showEndTurnModal: false,
 	turnStatus: null,
 	itemDeck: shuffleItemDeck(),
 	itemDeckCounter: 12,
@@ -89,8 +76,27 @@ const initialState: GameState = {
 	recentlyDrawnItemCard: 'None',
 	partsCollected: [],
 	endGameState: {},
-	showConfirmResetModal: false,
+	showResetModal: false,
 };
+
+type GameAction =
+	| { type: 'SET_PLAYERS'; count: number }
+	| { type: 'SET_DIFFICULTY'; index: number }
+	| { type: 'SELECT_ACTION'; action: string | null }
+	| { type: 'SET_SHOW_REVEAL_MODAL'; show: boolean; }
+	| { type: 'REVEAL_TILE'; tile: number }
+	| { type: 'SET_SHOW_END_TURN_MODAL'; show: boolean }
+	| { type: 'START_DRAWING' }
+	| { type: 'FINISH_DRAWING' }
+	| { type: 'SET_TURN_STATUS'; players: ActivePlayer[], status: string | null }
+	| { type: 'MOVE_HURRICANE'; board: Tile[] }
+	| { type: 'DRINK_WATER'; players: ActivePlayer[] }
+	| { type: 'DRAW_HURRICANE_CARD'; card: HurricaneCard }
+	| { type: 'RESHUFFLE_DECK'; deck: HurricaneCard[] }
+	| { type: 'DRAW_ITEM_CARD'; card: string }
+	| { type: 'GAME_OVER'; reason: string }
+	| { type: 'SET_SHOW_RESET_MODAL'; show: boolean }
+	| { type: 'RESET_GAME' };
 
 function initHurricaneDiscard(key: HurricaneCard) {
 	if (specialCards.includes(key.type)) {
@@ -109,6 +115,10 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 			};
 		case 'SET_DIFFICULTY':
 			return { ...state, meterProgress: action.index };
+		case 'SELECT_ACTION':
+			return { ...state, selectedAction: action.action };
+		case 'SET_SHOW_REVEAL_MODAL':
+			return { ...state, showRevealModal: action.show };
 		case 'REVEAL_TILE': {
 			const newBoard = [...state.board];
 			const targetTileIndex = newBoard.findIndex(
@@ -119,24 +129,24 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 			}
 			return { ...state, board: newBoard };
 		}
-		case 'SET_SHOW_CONFIRM_END_TURN_MODAL':
-			return { ...state, showConfirmEndTurnModal: action.show };
-		case 'SET_SHOW_CONFIRM_RESET_MODAL':
+		case 'SET_SHOW_END_TURN_MODAL':
+			return { ...state, showEndTurnModal: action.show };
+		case 'SET_SHOW_RESET_MODAL':
 			return {
 				...state,
-				showConfirmResetModal: action.show,
+				showResetModal: action.show,
 			};
 		case 'START_DRAWING':
 			return {
 				...state,
-				showConfirmEndTurnModal: false,
+				showEndTurnModal: false,
 				isDrawingHurricaneCards: true,
 				turnStatus: 'Drawing cards...',
 			};
 		case 'FINISH_DRAWING':
 			return { ...state, isDrawingHurricaneCards: false, turnStatus: null };
 		case 'SET_TURN_STATUS':
-			return { ...state, turnStatus: action.status };
+			return { ...state, players: action.players, turnStatus: action.status };
 		case 'MOVE_HURRICANE': {
 			return {
 				...state,
@@ -155,6 +165,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 				: `Move ${action.card.distance} ${action.card.direction}`;
 			return {
 				...state,
+				selectedAction: null,
 				recentlyDrawnHurricaneCard: action.card,
 				hurricaneDeckCounter: state.hurricaneDeckCounter + 1,
 				meterProgress:

@@ -9,7 +9,7 @@ export default function DrawHurricaneCardsModal() {
 
 	return (
 		<PopUp
-			show={state.showConfirmEndTurnModal}
+			show={state.showEndTurnModal}
 			heading="End Your Turn?"
 			description={
 				<>
@@ -24,7 +24,7 @@ export default function DrawHurricaneCardsModal() {
 			<ConfirmModalButtons
 				confirmMessage="Confirm & Draw"
 				onCancel={() =>
-					dispatch({ type: 'SET_SHOW_CONFIRM_END_TURN_MODAL', show: false })
+					dispatch({ type: 'SET_SHOW_END_TURN_MODAL', show: false })
 				}
 				onConfirm={handleDrawHurricaneCards}
 			/>
@@ -160,9 +160,18 @@ export default function DrawHurricaneCardsModal() {
 				}
 			}
 
+			let playerIndex = currentPlayers.findIndex((player) => player.isTurn);
+			currentPlayers[playerIndex].isTurn = false;
+
+			if (++playerIndex === currentPlayers.length) {
+				playerIndex = 0;
+			}
+			currentPlayers[playerIndex].isTurn = true;
+			currentPlayers = [...currentPlayers]
 			// End of turn rest delay & notification phase
 			dispatch({
 				type: 'SET_TURN_STATUS',
+				players: currentPlayers,
 				status: 'Turn complete! Passing to next player...',
 			});
 			await delay(1500); // Guard delay to display message before unlocking UI
