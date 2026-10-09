@@ -2,12 +2,13 @@ import Board from '@/components/Board';
 import EndGameScreen from '@/components/EndGameScreen';
 import { GameProvider, useGame } from '@/components/GameContext';
 import DrawHurricaneCardsModal from '@/components/hurricane/hurricane-deck/DrawHurricaneCardsModal';
-import HurricaneDeckSection from '@/components/hurricane/hurricane-deck/HurricaneDeckSection';
+import HurricaneDeck from '@/components/hurricane/hurricane-deck/HurricaneDeckSection';
 import ItemDeck from '@/components/ItemDeck';
 import PlayerCards from '@/components/player/PlayerCards';
 import ResetButton from '@/components/reset/ResetButton';
 import ResetButtonModal from '@/components/reset/ResetButtonModal';
 import Setup from '@/components/Setup';
+import ActionPanel from './components/ActionPanel';
 import HurricaneMeter from './components/hurricane/hurricane-meter/HurricaneMeter';
 import Parts from './components/Parts';
 
@@ -38,7 +39,8 @@ function GameContent() {
 				<div className="h-full min-h-0 lg:flex lg:flex-col lg:col-span-6 xl:col-span-1">
 					<div className="pr-2 lg:h-full lg:overflow-y-auto">
 						<section className="py-5 grid gap-5">
-							<HurricaneDeckSection />
+							<ActionPanel />
+							<HurricaneDeck />
 							<PlayerCards />
 							<ItemDeck />
 							<Parts />

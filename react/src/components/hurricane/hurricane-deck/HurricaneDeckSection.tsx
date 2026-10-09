@@ -7,7 +7,7 @@ import {
 } from '@/data/shuffleHurricaneDeck';
 import { sumSandPoints } from '@/data/tiles';
 
-export default function HurricaneDeckSection() {
+export default function HurricaneDeck() {
 	const { state, dispatch } = useGame();
 
 	return (
