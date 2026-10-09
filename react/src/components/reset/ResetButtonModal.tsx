@@ -13,9 +13,7 @@ export default function ResetButtonModal() {
 		>
 			<ConfirmModalButtons
 				confirmMessage="Confirm & Reset"
-				onCancel={() =>
-					dispatch({ type: 'SET_SHOW_RESET_MODAL', show: false })
-				}
+				onCancel={() => dispatch({ type: 'SET_SHOW_RESET_MODAL', show: false })}
 				onConfirm={() => dispatch({ type: 'RESET_GAME' })}
 			/>
 		</PopUp>

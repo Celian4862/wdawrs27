@@ -102,9 +102,7 @@ export default function HurricaneDeck() {
 
 				<button
 					type="button"
-					disabled={
-						state.isDrawingHurricaneCards || state.showEndTurnModal
-					}
+					disabled={state.isDrawingHurricaneCards || state.showEndTurnModal}
 					className={`p-3 bg-red-600/70 w-full rounded-lg font-semibold motion-safe:transition ${
 						state.isDrawingHurricaneCards || state.showEndTurnModal
 							? 'brightness-50 cursor-not-allowed'

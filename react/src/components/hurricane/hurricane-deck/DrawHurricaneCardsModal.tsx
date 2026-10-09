@@ -167,7 +167,7 @@ export default function DrawHurricaneCardsModal() {
 				playerIndex = 0;
 			}
 			currentPlayers[playerIndex].isTurn = true;
-			currentPlayers = [...currentPlayers]
+			currentPlayers = [...currentPlayers];
 			// End of turn rest delay & notification phase
 			dispatch({
 				type: 'SET_TURN_STATUS',

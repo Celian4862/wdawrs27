@@ -1,7 +1,7 @@
-import { getTilePlayer } from "@/data/actions";
-import ConfirmModalButtons from "../ConfirmModalButtons";
-import { useGame } from "../GameContext";
-import PopUp from "../PopUp";
+import { getTilePlayer } from '@/data/actions';
+import ConfirmModalButtons from '../ConfirmModalButtons';
+import { useGame } from '../GameContext';
+import PopUp from '../PopUp';
 
 export default function RevealTileModal() {
 	const { state, dispatch } = useGame();
@@ -17,14 +17,13 @@ export default function RevealTileModal() {
 			<ConfirmModalButtons
 				confirmMessage="Confirm & Reveal"
 				onCancel={() => {
-						dispatch({ type: 'SET_SHOW_REVEAL_MODAL', show: false });
-						dispatch({ type: 'SELECT_ACTION', action: null})
-					}
-				}
+					dispatch({ type: 'SET_SHOW_REVEAL_MODAL', show: false });
+					dispatch({ type: 'SELECT_ACTION', action: null });
+				}}
 				onConfirm={() => {
-					dispatch({ type: 'SET_SHOW_REVEAL_MODAL', show: false })
-					dispatch({ type: 'SELECT_ACTION', action: null })
-					dispatch({ type: 'REVEAL_TILE', tile: currentPlayer.currentTileId })
+					dispatch({ type: 'SET_SHOW_REVEAL_MODAL', show: false });
+					dispatch({ type: 'SELECT_ACTION', action: null });
+					dispatch({ type: 'REVEAL_TILE', tile: currentPlayer.currentTileId });
 				}}
 			/>
 		</PopUp>

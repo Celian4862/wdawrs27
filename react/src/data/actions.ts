@@ -1,5 +1,5 @@
-import { findCurrentPlayer, type ActivePlayer } from "./players";
-import type { Tile } from "./tiles";
+import { type ActivePlayer, findCurrentPlayer } from './players';
+import type { Tile } from './tiles';
 
 export function getTilePlayer(board: Tile[], players: ActivePlayer[]) {
 	const currentPlayer = findCurrentPlayer(players);
@@ -15,5 +15,5 @@ export function getTilePlayer(board: Tile[], players: ActivePlayer[]) {
 	if (!currentTile.info) {
 		throw new Error('Tile is not valid');
 	}
-	return { currentPlayer, currentTileInfo: currentTile.info }
+	return { currentPlayer, currentTileInfo: currentTile.info };
 }

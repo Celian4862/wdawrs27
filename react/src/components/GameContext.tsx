@@ -83,12 +83,12 @@ type GameAction =
 	| { type: 'SET_PLAYERS'; count: number }
 	| { type: 'SET_DIFFICULTY'; index: number }
 	| { type: 'SELECT_ACTION'; action: string | null }
-	| { type: 'SET_SHOW_REVEAL_MODAL'; show: boolean; }
+	| { type: 'SET_SHOW_REVEAL_MODAL'; show: boolean }
 	| { type: 'REVEAL_TILE'; tile: number }
 	| { type: 'SET_SHOW_END_TURN_MODAL'; show: boolean }
 	| { type: 'START_DRAWING' }
 	| { type: 'FINISH_DRAWING' }
-	| { type: 'SET_TURN_STATUS'; players: ActivePlayer[], status: string | null }
+	| { type: 'SET_TURN_STATUS'; players: ActivePlayer[]; status: string | null }
 	| { type: 'MOVE_HURRICANE'; board: Tile[] }
 	| { type: 'DRINK_WATER'; players: ActivePlayer[] }
 	| { type: 'DRAW_HURRICANE_CARD'; card: HurricaneCard }

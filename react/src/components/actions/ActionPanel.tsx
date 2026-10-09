@@ -5,7 +5,10 @@ import GameInfoSection from '../game-info/GameInfoSection';
 
 export default function ActionPanel() {
 	const { state, dispatch } = useGame();
-	const { currentPlayer, currentTileInfo } = getTilePlayer(state.board, state.players);
+	const { currentPlayer, currentTileInfo } = getTilePlayer(
+		state.board,
+		state.players,
+	);
 
 	const actions = [
 		{
@@ -20,7 +23,7 @@ export default function ActionPanel() {
 						return;
 					}
 					dispatch({ type: 'SELECT_ACTION', action: this.name });
-				}
+				};
 			},
 		},
 		{
@@ -31,9 +34,9 @@ export default function ActionPanel() {
 					if (state.isDrawingHurricaneCards) {
 						return;
 					}
-					dispatch({ type: 'SELECT_ACTION', action: this.name })
-				}
-			}
+					dispatch({ type: 'SELECT_ACTION', action: this.name });
+				};
+			},
 		},
 		{
 			name: 'Collect Part',
@@ -44,9 +47,9 @@ export default function ActionPanel() {
 					if (state.isDrawingHurricaneCards) {
 						return;
 					}
-					dispatch({ type: 'SELECT_ACTION', action: this.name })
-				}
-			}
+					dispatch({ type: 'SELECT_ACTION', action: this.name });
+				};
+			},
 		},
 		{
 			name: 'Reveal Tile',
@@ -57,10 +60,10 @@ export default function ActionPanel() {
 					if (state.isDrawingHurricaneCards) {
 						return;
 					}
-					dispatch({ type: 'SELECT_ACTION', action: this.name })
+					dispatch({ type: 'SELECT_ACTION', action: this.name });
 					dispatch({ type: 'SET_SHOW_REVEAL_MODAL', show: true });
-				}
-			}
+				};
+			},
 		},
 		{
 			name: 'Cancel',
@@ -70,10 +73,10 @@ export default function ActionPanel() {
 					if (state.isDrawingHurricaneCards) {
 						return;
 					}
-					dispatch({ type: 'SELECT_ACTION', action: null })
-				}
-			}
-		}
+					dispatch({ type: 'SELECT_ACTION', action: null });
+				};
+			},
+		},
 	];
 
 	return (

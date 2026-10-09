@@ -9,9 +9,9 @@ import ResetButton from '@/components/reset/ResetButton';
 import ResetButtonModal from '@/components/reset/ResetButtonModal';
 import Setup from '@/components/Setup';
 import ActionPanel from './components/actions/ActionPanel';
+import RevealTileModal from './components/actions/RevealTileModal';
 import HurricaneMeter from './components/hurricane/hurricane-meter/HurricaneMeter';
 import Parts from './components/Parts';
-import RevealTileModal from './components/actions/RevealTileModal';
 
 function GameContent() {
 	const { state } = useGame();
