@@ -63,16 +63,17 @@ export function findMoveable(
 	board: Tile[],
 	neighboringTilePositions: number[],
 	hikerTilePosition: number,
-	currentPlayer: ActivePlayer
+	currentPlayer: ActivePlayer,
 ) {
 	return neighboringTilePositions.filter((neighboringTilePosition) => {
 		const neighboringTile = board[neighboringTilePosition].info;
 		if (!neighboringTile) {
 			throw new Error('Neighboring Tile is not valid');
 		}
-		console.log(`Hiker's Position: ${hikerTilePosition}\nNeighboring Position: ${neighboringTilePosition}`)
 		return (
-			neighboringTile.sandPoints < 2 || neighboringTilePosition === hikerTilePosition || currentPlayer.role.title === 'Hiker'
+			neighboringTile.sandPoints < 2 ||
+			neighboringTilePosition === hikerTilePosition ||
+			currentPlayer.role.title === 'Hiker'
 		);
 	});
 }

@@ -7,7 +7,7 @@ export function assignPlayers(playerCount: number) {
 		.map<ActivePlayer>((role, index) => ({
 			id: index,
 			role: role,
-			currentWaterLevel: role.maxWater,
+			currentWaterLevel: role.maxWater - 2,
 			currentTileId: 19,
 			items: [],
 			isTurn: false,

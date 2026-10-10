@@ -86,8 +86,10 @@ type GameAction =
 	| { type: 'SET_DIFFICULTY'; index: number }
 	| { type: 'SELECT_ACTION'; action: string | null }
 	| { type: 'MOVE_TILES'; players: ActivePlayer[] }
+	| { type: 'REMOVE_SAND'; tilePosition: number }
+	| { type: 'GAIN_WATER'; players: ActivePlayer[] }
 	| { type: 'SET_SHOW_REVEAL_MODAL'; show: boolean }
-	| { type: 'REVEAL_TILE'; tile: number }
+	| { type: 'REVEAL_TILE'; board: Tile[]; players: ActivePlayer[] }
 	| { type: 'SET_SHOW_END_TURN_MODAL'; show: boolean }
 	| { type: 'START_DRAWING' }
 	| { type: 'FINISH_DRAWING' }
@@ -109,6 +111,9 @@ function initHurricaneDiscard(key: HurricaneCard) {
 }
 
 function gameReducer(state: GameState, action: GameAction): GameState {
+	const actionCount = state.actionCount - 1;
+	const selectedAction = actionCount === 0 ? null : state.selectedAction;
+
 	switch (action.type) {
 		case 'SET_PLAYERS':
 			return {
@@ -121,18 +126,44 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 		case 'SELECT_ACTION':
 			return { ...state, selectedAction: action.action };
 		case 'MOVE_TILES':
-			return { ...state, players: action.players };
+			if (state.actionCount === 0) {
+				return state;
+			}
+			return {
+				...state,
+				actionCount,
+				selectedAction,
+				players: action.players,
+			};
+		case 'REMOVE_SAND': {
+			if (state.actionCount === 0) {
+				return state;
+			}
+			const newBoard = [...state.board];
+			const targetTile = newBoard[action.tilePosition];
+			if (targetTile.info) {
+				newBoard[action.tilePosition] = {
+					id: targetTile.id,
+					info: {
+						...targetTile.info,
+						sandPoints: targetTile.info.sandPoints - 1,
+					},
+				};
+				return { ...state, actionCount, selectedAction, board: newBoard };
+			} else {
+				return { ...state };
+			}
+		}
 		case 'SET_SHOW_REVEAL_MODAL':
 			return { ...state, showRevealModal: action.show };
 		case 'REVEAL_TILE': {
-			const newBoard = [...state.board];
-			const targetTileIndex = newBoard.findIndex(
-				(tile) => tile.id === action.tile,
-			);
-			if (newBoard[targetTileIndex].info) {
-				newBoard[targetTileIndex].info.revealed = true;
-			}
-			return { ...state, board: newBoard };
+			return {
+				...state,
+				players: action.players,
+				actionCount: state.actionCount - 1,
+				selectedAction: null,
+				board: action.board,
+			};
 		}
 		case 'SET_SHOW_END_TURN_MODAL':
 			return { ...state, showEndTurnModal: action.show };

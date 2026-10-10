@@ -46,15 +46,23 @@ export default function ActionPanel() {
 		},
 	];
 
+	const disabled = (action: (typeof actions)[number]) =>
+		action.disableCondition ||
+		state.isDrawingHurricaneCards ||
+		state.actionCount === 0;
+
 	return (
 		<GameInfoSection className="bg-slate-700 lg:sticky top-0 lg:z-30">
-			<GameInfoHeading heading="Action Panel" subheading="" />
+			<GameInfoHeading
+				heading="Action Panel"
+				subheading={`${state.actionCount} / 4`}
+			/>
 			<div className="flex flex-wrap gap-2">
 				{actions.map((action) => (
 					<button
 						key={action.name}
 						type="button"
-						disabled={action.disableCondition || state.isDrawingHurricaneCards}
+						disabled={disabled(action)}
 						onClick={() => {
 							if (state.isDrawingHurricaneCards || action.disableCondition) {
 								return;
@@ -68,7 +76,7 @@ export default function ActionPanel() {
 								dispatch({ type: 'SET_SHOW_REVEAL_MODAL', show: true });
 							}
 						}}
-						className={`p-3 border rounded-lg motion-safe:transition ${action.disableCondition || state.isDrawingHurricaneCards ? 'brightness-50' : 'hover:bg-yellow-600 active:scale-115'} ${state.selectedAction === action.name ? 'bg-yellow-600 scale-115' : ''}`}
+						className={`p-3 border rounded-lg motion-safe:transition ${disabled(action) ? 'brightness-50' : 'hover:bg-yellow-600 active:scale-115'} ${state.selectedAction === action.name ? 'bg-yellow-600 scale-115' : ''}`}
 					>
 						{action.name}
 					</button>

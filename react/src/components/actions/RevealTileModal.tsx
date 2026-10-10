@@ -23,9 +23,26 @@ export default function RevealTileModal() {
 				onConfirm={() => {
 					dispatch({ type: 'SET_SHOW_REVEAL_MODAL', show: false });
 					dispatch({ type: 'SELECT_ACTION', action: null });
+
+					const board = [...state.board];
+					const targetTileIndex = board.findIndex(
+						(tile) => tile.id === state.players[currentPlayerIndex].currentTileId,
+					);
+					const players = [...state.players];
+					if (board[targetTileIndex].info) {
+						board[targetTileIndex].info.revealed = true;
+						if (board[targetTileIndex].info.revealedType === 'Water') {
+							players.forEach((_, index, arr) => {
+								if (arr[index].currentTileId === targetTileIndex) {
+									arr[index].currentWaterLevel = arr[index].currentWaterLevel + 2 > arr[index].role.maxWater ? arr[index].role.maxWater : arr[index].currentWaterLevel + 2;
+								}
+							});
+						}
+					}
 					dispatch({
 						type: 'REVEAL_TILE',
-						tile: state.players[currentPlayerIndex].currentTileId,
+						board,
+						players
 					});
 				}}
 			/>

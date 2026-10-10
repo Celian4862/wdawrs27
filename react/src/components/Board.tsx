@@ -32,7 +32,7 @@ export default function Board({ className }: { className?: string }) {
 					state.board,
 					neighboringTilePositions,
 					state.board.findIndex((tile) => tile.id === hikerPosition),
-					state.players[currentPlayerIndex]
+					state.players[currentPlayerIndex],
 				)
 			: state.selectedAction === 'Remove Sand'
 				? findSandPoints(
@@ -49,22 +49,36 @@ export default function Board({ className }: { className?: string }) {
 			{state.board.map((tile, index) => {
 				const isHurricane = !tile.info;
 				const invalidTile = !validTiles.includes(index);
-				const moveOrRemoveAction = ['Move', 'Remove Sand'].includes(
+				const isMoveOrRemoveAction = ['Move', 'Remove Sand'].includes(
 					state.selectedAction ?? '',
 				);
+				const hasNoActions = state.actionCount === 0;
 
 				return (
 					<button
 						key={tile.id}
 						type="button"
-						disabled={isHurricane || !state.selectedAction || invalidTile}
-						className={`relative aspect-square border rounded-lg ease-in-out hover:duration-250 active:duration-100 motion-safe:transition-all ${isHurricane || (invalidTile && moveOrRemoveAction) ? 'brightness-50 cursor-not-allowed' : ''} ${!(isHurricane || invalidTile) && moveOrRemoveAction ? 'hover:scale-115 active:brightness-50' : ''} ${tile.info?.revealed ? tile.info.revealedTileColor : tile.info?.unrevealedTileColor}`}
+						disabled={
+							isHurricane ||
+							!state.selectedAction ||
+							invalidTile ||
+							hasNoActions
+						}
+						className={`relative aspect-square border rounded-lg ease-in-out hover:duration-250 active:duration-100 motion-safe:transition-all ${isHurricane || (invalidTile && isMoveOrRemoveAction) ? 'brightness-50 cursor-not-allowed' : ''} ${!(isHurricane || invalidTile) && isMoveOrRemoveAction ? 'hover:scale-115 active:brightness-50' : ''} ${tile.info?.revealed ? tile.info.revealedTileColor : tile.info?.unrevealedTileColor}`}
 						onClick={() => {
 							switch (state.selectedAction) {
 								case 'Move': {
 									const newPlayers = [...state.players];
 									newPlayers[currentPlayerIndex].currentTileId = tile.id;
 									dispatch({ type: 'MOVE_TILES', players: newPlayers });
+									break;
+								}
+								case 'Remove Sand': {
+									dispatch({ type: 'REMOVE_SAND', tilePosition: index });
+									break;
+								}
+								case 'Collect Part': {
+									break;
 								}
 							}
 						}}
