@@ -1,28 +1,58 @@
 import { useGame } from '@/components/GameContext';
+import { getTilePlayer } from '@/data/actions';
+import { findMoveable, findNeighboring, findSandPoints } from '@/data/tiles';
 import PawnCircle from './player/PawnCircle';
-// import { isInvalidTile } from '@/data/tiles';
-// import { findCurrentPlayer } from '@/data/players';
-// import { getTilePlayer } from '@/data/actions';
 
 export default function Board({ className }: { className?: string }) {
 	const { state } = useGame();
+
+	const { currentPlayer } = getTilePlayer(state.board, state.players);
+	const currentPosition = state.board.findIndex(
+		(tile) => tile.id === currentPlayer.currentTileId,
+	);
+	const hikerPosition = (() => {
+		const hikerIndex = state.players.findIndex(
+			(player) => player.role.title === 'Hiker',
+		);
+		if (hikerIndex > 0) {
+			return state.board.findIndex(
+				(tile) => tile.id === state.players[hikerIndex].currentTileId,
+			);
+		}
+		return -1;
+	})();
+	const neighboringTilePositions = findNeighboring(
+		state.board.findIndex((tile) => tile.id === currentPlayer.currentTileId),
+		currentPlayer.role.title,
+	);
+	const validTiles =
+		state.selectedAction === 'Move'
+			? findMoveable(
+					state.board,
+					neighboringTilePositions,
+					state.board.findIndex((tile) => tile.id === hikerPosition),
+				)
+			: state.selectedAction === 'Remove Sand'
+				? findSandPoints(state.board, currentPosition, neighboringTilePositions)
+				: [];
 
 	return (
 		<section
 			className={`aspect-square w-100 md:max-w-full box-border grid grid-cols-5 gap-2 lg:w-auto lg:h-full ${className ?? ''}`}
 		>
-			{state.board.map((tile) => {
-				// const { currentPlayer } = getTilePlayer(state.board, state.players)
-				// const invalid = state.selectedAction ? isInvalidTile(state.selectedAction, state.board.findIndex((playerTile) => playerTile.id === currentPlayer.currentTileId), state.board.findIndex((tile2) => tile2.id === tile.id)) : false;
-
-				// const disabled = !tile.info || invalid;
+			{state.board.map((tile, index) => {
+				const isHurricane = !tile.info;
+				const invalidTile = !validTiles.includes(index);
+				const moveOrRemoveAction = ['Move', 'Remove Sand'].includes(
+					state.selectedAction ?? '',
+				);
 
 				return (
 					<button
 						key={tile.id}
 						type="button"
-						disabled={!tile.info}
-						className={`relative aspect-square border rounded-lg ease-in-out hover:duration-250 active:duration-100 motion-safe:transition-all ${!tile.info ? 'brightness-50 cursor-not-allowed' : 'hover:scale-115 active:brightness-50'} ${tile.info?.revealed ? tile.info.revealedTileColor : tile.info?.unrevealedTileColor}`}
+						disabled={isHurricane || !state.selectedAction || invalidTile}
+						className={`relative aspect-square border rounded-lg ease-in-out hover:duration-250 active:duration-100 motion-safe:transition-all ${isHurricane || (invalidTile && moveOrRemoveAction) ? 'brightness-50 cursor-not-allowed' : ''} ${!(isHurricane || invalidTile) && moveOrRemoveAction ? 'hover:scale-115 active:brightness-50' : ''} ${tile.info?.revealed ? tile.info.revealedTileColor : tile.info?.unrevealedTileColor}`}
 					>
 						{!tile.info && '🌪'}
 						{tile.info && tile.info.sandPoints > 0 && (

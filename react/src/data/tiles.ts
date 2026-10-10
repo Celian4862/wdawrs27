@@ -32,26 +32,60 @@ export function sumSandPoints(board: Tile[]) {
 	return board.reduce((sum, tile) => sum + (tile.info?.sandPoints ?? 0), 0);
 }
 
-// export function isInvalidTile(action: string, playerPosition: number, tilePosition: number, isTraveler: boolean = false, isHiker: boolean = false) {
-// 	switch (action) {
-// 		case 'Move':
-// 			findNeighboring()
-// 	}
-// }
-
-export function findNeighboring(board: Tile[], mainTilePosition: number) {
+export function findNeighboring(mainTilePosition: number, playerTitle: string) {
 	const [mainRow, mainCol] = toCoordinates(mainTilePosition);
+	const isTraveler = playerTitle === 'Traveler';
 
-	return {
-		up: board[toIndex(mainRow - 1, mainCol)],
-		down: board[toIndex(mainRow + 1, mainCol)],
-		left: board[toIndex(mainRow, mainCol - 1)],
-		right: board[toIndex(mainRow, mainCol + 1)],
-		up_left: board[toIndex(mainRow - 1, mainCol - 1)],
-		up_right: board[toIndex(mainRow - 1, mainCol + 1)],
-		down_left: board[toIndex(mainRow + 1, mainCol - 1)],
-		down_right: board[toIndex(mainRow + 1, mainCol + 1)],
-	};
+	const neighboring = [
+		toIndex(mainRow - 1, mainCol),
+		toIndex(mainRow + 1, mainCol),
+		toIndex(mainRow, mainCol - 1),
+		toIndex(mainRow, mainCol + 1),
+	];
+	if (isTraveler) {
+		neighboring.push(
+			toIndex(mainRow - 1, mainCol - 1),
+			toIndex(mainRow - 1, mainCol + 1),
+			toIndex(mainRow + 1, mainCol - 1),
+			toIndex(mainRow + 1, mainCol + 1),
+		);
+	}
+	return neighboring.filter((tilePosition) => tilePosition >= 0);
+}
+
+export function findMoveable(
+	board: Tile[],
+	neighboringTilePositions: number[],
+	hikerTilePosition: number,
+) {
+	return neighboringTilePositions.filter((neighboringTilePosition) => {
+		const neighboringTile = board[neighboringTilePosition].info;
+		if (!neighboringTile) {
+			throw new Error('Neighboring Tile is not valid');
+		}
+		return (
+			neighboringTile.sandPoints < 2 ||
+			neighboringTilePosition === hikerTilePosition
+		);
+	});
+}
+
+export function findSandPoints(
+	board: Tile[],
+	currentPosition: number,
+	neighboringTilePositions: number[],
+) {
+	const currentAndNeighboringPositions = [
+		...neighboringTilePositions,
+		currentPosition,
+	];
+	return currentAndNeighboringPositions.filter((position) => {
+		const tileInfo = board[position].info;
+		if (!tileInfo) {
+			throw new Error('Tile is not valid');
+		}
+		return tileInfo.sandPoints > 0;
+	});
 }
 
 export function shuffleBoard() {

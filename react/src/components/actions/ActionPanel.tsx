@@ -1,4 +1,5 @@
 import { getTilePlayer } from '@/data/actions';
+import { findNeighboring, findSandPoints } from '@/data/tiles';
 import { useGame } from '../GameContext';
 import GameInfoHeading from '../game-info/GameInfoHeading';
 import GameInfoSection from '../game-info/GameInfoSection';
@@ -9,6 +10,9 @@ export default function ActionPanel() {
 		state.board,
 		state.players,
 	);
+	const currentPosition = state.board.findIndex(
+		(tile) => tile.id === currentPlayer.currentTileId,
+	);
 
 	const actions = [
 		{
@@ -17,65 +21,25 @@ export default function ActionPanel() {
 				currentTileInfo.sandPoints > 1 &&
 				state.players.find((player) => player.role.title === 'Hiker')
 					?.currentTileId !== currentPlayer.currentTileId,
-			get onClick() {
-				return () => {
-					if (state.isDrawingHurricaneCards) {
-						return;
-					}
-					dispatch({ type: 'SELECT_ACTION', action: this.name });
-				};
-			},
 		},
 		{
 			name: 'Remove Sand',
-			disableCondition: currentTileInfo.sandPoints === 0,
-			get onClick() {
-				return () => {
-					if (state.isDrawingHurricaneCards) {
-						return;
-					}
-					dispatch({ type: 'SELECT_ACTION', action: this.name });
-				};
-			},
+			disableCondition:
+				findSandPoints(
+					state.board,
+					currentPosition,
+					findNeighboring(currentPosition, currentPlayer.role.title),
+				).length === 0,
 		},
 		{
 			name: 'Collect Part',
 			disableCondition:
 				currentTileInfo.partCount === 0 || !currentTileInfo.revealed,
-			get onClick() {
-				return () => {
-					if (state.isDrawingHurricaneCards) {
-						return;
-					}
-					dispatch({ type: 'SELECT_ACTION', action: this.name });
-				};
-			},
 		},
 		{
 			name: 'Reveal Tile',
 			disableCondition:
 				currentTileInfo.sandPoints > 0 || currentTileInfo.revealed,
-			get onClick() {
-				return () => {
-					if (state.isDrawingHurricaneCards) {
-						return;
-					}
-					dispatch({ type: 'SELECT_ACTION', action: this.name });
-					dispatch({ type: 'SET_SHOW_REVEAL_MODAL', show: true });
-				};
-			},
-		},
-		{
-			name: 'Cancel',
-			disableCondition: !state.selectedAction,
-			get onClick() {
-				return () => {
-					if (state.isDrawingHurricaneCards) {
-						return;
-					}
-					dispatch({ type: 'SELECT_ACTION', action: null });
-				};
-			},
 		},
 	];
 
@@ -88,7 +52,19 @@ export default function ActionPanel() {
 						key={action.name}
 						type="button"
 						disabled={action.disableCondition || state.isDrawingHurricaneCards}
-						onClick={action.onClick}
+						onClick={() => {
+							if (state.isDrawingHurricaneCards || action.disableCondition) {
+								return;
+							}
+							dispatch({
+								type: 'SELECT_ACTION',
+								action:
+									state.selectedAction === action.name ? null : action.name,
+							});
+							if (action.name === 'Reveal Tile') {
+								dispatch({ type: 'SET_SHOW_REVEAL_MODAL', show: true });
+							}
+						}}
 						className={`p-3 border rounded-lg motion-safe:transition ${action.disableCondition || state.isDrawingHurricaneCards ? 'brightness-50' : 'hover:bg-yellow-600 active:scale-115'} ${state.selectedAction === action.name ? 'bg-yellow-600 scale-115' : ''}`}
 					>
 						{action.name}
