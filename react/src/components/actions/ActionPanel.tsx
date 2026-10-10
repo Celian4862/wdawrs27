@@ -6,40 +6,43 @@ import GameInfoSection from '../game-info/GameInfoSection';
 
 export default function ActionPanel() {
 	const { state, dispatch } = useGame();
-	const { currentPlayer, currentTileInfo } = getTilePlayer(
+	const { currentPlayerIndex, currentTileIndex } = getTilePlayer(
 		state.board,
 		state.players,
-	);
-	const currentPosition = state.board.findIndex(
-		(tile) => tile.id === currentPlayer.currentTileId,
 	);
 
 	const actions = [
 		{
 			name: 'Move',
 			disableCondition:
-				currentTileInfo.sandPoints > 1 &&
+				(state.board[currentTileIndex].info?.sandPoints ?? 0) > 1 &&
 				state.players.find((player) => player.role.title === 'Hiker')
-					?.currentTileId !== currentPlayer.currentTileId,
+					?.currentTileId !== state.players[currentPlayerIndex].currentTileId,
 		},
 		{
 			name: 'Remove Sand',
 			disableCondition:
 				findSandPoints(
 					state.board,
-					currentPosition,
-					findNeighboring(currentPosition, currentPlayer.role.title),
+					currentTileIndex,
+					findNeighboring(
+						state.board,
+						currentTileIndex,
+						state.players[currentPlayerIndex].role.title,
+					),
 				).length === 0,
 		},
 		{
 			name: 'Collect Part',
 			disableCondition:
-				currentTileInfo.partCount === 0 || !currentTileInfo.revealed,
+				state.board[currentTileIndex].info?.partCount === 0 ||
+				!state.board[currentTileIndex].info?.revealed,
 		},
 		{
 			name: 'Reveal Tile',
 			disableCondition:
-				currentTileInfo.sandPoints > 0 || currentTileInfo.revealed,
+				(state.board[currentTileIndex].info?.sandPoints ?? 0) > 0 ||
+				state.board[currentTileIndex].info?.revealed,
 		},
 	];
 

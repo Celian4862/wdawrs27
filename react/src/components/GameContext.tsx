@@ -22,6 +22,7 @@ interface GameState {
 	players: ActivePlayer[];
 	board: Tile[];
 	selectedAction: string | null;
+	actionCount: number;
 	showRevealModal: boolean;
 	sandMarkCount: number;
 	hurricaneMeter: number[];
@@ -49,6 +50,7 @@ const initialState: GameState = {
 	gameId: false,
 	players: [],
 	board: initialBoard,
+	actionCount: 4,
 	selectedAction: null,
 	showRevealModal: false,
 	sandMarkCount: sumSandPoints(initialBoard),
@@ -83,6 +85,7 @@ type GameAction =
 	| { type: 'SET_PLAYERS'; count: number }
 	| { type: 'SET_DIFFICULTY'; index: number }
 	| { type: 'SELECT_ACTION'; action: string | null }
+	| { type: 'MOVE_TILES'; players: ActivePlayer[] }
 	| { type: 'SET_SHOW_REVEAL_MODAL'; show: boolean }
 	| { type: 'REVEAL_TILE'; tile: number }
 	| { type: 'SET_SHOW_END_TURN_MODAL'; show: boolean }
@@ -117,6 +120,8 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 			return { ...state, meterProgress: action.index };
 		case 'SELECT_ACTION':
 			return { ...state, selectedAction: action.action };
+		case 'MOVE_TILES':
+			return { ...state, players: action.players };
 		case 'SET_SHOW_REVEAL_MODAL':
 			return { ...state, showRevealModal: action.show };
 		case 'REVEAL_TILE': {
@@ -146,7 +151,12 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 		case 'FINISH_DRAWING':
 			return { ...state, isDrawingHurricaneCards: false, turnStatus: null };
 		case 'SET_TURN_STATUS':
-			return { ...state, players: action.players, turnStatus: action.status };
+			return {
+				...state,
+				actionCount: 4,
+				players: action.players,
+				turnStatus: action.status,
+			};
 		case 'MOVE_HURRICANE': {
 			return {
 				...state,

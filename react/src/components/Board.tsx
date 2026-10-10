@@ -4,17 +4,17 @@ import { findMoveable, findNeighboring, findSandPoints } from '@/data/tiles';
 import PawnCircle from './player/PawnCircle';
 
 export default function Board({ className }: { className?: string }) {
-	const { state } = useGame();
+	const { state, dispatch } = useGame();
 
-	const { currentPlayer } = getTilePlayer(state.board, state.players);
-	const currentPosition = state.board.findIndex(
-		(tile) => tile.id === currentPlayer.currentTileId,
+	const { currentPlayerIndex, currentTileIndex } = getTilePlayer(
+		state.board,
+		state.players,
 	);
 	const hikerPosition = (() => {
 		const hikerIndex = state.players.findIndex(
 			(player) => player.role.title === 'Hiker',
 		);
-		if (hikerIndex > 0) {
+		if (hikerIndex >= 0) {
 			return state.board.findIndex(
 				(tile) => tile.id === state.players[hikerIndex].currentTileId,
 			);
@@ -22,8 +22,9 @@ export default function Board({ className }: { className?: string }) {
 		return -1;
 	})();
 	const neighboringTilePositions = findNeighboring(
-		state.board.findIndex((tile) => tile.id === currentPlayer.currentTileId),
-		currentPlayer.role.title,
+		state.board,
+		currentTileIndex,
+		state.players[currentPlayerIndex].role.title,
 	);
 	const validTiles =
 		state.selectedAction === 'Move'
@@ -31,9 +32,14 @@ export default function Board({ className }: { className?: string }) {
 					state.board,
 					neighboringTilePositions,
 					state.board.findIndex((tile) => tile.id === hikerPosition),
+					state.players[currentPlayerIndex]
 				)
 			: state.selectedAction === 'Remove Sand'
-				? findSandPoints(state.board, currentPosition, neighboringTilePositions)
+				? findSandPoints(
+						state.board,
+						currentTileIndex,
+						neighboringTilePositions,
+					)
 				: [];
 
 	return (
@@ -53,6 +59,15 @@ export default function Board({ className }: { className?: string }) {
 						type="button"
 						disabled={isHurricane || !state.selectedAction || invalidTile}
 						className={`relative aspect-square border rounded-lg ease-in-out hover:duration-250 active:duration-100 motion-safe:transition-all ${isHurricane || (invalidTile && moveOrRemoveAction) ? 'brightness-50 cursor-not-allowed' : ''} ${!(isHurricane || invalidTile) && moveOrRemoveAction ? 'hover:scale-115 active:brightness-50' : ''} ${tile.info?.revealed ? tile.info.revealedTileColor : tile.info?.unrevealedTileColor}`}
+						onClick={() => {
+							switch (state.selectedAction) {
+								case 'Move': {
+									const newPlayers = [...state.players];
+									newPlayers[currentPlayerIndex].currentTileId = tile.id;
+									dispatch({ type: 'MOVE_TILES', players: newPlayers });
+								}
+							}
+						}}
 					>
 						{!tile.info && '🌪'}
 						{tile.info && tile.info.sandPoints > 0 && (

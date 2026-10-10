@@ -1,16 +1,18 @@
 import ConfirmModalButtons from '@/components/ConfirmModalButtons';
 import { useGame } from '@/components/GameContext';
 import PopUp from '@/components/PopUp';
+import { getTilePlayer } from '@/data/actions';
 import { shuffleHurricaneDeck } from '@/data/shuffleHurricaneDeck';
 import { sumSandPoints, toCoordinates, toIndex } from '@/data/tiles';
 
 export default function DrawHurricaneCardsModal() {
 	const { state, dispatch, getGameState } = useGame();
+	const { currentPlayerIndex } = getTilePlayer(state.board, state.players);
 
 	return (
 		<PopUp
 			show={state.showEndTurnModal}
-			heading="End Your Turn?"
+			heading={`End ${state.players[currentPlayerIndex].role.title}'s Turn?`}
 			description={
 				<>
 					This will automatically draw{' '}

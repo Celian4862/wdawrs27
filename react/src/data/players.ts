@@ -23,7 +23,7 @@ export function assignPlayers(playerCount: number) {
 }
 
 export function findCurrentPlayer(players: ActivePlayer[]) {
-	return players.find((player) => player.isTurn);
+	return players.findIndex((player) => player.isTurn);
 }
 
 export interface ActivePlayer {

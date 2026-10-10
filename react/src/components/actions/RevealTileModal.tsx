@@ -6,12 +6,12 @@ import PopUp from '../PopUp';
 export default function RevealTileModal() {
 	const { state, dispatch } = useGame();
 
-	const { currentPlayer } = getTilePlayer(state.board, state.players);
+	const { currentPlayerIndex } = getTilePlayer(state.board, state.players);
 
 	return (
 		<PopUp
 			show={state.showRevealModal}
-			heading={`Reveal ${currentPlayer.role.title}'s tile?`}
+			heading={`Reveal ${state.players[currentPlayerIndex].role.title}'s tile?`}
 			description="This action cannot be undone."
 		>
 			<ConfirmModalButtons
@@ -23,7 +23,10 @@ export default function RevealTileModal() {
 				onConfirm={() => {
 					dispatch({ type: 'SET_SHOW_REVEAL_MODAL', show: false });
 					dispatch({ type: 'SELECT_ACTION', action: null });
-					dispatch({ type: 'REVEAL_TILE', tile: currentPlayer.currentTileId });
+					dispatch({
+						type: 'REVEAL_TILE',
+						tile: state.players[currentPlayerIndex].currentTileId,
+					});
 				}}
 			/>
 		</PopUp>
