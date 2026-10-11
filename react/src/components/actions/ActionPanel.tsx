@@ -55,7 +55,7 @@ export default function ActionPanel() {
 		<GameInfoSection className="bg-slate-700 lg:sticky top-0 lg:z-30">
 			<GameInfoHeading
 				heading="Action Panel"
-				subheading={`${state.actionCount} / 4`}
+				subheading={`${state.actionCount} actions left`}
 			/>
 			<div className="flex flex-wrap gap-2">
 				{actions.map((action) => (

@@ -2,32 +2,34 @@ import { useGame } from '@/components/GameContext';
 import GameInfoHeading from '@/components/game-info/GameInfoHeading';
 import GameInfoSection from '@/components/game-info/GameInfoSection';
 import {
+	countHurricaneCards,
 	hurricaneDirections,
 	hurricaneDistances,
-} from '@/data/shuffleHurricaneDeck';
+} from '@/data/hurricane/hurricaneDeck';
 import { sumSandPoints } from '@/data/tiles';
 
 export default function HurricaneDeck() {
 	const { state, dispatch } = useGame();
+	const hurricaneCount = countHurricaneCards(state.hurricaneDeck);
 
 	return (
 		<GameInfoSection>
 			<GameInfoHeading
 				heading="Hurricane Deck"
-				subheading={`${state.hurricaneDeckCounter} / 31`}
+				subheading={`${state.hurricaneDeck.length}`}
 			/>
 			<div className="grid md:grid-cols-2 gap-3 *:py-1 *:text-lg *:border *:rounded-lg">
 				<div
 					className={`${state.recentlyDrawnHurricaneCard.type === 'Thirst' ? 'bg-blue-700' : 'bg-none'} flex justify-around items-center`}
 				>
 					<h3 className="font-bold">Thirst</h3>
-					<span>{4 - state.discardedHurricaneDeck.Thirst} / 4</span>
+					<span>{hurricaneCount.Thirst ?? 0}</span>
 				</div>
 				<div
 					className={`${state.recentlyDrawnHurricaneCard.type === 'Hurricane Up' ? 'bg-red-700/80' : 'bg-none'} flex flex-wrap justify-around items-center`}
 				>
 					<h3 className="font-bold">Hurricane Up</h3>
-					<span>{3 - state.discardedHurricaneDeck['Hurricane Up']} / 3</span>
+					<span>{hurricaneCount['Hurricane Up'] ?? 0}</span>
 				</div>
 
 				<div className="grid md:col-span-2">
@@ -62,8 +64,7 @@ export default function HurricaneDeck() {
 																: 'bg-black'
 														}
 													>
-														{(4 - distance) - state.discardedHurricaneDeck[moveString]} /{' '}
-														{4 - distance}
+														{hurricaneCount[moveString] ?? 0}
 													</td>
 												);
 											})}

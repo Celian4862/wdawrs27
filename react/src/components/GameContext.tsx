@@ -8,19 +8,14 @@ import {
 } from 'react';
 import type { EndGameState } from '@/components/EndGameScreen';
 import { getTilePlayer } from '@/data/actions';
-import { initHurricaneMeter } from '@/data/initHurricaneMeter';
+import { type HurricaneCard, shuffleHurricaneDeck } from '@/data/hurricane/hurricaneDeck';
+import { initHurricaneMeter } from '@/data/hurricane/initHurricaneMeter';
 import { type ItemType, shuffleItemDeck } from '@/data/items';
 import { type ActivePlayer, assignPlayers } from '@/data/players';
-import {
-	type HurricaneCard,
-	shuffleHurricaneDeck,
-	specialCards,
-} from '@/data/shuffleHurricaneDeck';
 import {
 	findNeighboring,
 	findSandPoints,
 	shuffleBoard,
-	sumSandPoints,
 	type Tile,
 } from '@/data/tiles';
 
@@ -33,61 +28,39 @@ interface GameState {
 	prevAction: string | null;
 	actionCount: number;
 	showRevealModal: boolean;
-	sandMarkCount: number;
 	hurricaneMeter: number[];
 	meterProgress: number;
 	hurricaneDeck: HurricaneCard[];
-	hurricaneDeckCounter: number;
-	discardedHurricaneDeck: Record<string, number>;
 	recentlyDrawnHurricaneCard: HurricaneCard;
 	isDrawingHurricaneCards: boolean;
 	showEndTurnModal: boolean;
 	turnStatus: string | null;
 	turnCount: number;
 	itemDeck: ItemType[];
-	itemDeckCounter: number;
-	drawnItemDeck: Record<string, number>;
 	recentlyDrawnItemCard: string;
 	partsCollected: string[];
 	endGameState: EndGameState;
 	showResetModal: boolean;
 }
 
-const initialHurricaneDeck = shuffleHurricaneDeck();
-const initialBoard = shuffleBoard();
-
 const initialState: GameState = {
 	gameId: false,
 	players: [],
 	firstPlayerId: -1,
-	board: initialBoard,
+	board: shuffleBoard(),
 	actionCount: 4,
 	selectedAction: null,
 	prevAction: null,
 	showRevealModal: false,
-	sandMarkCount: sumSandPoints(initialBoard),
 	hurricaneMeter: [],
 	meterProgress: -1,
-	hurricaneDeck: initialHurricaneDeck,
-	hurricaneDeckCounter: 31,
-	discardedHurricaneDeck: Object.fromEntries(
-		initialHurricaneDeck.map((key) => initHurricaneDiscard(key)),
-	),
+	hurricaneDeck: shuffleHurricaneDeck(),
 	recentlyDrawnHurricaneCard: { type: 'None' },
 	isDrawingHurricaneCards: false,
 	showEndTurnModal: false,
 	turnStatus: null,
 	turnCount: 1,
 	itemDeck: shuffleItemDeck(),
-	itemDeckCounter: 12,
-	drawnItemDeck: {
-		'Sand Remover': 3,
-		'Flying Tool': 3,
-		'Thirst Shield': 2,
-		'X-Ray Goggles': 2,
-		'Add 2 Water': 1,
-		'Speed Boost': 1,
-	},
 	recentlyDrawnItemCard: 'None',
 	partsCollected: [],
 	endGameState: {},
@@ -102,7 +75,7 @@ type GameAction =
 	| { type: 'REMOVE_SAND'; tilePosition: number }
 	| { type: 'GAIN_WATER'; players: ActivePlayer[] }
 	| { type: 'SET_SHOW_REVEAL_MODAL'; prevAction: string | null; show: boolean }
-	| { type: 'REVEAL_TILE'; board: Tile[]; players: ActivePlayer[]; }
+	| { type: 'REVEAL_TILE'; board: Tile[]; players: ActivePlayer[] }
 	| { type: 'SET_SHOW_END_TURN_MODAL'; show: boolean }
 	| { type: 'START_DRAWING' }
 	| { type: 'FINISH_DRAWING' }
@@ -114,19 +87,12 @@ type GameAction =
 	  }
 	| { type: 'MOVE_HURRICANE'; board: Tile[] }
 	| { type: 'DRINK_WATER'; players: ActivePlayer[] }
-	| { type: 'DRAW_HURRICANE_CARD'; card: HurricaneCard }
-	| { type: 'RESHUFFLE_DECK'; deck: HurricaneCard[]; deckCounter: number }
-	| { type: 'DRAW_ITEM_CARD'; card: string }
+	| { type: 'DRAW_HURRICANE_CARD'; deck: HurricaneCard[]; card: HurricaneCard }
+	| { type: 'RESHUFFLE_DECK'; deck: HurricaneCard[] }
+	| { type: 'DRAW_ITEM_CARD'; items: ItemType[]; card: string }
 	| { type: 'GAME_OVER'; reason: string }
 	| { type: 'SET_SHOW_RESET_MODAL'; show: boolean }
 	| { type: 'RESET_GAME' };
-
-function initHurricaneDiscard(key: HurricaneCard) {
-	if (specialCards.includes(key.type)) {
-		return [key.type, 0];
-	}
-	return [`Move ${key.distance} ${key.direction}`, 0];
-}
 
 function gameReducer(state: GameState, action: GameAction): GameState {
 	const actionCount = state.actionCount - 1;
@@ -250,43 +216,31 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 			};
 		}
 		case 'DRAW_HURRICANE_CARD': {
-			const discardKey = specialCards.includes(action.card.type)
-				? action.card.type
-				: `Move ${action.card.distance} ${action.card.direction}`;
 			return {
 				...state,
 				selectedAction: null,
+				hurricaneDeck: action.deck,
 				recentlyDrawnHurricaneCard: action.card,
-				hurricaneDeckCounter: state.hurricaneDeckCounter - 1,
 				meterProgress:
 					action.card.type === 'Hurricane Up'
 						? state.meterProgress + 1
 						: state.meterProgress,
-				discardedHurricaneDeck: {
-					...state.discardedHurricaneDeck,
-					[discardKey]: (state.discardedHurricaneDeck[discardKey] ?? 0) + 1,
-				},
 			};
 		}
 		case 'RESHUFFLE_DECK': {
 			return {
 				...state,
 				hurricaneDeck: action.deck,
-				hurricaneDeckCounter: action.deckCounter,
-				discardedHurricaneDeck: Object.fromEntries(
-					action.deck.map((key) => initHurricaneDiscard(key)),
-				),
 			};
 		}
 		case 'DRAW_ITEM_CARD': {
+			if (state.itemDeck.length === 0) {
+				return state;
+			}
 			return {
 				...state,
 				recentlyDrawnItemCard: action.card,
-				drawnItemDeck: {
-					...state.drawnItemDeck,
-					[action.card]: state.drawnItemDeck[action.card] - 1
-				},
-				itemDeckCounter: state.itemDeckCounter - 1,
+				itemDeck: action.items,
 			};
 		}
 		case 'GAME_OVER':

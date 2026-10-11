@@ -25,7 +25,10 @@ export default function RevealTileModal() {
 					});
 				}}
 				onConfirm={() => {
-					dispatch({ type: 'SELECT_ACTION', action: state.actionCount === 1 ? null : state.prevAction });
+					dispatch({
+						type: 'SELECT_ACTION',
+						action: state.actionCount === 1 ? null : state.prevAction,
+					});
 					dispatch({
 						type: 'SET_SHOW_REVEAL_MODAL',
 						prevAction: null,
@@ -45,26 +48,28 @@ export default function RevealTileModal() {
 								players.forEach((_, index, arr) => {
 									if (arr[index].currentTileId === targetTileIndex) {
 										arr[index].currentWaterLevel =
-											arr[index].currentWaterLevel + 2 > arr[index].role.maxWater
+											arr[index].currentWaterLevel + 2 >
+											arr[index].role.maxWater
 												? arr[index].role.maxWater
 												: arr[index].currentWaterLevel + 2;
 									}
 								});
 								break;
 							case 'Shade':
-							case 'Item':
-								let itemDeckCounter = state.itemDeckCounter;
+							case 'Item': {
 								const items = [...state.itemDeck];
-								const item = items[--itemDeckCounter];
-								players[currentPlayerIndex].items.push(item);
-								dispatch({ type: 'DRAW_ITEM_CARD', card: item.type })
-
+								const item = items.pop();
+								if (item) {
+									players[currentPlayerIndex].items.push(item);
+									dispatch({ type: 'DRAW_ITEM_CARD', card: item.type, items });
+								}
+							}
 						}
 					}
 					dispatch({
 						type: 'REVEAL_TILE',
 						board,
-						players
+						players,
 					});
 				}}
 			/>

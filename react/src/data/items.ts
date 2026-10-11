@@ -6,6 +6,21 @@ export interface ItemType {
 	description: string;
 }
 
+export function countItemCards(itemDeck: ItemType[]) {
+	const itemCounts: Record<string, number> = {
+		'Sand Remover': 0,
+		'Flying Tool': 0,
+		'Thirst Shield': 0,
+		'X-Ray Goggles': 0,
+		'Add 2 Water': 0,
+		'Speed Boost': 0,
+	};
+	itemDeck.forEach((item) => {
+		itemCounts[item.type]++;
+	});
+	return itemCounts;
+}
+
 export const items: ItemType[] = [
 	...Array.from({ length: 3 }, (_, index) => ({
 		id: index,
