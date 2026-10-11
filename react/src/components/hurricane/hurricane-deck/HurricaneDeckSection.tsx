@@ -21,13 +21,13 @@ export default function HurricaneDeck() {
 					className={`${state.recentlyDrawnHurricaneCard.type === 'Thirst' ? 'bg-blue-700' : 'bg-none'} flex justify-around items-center`}
 				>
 					<h3 className="font-bold">Thirst</h3>
-					<span>{state.discardedHurricaneDeck.Thirst} / 4</span>
+					<span>{4 - state.discardedHurricaneDeck.Thirst} / 4</span>
 				</div>
 				<div
 					className={`${state.recentlyDrawnHurricaneCard.type === 'Hurricane Up' ? 'bg-red-700/80' : 'bg-none'} flex flex-wrap justify-around items-center`}
 				>
 					<h3 className="font-bold">Hurricane Up</h3>
-					<span>{state.discardedHurricaneDeck['Hurricane Up']} / 3</span>
+					<span>{3 - state.discardedHurricaneDeck['Hurricane Up']} / 3</span>
 				</div>
 
 				<div className="grid md:col-span-2">
@@ -62,7 +62,7 @@ export default function HurricaneDeck() {
 																: 'bg-black'
 														}
 													>
-														{state.discardedHurricaneDeck[moveString]} /{' '}
+														{(4 - distance) - state.discardedHurricaneDeck[moveString]} /{' '}
 														{4 - distance}
 													</td>
 												);
@@ -76,7 +76,7 @@ export default function HurricaneDeck() {
 				</div>
 				<div className="flex flex-wrap justify-around items-center md:col-span-2">
 					<h3 className="font-bold">Sand Mark Count: </h3>
-					{sumSandPoints(state.board)} / 48
+					{48 - sumSandPoints(state.board)} / 48
 				</div>
 			</div>
 

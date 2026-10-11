@@ -52,13 +52,13 @@ export default function DrawHurricaneCardsModal() {
 
 				if (getGameState().gameId !== currentGameId) return;
 
-				if (deckCounter >= 31) {
+				if (deckCounter < 0) {
 					deck = shuffleHurricaneDeck();
-					deckCounter = 0;
-					dispatch({ type: 'RESHUFFLE_DECK', deck });
+					deckCounter = 31;
+					dispatch({ type: 'RESHUFFLE_DECK', deck, deckCounter });
 				}
 
-				const drawnCard = deck[deckCounter];
+				const drawnCard = deck[--deckCounter];
 
 				dispatch({ type: 'DRAW_HURRICANE_CARD', card: drawnCard });
 
@@ -139,7 +139,7 @@ export default function DrawHurricaneCardsModal() {
 
 							dispatch({
 								type: 'GAME_OVER',
-								reason: 'You had too many sand points',
+								reason: 'You ran out of sand points',
 							});
 							return;
 						}
@@ -147,8 +147,6 @@ export default function DrawHurricaneCardsModal() {
 						await delay(400);
 					}
 				}
-
-				deckCounter++;
 
 				if (meterProgress === state.hurricaneMeter.length - 1) {
 					await delay(1500);

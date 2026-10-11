@@ -69,7 +69,7 @@ const initialState: GameState = {
 	hurricaneMeter: [],
 	meterProgress: -1,
 	hurricaneDeck: initialHurricaneDeck,
-	hurricaneDeckCounter: 0,
+	hurricaneDeckCounter: 31,
 	discardedHurricaneDeck: Object.fromEntries(
 		initialHurricaneDeck.map((key) => initHurricaneDiscard(key)),
 	),
@@ -81,12 +81,12 @@ const initialState: GameState = {
 	itemDeck: shuffleItemDeck(),
 	itemDeckCounter: 12,
 	drawnItemDeck: {
-		'Sand Remover': 0,
-		'Flying Tool': 0,
-		'Thirst Shield': 0,
-		'X-Ray Goggles': 0,
-		'Add 2 Water': 0,
-		'Speed Boost': 0,
+		'Sand Remover': 3,
+		'Flying Tool': 3,
+		'Thirst Shield': 2,
+		'X-Ray Goggles': 2,
+		'Add 2 Water': 1,
+		'Speed Boost': 1,
 	},
 	recentlyDrawnItemCard: 'None',
 	partsCollected: [],
@@ -102,7 +102,7 @@ type GameAction =
 	| { type: 'REMOVE_SAND'; tilePosition: number }
 	| { type: 'GAIN_WATER'; players: ActivePlayer[] }
 	| { type: 'SET_SHOW_REVEAL_MODAL'; prevAction: string | null; show: boolean }
-	| { type: 'REVEAL_TILE'; board: Tile[]; players: ActivePlayer[] }
+	| { type: 'REVEAL_TILE'; board: Tile[]; players: ActivePlayer[]; }
 	| { type: 'SET_SHOW_END_TURN_MODAL'; show: boolean }
 	| { type: 'START_DRAWING' }
 	| { type: 'FINISH_DRAWING' }
@@ -115,7 +115,7 @@ type GameAction =
 	| { type: 'MOVE_HURRICANE'; board: Tile[] }
 	| { type: 'DRINK_WATER'; players: ActivePlayer[] }
 	| { type: 'DRAW_HURRICANE_CARD'; card: HurricaneCard }
-	| { type: 'RESHUFFLE_DECK'; deck: HurricaneCard[] }
+	| { type: 'RESHUFFLE_DECK'; deck: HurricaneCard[]; deckCounter: number }
 	| { type: 'DRAW_ITEM_CARD'; card: string }
 	| { type: 'GAME_OVER'; reason: string }
 	| { type: 'SET_SHOW_RESET_MODAL'; show: boolean }
@@ -257,7 +257,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 				...state,
 				selectedAction: null,
 				recentlyDrawnHurricaneCard: action.card,
-				hurricaneDeckCounter: state.hurricaneDeckCounter + 1,
+				hurricaneDeckCounter: state.hurricaneDeckCounter - 1,
 				meterProgress:
 					action.card.type === 'Hurricane Up'
 						? state.meterProgress + 1
@@ -272,7 +272,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 			return {
 				...state,
 				hurricaneDeck: action.deck,
-				hurricaneDeckCounter: 0,
+				hurricaneDeckCounter: action.deckCounter,
 				discardedHurricaneDeck: Object.fromEntries(
 					action.deck.map((key) => initHurricaneDiscard(key)),
 				),
@@ -282,7 +282,11 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 			return {
 				...state,
 				recentlyDrawnItemCard: action.card,
-				itemDeckCounter: state.itemDeckCounter + 1,
+				drawnItemDeck: {
+					...state.drawnItemDeck,
+					[action.card]: state.drawnItemDeck[action.card] - 1
+				},
+				itemDeckCounter: state.itemDeckCounter - 1,
 			};
 		}
 		case 'GAME_OVER':

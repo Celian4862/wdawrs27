@@ -1,4 +1,3 @@
-import { maxItemCounts } from '@/data/items';
 import { useGame } from './GameContext';
 import GameInfoHeading from './game-info/GameInfoHeading';
 import GameInfoSection from './game-info/GameInfoSection';
@@ -22,10 +21,10 @@ export default function ItemDeck() {
 				<tbody>
 					{Object.keys(state.drawnItemDeck).map((drawnItem) => {
 						return (
-							<tr key={drawnItem}>
+							<tr key={drawnItem} className={`${state.recentlyDrawnItemCard === drawnItem ? 'bg-slate-500' : ''}`}>
 								<td>{drawnItem}</td>
 								<td>
-									{maxItemCounts[drawnItem] - state.drawnItemDeck[drawnItem]}
+									{state.drawnItemDeck[drawnItem]}
 								</td>
 							</tr>
 						);
