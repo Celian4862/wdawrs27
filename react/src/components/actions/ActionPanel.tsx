@@ -67,14 +67,18 @@ export default function ActionPanel() {
 							if (state.isDrawingHurricaneCards || action.disableCondition) {
 								return;
 							}
+							if (action.name === 'Reveal Tile') {
+								dispatch({
+									type: 'SET_SHOW_REVEAL_MODAL',
+									prevAction: state.selectedAction,
+									show: true,
+								});
+							}
 							dispatch({
 								type: 'SELECT_ACTION',
 								action:
 									state.selectedAction === action.name ? null : action.name,
 							});
-							if (action.name === 'Reveal Tile') {
-								dispatch({ type: 'SET_SHOW_REVEAL_MODAL', show: true });
-							}
 						}}
 						className={`p-3 border rounded-lg motion-safe:transition ${disabled(action) ? 'brightness-50' : 'hover:bg-yellow-600 active:scale-115'} ${state.selectedAction === action.name ? 'bg-yellow-600 scale-115' : ''}`}
 					>

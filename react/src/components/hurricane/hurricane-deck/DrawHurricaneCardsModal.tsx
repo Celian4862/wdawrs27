@@ -175,6 +175,10 @@ export default function DrawHurricaneCardsModal() {
 				type: 'SET_TURN_STATUS',
 				players: currentPlayers,
 				status: 'Turn complete! Passing to next player...',
+				turnCount:
+					currentPlayers[playerIndex].id === state.firstPlayerId
+						? state.turnCount + 1
+						: state.turnCount,
 			});
 			await delay(1500); // Guard delay to display message before unlocking UI
 		} finally {

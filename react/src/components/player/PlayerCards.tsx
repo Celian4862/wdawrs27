@@ -8,7 +8,10 @@ export default function PlayerCards() {
 
 	return (
 		<GameInfoSection>
-			<GameInfoHeading heading="Player Cards" subheading="" />
+			<GameInfoHeading
+				heading="Player Cards"
+				subheading={`Turn ${state.turnCount}`}
+			/>
 			<div className="flex flex-col gap-3">
 				{state.players.map((player) => (
 					<article

@@ -7,6 +7,7 @@ import {
 	useRef,
 } from 'react';
 import type { EndGameState } from '@/components/EndGameScreen';
+import { getTilePlayer } from '@/data/actions';
 import { initHurricaneMeter } from '@/data/initHurricaneMeter';
 import { type ItemType, shuffleItemDeck } from '@/data/items';
 import { type ActivePlayer, assignPlayers } from '@/data/players';
@@ -15,13 +16,21 @@ import {
 	shuffleHurricaneDeck,
 	specialCards,
 } from '@/data/shuffleHurricaneDeck';
-import { shuffleBoard, sumSandPoints, type Tile } from '@/data/tiles';
+import {
+	findNeighboring,
+	findSandPoints,
+	shuffleBoard,
+	sumSandPoints,
+	type Tile,
+} from '@/data/tiles';
 
 interface GameState {
 	gameId: boolean;
 	players: ActivePlayer[];
+	firstPlayerId: number;
 	board: Tile[];
 	selectedAction: string | null;
+	prevAction: string | null;
 	actionCount: number;
 	showRevealModal: boolean;
 	sandMarkCount: number;
@@ -34,6 +43,7 @@ interface GameState {
 	isDrawingHurricaneCards: boolean;
 	showEndTurnModal: boolean;
 	turnStatus: string | null;
+	turnCount: number;
 	itemDeck: ItemType[];
 	itemDeckCounter: number;
 	drawnItemDeck: Record<string, number>;
@@ -49,9 +59,11 @@ const initialBoard = shuffleBoard();
 const initialState: GameState = {
 	gameId: false,
 	players: [],
+	firstPlayerId: -1,
 	board: initialBoard,
 	actionCount: 4,
 	selectedAction: null,
+	prevAction: null,
 	showRevealModal: false,
 	sandMarkCount: sumSandPoints(initialBoard),
 	hurricaneMeter: [],
@@ -65,6 +77,7 @@ const initialState: GameState = {
 	isDrawingHurricaneCards: false,
 	showEndTurnModal: false,
 	turnStatus: null,
+	turnCount: 1,
 	itemDeck: shuffleItemDeck(),
 	itemDeckCounter: 12,
 	drawnItemDeck: {
@@ -88,12 +101,17 @@ type GameAction =
 	| { type: 'MOVE_TILES'; players: ActivePlayer[] }
 	| { type: 'REMOVE_SAND'; tilePosition: number }
 	| { type: 'GAIN_WATER'; players: ActivePlayer[] }
-	| { type: 'SET_SHOW_REVEAL_MODAL'; show: boolean }
+	| { type: 'SET_SHOW_REVEAL_MODAL'; prevAction: string | null; show: boolean }
 	| { type: 'REVEAL_TILE'; board: Tile[]; players: ActivePlayer[] }
 	| { type: 'SET_SHOW_END_TURN_MODAL'; show: boolean }
 	| { type: 'START_DRAWING' }
 	| { type: 'FINISH_DRAWING' }
-	| { type: 'SET_TURN_STATUS'; players: ActivePlayer[]; status: string | null }
+	| {
+			type: 'SET_TURN_STATUS';
+			players: ActivePlayer[];
+			status: string | null;
+			turnCount: number;
+	  }
 	| { type: 'MOVE_HURRICANE'; board: Tile[] }
 	| { type: 'DRINK_WATER'; players: ActivePlayer[] }
 	| { type: 'DRAW_HURRICANE_CARD'; card: HurricaneCard }
@@ -115,12 +133,15 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 	const selectedAction = actionCount === 0 ? null : state.selectedAction;
 
 	switch (action.type) {
-		case 'SET_PLAYERS':
+		case 'SET_PLAYERS': {
+			const players = assignPlayers(action.count);
 			return {
 				...state,
-				players: assignPlayers(action.count),
+				players,
+				firstPlayerId: players[players.findIndex((player) => player.isTurn)].id,
 				hurricaneMeter: initHurricaneMeter(action.count),
 			};
+		}
 		case 'SET_DIFFICULTY':
 			return { ...state, meterProgress: action.index };
 		case 'SELECT_ACTION':
@@ -141,28 +162,54 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 			}
 			const newBoard = [...state.board];
 			const targetTile = newBoard[action.tilePosition];
-			const currentPlayerIndex = state.players.findIndex((player) => player.isTurn);
+			const { currentPlayerIndex, currentTileIndex } = getTilePlayer(
+				state.board,
+				state.players,
+			);
+
 			if (targetTile.info) {
 				newBoard[action.tilePosition] = {
 					id: targetTile.id,
 					info: {
 						...targetTile.info,
-						sandPoints: state.players[currentPlayerIndex].role.title === 'Digger' ? targetTile.info.sandPoints - 2 : targetTile.info.sandPoints - 1,
+						sandPoints:
+							state.players[currentPlayerIndex].role.title === 'Digger'
+								? targetTile.info.sandPoints - 2
+								: targetTile.info.sandPoints - 1,
 					},
 				};
-				return { ...state, actionCount, selectedAction, board: newBoard };
+				return {
+					...state,
+					actionCount,
+					selectedAction:
+						findSandPoints(
+							newBoard,
+							currentTileIndex,
+							findNeighboring(
+								newBoard,
+								currentTileIndex,
+								state.players[currentPlayerIndex].role.title,
+							),
+						).length === 0
+							? null
+							: selectedAction,
+					board: newBoard,
+				};
 			} else {
 				return { ...state };
 			}
 		}
 		case 'SET_SHOW_REVEAL_MODAL':
-			return { ...state, showRevealModal: action.show };
+			return {
+				...state,
+				prevAction: action.prevAction,
+				showRevealModal: action.show,
+			};
 		case 'REVEAL_TILE': {
 			return {
 				...state,
 				players: action.players,
 				actionCount: state.actionCount - 1,
-				selectedAction: null,
 				board: action.board,
 			};
 		}
@@ -188,6 +235,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 				actionCount: 4,
 				players: action.players,
 				turnStatus: action.status,
+				turnCount: action.turnCount,
 			};
 		case 'MOVE_HURRICANE': {
 			return {

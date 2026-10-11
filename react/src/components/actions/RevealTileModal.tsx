@@ -17,12 +17,20 @@ export default function RevealTileModal() {
 			<ConfirmModalButtons
 				confirmMessage="Confirm & Reveal"
 				onCancel={() => {
-					dispatch({ type: 'SET_SHOW_REVEAL_MODAL', show: false });
-					dispatch({ type: 'SELECT_ACTION', action: null });
+					dispatch({ type: 'SELECT_ACTION', action: state.prevAction });
+					dispatch({
+						type: 'SET_SHOW_REVEAL_MODAL',
+						prevAction: null,
+						show: false,
+					});
 				}}
 				onConfirm={() => {
-					dispatch({ type: 'SET_SHOW_REVEAL_MODAL', show: false });
-					dispatch({ type: 'SELECT_ACTION', action: null });
+					dispatch({ type: 'SELECT_ACTION', action: state.prevAction });
+					dispatch({
+						type: 'SET_SHOW_REVEAL_MODAL',
+						prevAction: null,
+						show: false,
+					});
 
 					const board = [...state.board];
 					const targetTileIndex = board.findIndex(
