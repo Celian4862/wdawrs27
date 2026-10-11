@@ -99,6 +99,7 @@ export default function Board({ className }: { className?: string }) {
 									<PawnCircle
 										key={player.role.color}
 										color={player.role.color}
+										isCurrentPlayer={player.id === state.players[currentPlayerIndex].id}
 									/>
 								))}
 						</div>

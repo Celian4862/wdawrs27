@@ -2,9 +2,11 @@ import GameInfoHeading from '@/components/game-info/GameInfoHeading';
 import GameInfoSection from '@/components/game-info/GameInfoSection';
 import { useGame } from '../GameContext';
 import PawnCircle from './PawnCircle';
+import { findCurrentPlayer } from '@/data/players';
 
 export default function PlayerCards() {
 	const { state } = useGame();
+	const currentPlayer = state.players[findCurrentPlayer(state.players)];
 
 	return (
 		<GameInfoSection>
@@ -22,7 +24,7 @@ export default function PlayerCards() {
 							<h2 className="text-xl font-bold text-white">
 								{player.role.title}
 							</h2>
-							<PawnCircle color={player.role.color} />
+							<PawnCircle color={player.role.color} isCurrentPlayer={player.id === currentPlayer.id} />
 						</div>
 						<details>
 							<summary className="mt-1 cursor-pointer">Abilities</summary>

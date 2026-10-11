@@ -66,7 +66,7 @@ const roleTemplates = [
 		ability:
 			'Can use an action to look at the next set of hurricane cards and optionally defer one card to the end of the deck. Can use an action to draw one less storm card.',
 		maxWater: 4,
-		color: '#FFFFFF',
+		color: '#b1b1b1',
 	},
 	{
 		title: 'Water Dispenser',
