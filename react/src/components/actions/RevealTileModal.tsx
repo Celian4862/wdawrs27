@@ -26,7 +26,8 @@ export default function RevealTileModal() {
 
 					const board = [...state.board];
 					const targetTileIndex = board.findIndex(
-						(tile) => tile.id === state.players[currentPlayerIndex].currentTileId,
+						(tile) =>
+							tile.id === state.players[currentPlayerIndex].currentTileId,
 					);
 					const players = [...state.players];
 					if (board[targetTileIndex].info) {
@@ -34,7 +35,10 @@ export default function RevealTileModal() {
 						if (board[targetTileIndex].info.revealedType === 'Water') {
 							players.forEach((_, index, arr) => {
 								if (arr[index].currentTileId === targetTileIndex) {
-									arr[index].currentWaterLevel = arr[index].currentWaterLevel + 2 > arr[index].role.maxWater ? arr[index].role.maxWater : arr[index].currentWaterLevel + 2;
+									arr[index].currentWaterLevel =
+										arr[index].currentWaterLevel + 2 > arr[index].role.maxWater
+											? arr[index].role.maxWater
+											: arr[index].currentWaterLevel + 2;
 								}
 							});
 						}
@@ -42,7 +46,7 @@ export default function RevealTileModal() {
 					dispatch({
 						type: 'REVEAL_TILE',
 						board,
-						players
+						players,
 					});
 				}}
 			/>

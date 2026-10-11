@@ -141,12 +141,13 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 			}
 			const newBoard = [...state.board];
 			const targetTile = newBoard[action.tilePosition];
+			const currentPlayerIndex = state.players.findIndex((player) => player.isTurn);
 			if (targetTile.info) {
 				newBoard[action.tilePosition] = {
 					id: targetTile.id,
 					info: {
 						...targetTile.info,
-						sandPoints: targetTile.info.sandPoints - 1,
+						sandPoints: state.players[currentPlayerIndex].role.title === 'Digger' ? targetTile.info.sandPoints - 2 : targetTile.info.sandPoints - 1,
 					},
 				};
 				return { ...state, actionCount, selectedAction, board: newBoard };
