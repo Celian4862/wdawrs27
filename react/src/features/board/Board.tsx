@@ -1,7 +1,11 @@
 import { getTileIndex } from '@/features/action/actions';
-import { findMoveable, findNeighboring, findSandPoints } from '@/features/board/tiles';
-import { useGame } from '@/features/utility/GameContext';
+import {
+	findMoveable,
+	findNeighboring,
+	findSandPoints,
+} from '@/features/board/tiles';
 import PawnCircle from '@/features/player/PawnCircle';
+import { useGame } from '@/features/utility/GameContext';
 
 export default function Board({ className }: { className?: string }) {
 	const { state, dispatch } = useGame();
@@ -92,13 +96,19 @@ export default function Board({ className }: { className?: string }) {
 						<div className="absolute right-1 top-1 grid grid-rows-3 grid-flow-col rtl gap-0.5 items-start pointer-events-none">
 							{state.players
 								.filter((player) => player.currentTileId === tile.id)
-								.map((player) => (
-									<PawnCircle
-										key={player.role.color}
-										color={player.role.color}
-										isCurrentPlayer={player.id === state.players[0].id}
-									/>
-								))}
+								.map((player) => {
+									const isCurrentPlayer = player.id === state.players[0].id;
+									return (
+										<PawnCircle
+											key={player.role.color}
+											color={player.role.color}
+											isCurrentPlayer={isCurrentPlayer}
+											className={
+												isCurrentPlayer ? 'motion-safe:animate-bounce' : ''
+											}
+										/>
+									);
+								})}
 						</div>
 
 						{tile.info?.orientationEmoji && (

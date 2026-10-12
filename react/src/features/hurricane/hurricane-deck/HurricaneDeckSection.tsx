@@ -32,47 +32,45 @@ export default function HurricaneDeck() {
 					<span>{hurricaneCount['Hurricane Up'] ?? 0}</span>
 				</div>
 
-				<div className="grid md:col-span-2">
-					<table className="w-full border-separate border-spacing-2 text-center">
-						<thead>
-							<tr>
-								<th>Move</th>
-								<th>1</th>
-								<th>2</th>
-								<th>3</th>
-							</tr>
-						</thead>
-						<tbody>
-							{hurricaneDirections.map((direction) => {
-								return (
-									<tr key={direction}>
-										<td>{direction}</td>
+				<table className="w-full border-separate border-spacing-2 text-center md:col-span-2">
+					<thead>
+						<tr>
+							<th>Move</th>
+							<th>1</th>
+							<th>2</th>
+							<th>3</th>
+						</tr>
+					</thead>
+					<tbody>
+						{hurricaneDirections.map((direction) => {
+							return (
+								<tr key={direction}>
+									<td>{direction}</td>
 
-										{hurricaneDistances.map((distance) => {
-											const moveString = `Move ${distance} ${direction}`;
+									{hurricaneDistances.map((distance) => {
+										const moveString = `Move ${distance} ${direction}`;
 
-											return (
-												<td
-													key={moveString}
-													className={
-														state.recentlyDrawnHurricaneCard.distance ===
-															distance &&
-														state.recentlyDrawnHurricaneCard.direction ===
-															direction
-															? 'bg-amber-500'
-															: 'bg-black'
-													}
-												>
-													{hurricaneCount[moveString] ?? 0}
-												</td>
-											);
-										})}
-									</tr>
-								);
-							})}
-						</tbody>
-					</table>
-				</div>
+										return (
+											<td
+												key={moveString}
+												className={
+													state.recentlyDrawnHurricaneCard.distance ===
+														distance &&
+													state.recentlyDrawnHurricaneCard.direction ===
+														direction
+														? 'bg-amber-500'
+														: 'bg-black'
+												}
+											>
+												{hurricaneCount[moveString] ?? 0}
+											</td>
+										);
+									})}
+								</tr>
+							);
+						})}
+					</tbody>
+				</table>
 				<div className="flex flex-wrap justify-around items-center md:col-span-2">
 					<h3 className="font-bold">Sand Point Stock: </h3>
 					{48 - sumSandPoints(state.board)} / 48

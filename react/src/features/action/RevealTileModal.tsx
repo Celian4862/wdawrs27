@@ -32,36 +32,57 @@ export default function RevealTileModal() {
 						show: false,
 					});
 
-					const board = [...state.board];
-					const targetTileIndex = board.findIndex(
-						(tile) => tile.id === state.players[0].currentTileId,
-					);
-					const players = [...state.players];
-					if (board[targetTileIndex].info) {
-						board[targetTileIndex].info.revealed = true;
-						switch (board[targetTileIndex].info.revealedType) {
-							case 'Water':
-								players.forEach((_, index, arr) => {
-									if (arr[index].currentTileId === targetTileIndex) {
-										arr[index].currentWaterLevel =
-											arr[index].currentWaterLevel + 2 >
-											arr[index].role.maxWater
-												? arr[index].role.maxWater
-												: arr[index].currentWaterLevel + 2;
-									}
-								});
-								break;
-							case 'Shade':
-							case 'Item': {
-								const items = [...state.itemDeck];
-								const item = items.pop();
-								if (item) {
-									players[0].items.push(item);
-									dispatch({ type: 'DRAW_ITEM_CARD', card: item.type, items });
-								}
-							}
+					const targetTileId = state.players[0].currentTileId;
+					const board = state.board.map((tile) => {
+						if (tile.id === targetTileId && tile.info) {
+							return {
+								...tile,
+								info: { ...tile.info, revealed: true },
+							};
+						}
+						return tile;
+					});
+
+					const targetTile = state.board.find((t) => t.id === targetTileId);
+					const revealedType = targetTile?.info?.revealedType;
+
+					// 2. Immutably update the players array and objects
+					const items = [...state.itemDeck];
+					let drawnItem = null;
+					if (revealedType === 'Shade' || revealedType === 'Item') {
+						drawnItem = items.pop();
+						if (drawnItem) {
+							dispatch({ type: 'DRAW_ITEM_CARD', card: drawnItem.type, items });
 						}
 					}
+
+					const players = state.players.map((player, index) => {
+						// Copy the player object
+						const updatedPlayer = { ...player };
+
+						// Handle Water logic
+						if (
+							revealedType === 'Water' &&
+							player.currentTileId === state.players[0].currentTileId
+						) {
+							const newWater = updatedPlayer.currentWaterLevel + 2;
+							updatedPlayer.currentWaterLevel =
+								newWater > updatedPlayer.role.maxWater
+									? updatedPlayer.role.maxWater
+									: newWater;
+						}
+
+						// Handle Item/Shade logic for player 0
+						if (
+							(revealedType === 'Shade' || revealedType === 'Item') &&
+							index === 0 &&
+							drawnItem
+						) {
+							updatedPlayer.items = [...updatedPlayer.items, drawnItem];
+						}
+
+						return updatedPlayer;
+					});
 					dispatch({
 						type: 'REVEAL_TILE',
 						board,

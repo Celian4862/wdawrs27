@@ -66,54 +66,55 @@ export default function ActionPanel() {
 				</div>
 			)}
 
-			{state.turnStatus && (
-				<p className="text-center text-amber-400 font-semibold animate-pulse text-sm md:text-base">
-					{state.turnStatus}
-				</p>
-			)}
-
-			<div className="mt-5 flex flex-wrap justify-center gap-2 lg:m-0">
-				{actions.map((action) => (
-					<button
-						key={action.name}
-						type="button"
-						disabled={disabled(action)}
-						onClick={() => {
-							if (state.isDrawingHurricaneCards || action.disableCondition) {
-								return;
-							}
-							if (action.name === 'Reveal Tile') {
+			<div className="flex flex-col lg:flex-col-reverse">
+				{state.turnStatus && (
+					<p className="mt-3 text-center text-amber-400 font-semibold animate-pulse text-sm md:text-base">
+						{state.turnStatus}
+					</p>
+				)}
+				<div className="mt-3 flex flex-wrap justify-center gap-2 lg:m-0">
+					{actions.map((action) => (
+						<button
+							key={action.name}
+							type="button"
+							disabled={disabled(action)}
+							onClick={() => {
+								if (state.isDrawingHurricaneCards || action.disableCondition) {
+									return;
+								}
+								if (action.name === 'Reveal Tile') {
+									dispatch({
+										type: 'SET_SHOW_REVEAL_MODAL',
+										prevAction: state.selectedAction,
+										show: true,
+									});
+								}
 								dispatch({
-									type: 'SET_SHOW_REVEAL_MODAL',
-									prevAction: state.selectedAction,
-									show: true,
+									type: 'SELECT_ACTION',
+									action:
+										state.selectedAction === action.name ? null : action.name,
 								});
-							}
-							dispatch({
-								type: 'SELECT_ACTION',
-								action:
-									state.selectedAction === action.name ? null : action.name,
-							});
-						}}
-						className={`p-3 border rounded-lg motion-safe:transition ${disabled(action) ? 'brightness-50' : 'hover:bg-yellow-600 active:scale-115'} ${state.selectedAction === action.name ? 'bg-yellow-600 scale-115' : ''}`}
+							}}
+							className={`p-3 border rounded-lg motion-safe:transition ${disabled(action) ? 'brightness-50' : 'hover:bg-yellow-600 active:scale-115'} ${state.selectedAction === action.name ? 'bg-yellow-600 scale-115' : ''}`}
+						>
+							{action.name}
+						</button>
+					))}
+					<button
+						type="button"
+						disabled={state.isDrawingHurricaneCards || state.showEndTurnModal}
+						className={`p-3 bg-red-600/70 rounded-lg font-semibold border motion-safe:transition ${
+							state.isDrawingHurricaneCards || state.showEndTurnModal
+								? 'brightness-50 cursor-not-allowed'
+								: 'hover:bg-red-600 active:brightness-50'
+						}`}
+						onClick={() =>
+							dispatch({ type: 'SET_SHOW_END_TURN_MODAL', show: true })
+						}
 					>
-						{action.name}
+						End Turn
 					</button>
-				))}
-				<button
-					type="button"
-					disabled={state.isDrawingHurricaneCards || state.showEndTurnModal}
-					className={`p-3 bg-red-600/70 rounded-lg font-semibold border motion-safe:transition ${
-						state.isDrawingHurricaneCards || state.showEndTurnModal
-							? 'brightness-50 cursor-not-allowed'
-							: 'hover:bg-red-600 active:brightness-50'
-					}`}
-					onClick={() =>
-						dispatch({ type: 'SET_SHOW_END_TURN_MODAL', show: true })
-					}
-				>
-					End Turn
-				</button>
+				</div>
 			</div>
 		</GameInfoSection>
 	);

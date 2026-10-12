@@ -5,13 +5,14 @@ import EndGameScreen from '@/features/EndGameScreen';
 import DrawHurricaneCardsModal from '@/features/hurricane/hurricane-deck/DrawHurricaneCardsModal';
 import HurricaneDeck from '@/features/hurricane/hurricane-deck/HurricaneDeckSection';
 import ItemDeck from '@/features/item/ItemDeck';
+import Legend from '@/features/legend/Legend';
+import Parts from '@/features/part/Parts';
 import PlayerCards from '@/features/player/PlayerCards';
 import ResetButton from '@/features/reset/ResetButton';
 import ResetButtonModal from '@/features/reset/ResetButtonModal';
 import { GameProvider, useGame } from '@/features/utility/GameContext';
 import Setup from '@/features/utility/Setup';
 import HurricaneMeter from './features/hurricane/hurricane-meter/HurricaneMeter';
-import Parts from './features/part/Parts';
 
 function GameContent() {
 	const { state } = useGame();
@@ -47,7 +48,7 @@ function GameContent() {
 								<HurricaneDeck />
 								<ItemDeck />
 								<Parts />
-								{/* Need to add a legend for the emojis to help players understand what they are */}
+								<Legend />
 								<ResetButton />
 							</div>
 						</section>

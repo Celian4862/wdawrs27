@@ -1,6 +1,6 @@
-import { cyclePlayers } from '@/features/player/players';
 import { sumSandPoints, toCoordinates, toIndex } from '@/features/board/tiles';
 import { shuffleHurricaneDeck } from '@/features/hurricane/hurricane-deck/hurricaneDeck';
+import { cyclePlayers } from '@/features/player/players';
 import ConfirmModalButtons from '@/features/utility/ConfirmModalButtons';
 import { useGame } from '@/features/utility/GameContext';
 import PopUp from '@/features/utility/PopUp';

@@ -7,7 +7,6 @@ import {
 	useRef,
 } from 'react';
 import { getTileIndex } from '@/features/action/actions';
-import { type ActivePlayer, assignPlayers } from '@/features/player/players';
 import {
 	findNeighboring,
 	findSandPoints,
@@ -21,6 +20,7 @@ import {
 } from '@/features/hurricane/hurricane-deck/hurricaneDeck';
 import { initHurricaneMeter } from '@/features/hurricane/hurricane-meter/initHurricaneMeter';
 import { type ItemType, shuffleItemDeck } from '@/features/item/items';
+import { type ActivePlayer, assignPlayers } from '@/features/player/players';
 
 interface GameState {
 	gameId: boolean;
