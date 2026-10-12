@@ -58,7 +58,6 @@ export default function DrawHurricaneCardsModal() {
 				const drawnCard = deck.pop();
 
 				if (drawnCard) {
-					console.log('This ran');
 					dispatch({ type: 'DRAW_HURRICANE_CARD', deck, card: drawnCard });
 					switch (drawnCard.type) {
 						case 'Hurricane Up':

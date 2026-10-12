@@ -1,4 +1,4 @@
-import { type ActivePlayer } from './players';
+import type { ActivePlayer } from './players';
 import type { Tile } from './tiles';
 
 export function getTileIndex(board: Tile[], player: ActivePlayer) {

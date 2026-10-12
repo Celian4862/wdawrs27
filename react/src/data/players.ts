@@ -2,27 +2,23 @@ import type { ItemType } from './items';
 import { shuffle } from './shuffle';
 
 export function assignPlayers(playerCount: number) {
-	const activePlayers = shuffle(roleTemplates)
-		.slice(0, playerCount)
-		.map<ActivePlayer>((role, index) => ({
-			id: index,
-			role: role,
-			currentWaterLevel: role.maxWater,
-			currentTileId: 19,
-			items: [],
-			isTurn: false,
-		}));
-
-	const minWaterIdx = activePlayers.reduce(
+	const roles = shuffle(roleTemplates).slice(0, playerCount);
+	const minWaterIdx = roles.reduce(
 		(minIdx, current, idx, arr) =>
-			current.role.maxWater < arr[minIdx].role.maxWater ? idx : minIdx,
+			current.maxWater < arr[minIdx].maxWater ? idx : minIdx,
 		0,
 	);
 
 	return [
-		...activePlayers.slice(minWaterIdx),
-		...activePlayers.slice(0, minWaterIdx),
-	];
+		...roles.slice(minWaterIdx),
+		...roles.slice(0, minWaterIdx),
+	].map<ActivePlayer>((role, index) => ({
+		id: index,
+		role: role,
+		currentWaterLevel: role.maxWater,
+		currentTileId: 19,
+		items: [],
+	}));
 }
 
 export function cyclePlayers(players: ActivePlayer[]) {
@@ -31,7 +27,7 @@ export function cyclePlayers(players: ActivePlayer[]) {
 	if (!prevPlayer) {
 		throw new Error('Array is empty');
 	}
-	newPlayers.push(prevPlayer)
+	newPlayers.push(prevPlayer);
 	return newPlayers;
 }
 

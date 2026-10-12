@@ -34,8 +34,7 @@ export default function RevealTileModal() {
 
 					const board = [...state.board];
 					const targetTileIndex = board.findIndex(
-						(tile) =>
-							tile.id === state.players[0].currentTileId,
+						(tile) => tile.id === state.players[0].currentTileId,
 					);
 					const players = [...state.players];
 					if (board[targetTileIndex].info) {

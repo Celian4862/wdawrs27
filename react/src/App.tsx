@@ -42,8 +42,8 @@ function GameContent() {
 					<div className="pr-2 lg:h-full lg:overflow-y-auto">
 						<section className="py-5 grid gap-5">
 							<ActionPanel />
-							<HurricaneDeck />
 							<PlayerCards />
+							<HurricaneDeck />
 							<ItemDeck />
 							<Parts />
 							{/* Need to add a legend for the emojis to help players understand what they are */}

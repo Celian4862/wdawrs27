@@ -131,10 +131,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 			}
 			const newBoard = [...state.board];
 			const targetTile = newBoard[action.tilePosition];
-			const currentTileIndex = getTileIndex(
-				state.board,
-				state.players[0],
-			);
+			const currentTileIndex = getTileIndex(state.board, state.players[0]);
 
 			if (targetTile.info) {
 				newBoard[action.tilePosition] = {

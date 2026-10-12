@@ -6,10 +6,7 @@ import PawnCircle from './player/PawnCircle';
 export default function Board({ className }: { className?: string }) {
 	const { state, dispatch } = useGame();
 
-	const currentTileIndex = getTileIndex(
-		state.board,
-		state.players[0],
-	);
+	const currentTileIndex = getTileIndex(state.board, state.players[0]);
 	const hikerPosition = (() => {
 		const hikerIndex = state.players.findIndex(
 			(player) => player.role.title === 'Hiker',
@@ -99,9 +96,7 @@ export default function Board({ className }: { className?: string }) {
 									<PawnCircle
 										key={player.role.color}
 										color={player.role.color}
-										isCurrentPlayer={
-											player.id === state.players[0].id
-										}
+										isCurrentPlayer={player.id === state.players[0].id}
 									/>
 								))}
 						</div>
