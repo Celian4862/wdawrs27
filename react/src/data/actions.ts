@@ -1,10 +1,9 @@
-import { type ActivePlayer, findCurrentPlayer } from './players';
+import { type ActivePlayer } from './players';
 import type { Tile } from './tiles';
 
-export function getTilePlayer(board: Tile[], players: ActivePlayer[]) {
-	const currentPlayerIndex = findCurrentPlayer(players);
+export function getTileIndex(board: Tile[], player: ActivePlayer) {
 	const currentTileIndex = board.findIndex(
-		(tile) => tile.id === players[currentPlayerIndex].currentTileId,
+		(tile) => tile.id === player.currentTileId,
 	);
-	return { currentPlayerIndex, currentTileIndex };
+	return currentTileIndex;
 }

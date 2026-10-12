@@ -7,8 +7,11 @@ import {
 	useRef,
 } from 'react';
 import type { EndGameState } from '@/components/EndGameScreen';
-import { getTilePlayer } from '@/data/actions';
-import { type HurricaneCard, shuffleHurricaneDeck } from '@/data/hurricane/hurricaneDeck';
+import { getTileIndex } from '@/data/actions';
+import {
+	type HurricaneCard,
+	shuffleHurricaneDeck,
+} from '@/data/hurricane/hurricaneDeck';
 import { initHurricaneMeter } from '@/data/hurricane/initHurricaneMeter';
 import { type ItemType, shuffleItemDeck } from '@/data/items';
 import { type ActivePlayer, assignPlayers } from '@/data/players';
@@ -104,7 +107,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 			return {
 				...state,
 				players,
-				firstPlayerId: players[players.findIndex((player) => player.isTurn)].id,
+				firstPlayerId: players[0].id,
 				hurricaneMeter: initHurricaneMeter(action.count),
 			};
 		}
@@ -128,9 +131,9 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 			}
 			const newBoard = [...state.board];
 			const targetTile = newBoard[action.tilePosition];
-			const { currentPlayerIndex, currentTileIndex } = getTilePlayer(
+			const currentTileIndex = getTileIndex(
 				state.board,
-				state.players,
+				state.players[0],
 			);
 
 			if (targetTile.info) {
@@ -139,7 +142,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 					info: {
 						...targetTile.info,
 						sandPoints:
-							state.players[currentPlayerIndex].role.title === 'Digger'
+							state.players[0].role.title === 'Digger'
 								? targetTile.info.sandPoints - 2
 								: targetTile.info.sandPoints - 1,
 					},
@@ -154,7 +157,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 							findNeighboring(
 								newBoard,
 								currentTileIndex,
-								state.players[currentPlayerIndex].role.title,
+								state.players[0].role.title,
 							),
 						).length === 0
 							? null

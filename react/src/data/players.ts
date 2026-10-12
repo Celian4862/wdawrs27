@@ -13,17 +13,26 @@ export function assignPlayers(playerCount: number) {
 			isTurn: false,
 		}));
 
-	const minWater = activePlayers.reduce((min, current) =>
-		current.role.maxWater < min.role.maxWater ? current : min,
+	const minWaterIdx = activePlayers.reduce(
+		(minIdx, current, idx, arr) =>
+			current.role.maxWater < arr[minIdx].role.maxWater ? idx : minIdx,
+		0,
 	);
 
-	return activePlayers.map((player) =>
-		player === minWater ? { ...player, isTurn: true } : player,
-	);
+	return [
+		...activePlayers.slice(minWaterIdx),
+		...activePlayers.slice(0, minWaterIdx),
+	];
 }
 
-export function findCurrentPlayer(players: ActivePlayer[]) {
-	return players.findIndex((player) => player.isTurn);
+export function cyclePlayers(players: ActivePlayer[]) {
+	const newPlayers = [...players];
+	const prevPlayer = newPlayers.shift();
+	if (!prevPlayer) {
+		throw new Error('Array is empty');
+	}
+	newPlayers.push(prevPlayer)
+	return newPlayers;
 }
 
 export interface ActivePlayer {
@@ -32,7 +41,6 @@ export interface ActivePlayer {
 	currentWaterLevel: number;
 	currentTileId: number;
 	items: ItemType[];
-	isTurn: boolean;
 }
 
 const roleTemplates = [

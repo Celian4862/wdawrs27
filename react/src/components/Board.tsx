@@ -1,14 +1,14 @@
 import { useGame } from '@/components/GameContext';
-import { getTilePlayer } from '@/data/actions';
+import { getTileIndex } from '@/data/actions';
 import { findMoveable, findNeighboring, findSandPoints } from '@/data/tiles';
 import PawnCircle from './player/PawnCircle';
 
 export default function Board({ className }: { className?: string }) {
 	const { state, dispatch } = useGame();
 
-	const { currentPlayerIndex, currentTileIndex } = getTilePlayer(
+	const currentTileIndex = getTileIndex(
 		state.board,
-		state.players,
+		state.players[0],
 	);
 	const hikerPosition = (() => {
 		const hikerIndex = state.players.findIndex(
@@ -24,7 +24,7 @@ export default function Board({ className }: { className?: string }) {
 	const neighboringTilePositions = findNeighboring(
 		state.board,
 		currentTileIndex,
-		state.players[currentPlayerIndex].role.title,
+		state.players[0].role.title,
 	);
 	const validTiles =
 		state.selectedAction === 'Move'
@@ -32,7 +32,7 @@ export default function Board({ className }: { className?: string }) {
 					state.board,
 					neighboringTilePositions,
 					state.board.findIndex((tile) => tile.id === hikerPosition),
-					state.players[currentPlayerIndex],
+					state.players[0],
 				)
 			: state.selectedAction === 'Remove Sand'
 				? findSandPoints(
@@ -69,7 +69,7 @@ export default function Board({ className }: { className?: string }) {
 							switch (state.selectedAction) {
 								case 'Move': {
 									const newPlayers = [...state.players];
-									newPlayers[currentPlayerIndex].currentTileId = tile.id;
+									newPlayers[0].currentTileId = tile.id;
 									dispatch({ type: 'MOVE_TILES', players: newPlayers });
 									break;
 								}
@@ -100,7 +100,7 @@ export default function Board({ className }: { className?: string }) {
 										key={player.role.color}
 										color={player.role.color}
 										isCurrentPlayer={
-											player.id === state.players[currentPlayerIndex].id
+											player.id === state.players[0].id
 										}
 									/>
 								))}

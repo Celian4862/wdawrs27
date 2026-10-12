@@ -1,4 +1,4 @@
-import { getTilePlayer } from '@/data/actions';
+import { getTileIndex } from '@/data/actions';
 import { findNeighboring, findSandPoints } from '@/data/tiles';
 import { useGame } from '../GameContext';
 import GameInfoHeading from '../game-info/GameInfoHeading';
@@ -6,9 +6,9 @@ import GameInfoSection from '../game-info/GameInfoSection';
 
 export default function ActionPanel() {
 	const { state, dispatch } = useGame();
-	const { currentPlayerIndex, currentTileIndex } = getTilePlayer(
+	const currentTileIndex = getTileIndex(
 		state.board,
-		state.players,
+		state.players[0],
 	);
 
 	const actions = [
@@ -17,7 +17,7 @@ export default function ActionPanel() {
 			disableCondition:
 				(state.board[currentTileIndex].info?.sandPoints ?? 0) > 1 &&
 				state.players.find((player) => player.role.title === 'Hiker')
-					?.currentTileId !== state.players[currentPlayerIndex].currentTileId,
+					?.currentTileId !== state.players[0].currentTileId,
 		},
 		{
 			name: 'Remove Sand',
@@ -28,7 +28,7 @@ export default function ActionPanel() {
 					findNeighboring(
 						state.board,
 						currentTileIndex,
-						state.players[currentPlayerIndex].role.title,
+						state.players[0].role.title,
 					),
 				).length === 0,
 		},

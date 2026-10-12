@@ -76,7 +76,7 @@ export default function HurricaneDeck() {
 					</div>
 				</div>
 				<div className="flex flex-wrap justify-around items-center md:col-span-2">
-					<h3 className="font-bold">Sand Mark Count: </h3>
+					<h3 className="font-bold">Sand Point Count: </h3>
 					{48 - sumSandPoints(state.board)} / 48
 				</div>
 			</div>

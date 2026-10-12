@@ -1,4 +1,3 @@
-import { getTilePlayer } from '@/data/actions';
 import ConfirmModalButtons from '../ConfirmModalButtons';
 import { useGame } from '../GameContext';
 import PopUp from '../PopUp';
@@ -6,12 +5,10 @@ import PopUp from '../PopUp';
 export default function RevealTileModal() {
 	const { state, dispatch } = useGame();
 
-	const { currentPlayerIndex } = getTilePlayer(state.board, state.players);
-
 	return (
 		<PopUp
 			show={state.showRevealModal}
-			heading={`Reveal ${state.players[currentPlayerIndex].role.title}'s tile?`}
+			heading={`Reveal ${state.players[0].role.title}'s tile?`}
 			description="This action cannot be undone."
 		>
 			<ConfirmModalButtons
@@ -38,7 +35,7 @@ export default function RevealTileModal() {
 					const board = [...state.board];
 					const targetTileIndex = board.findIndex(
 						(tile) =>
-							tile.id === state.players[currentPlayerIndex].currentTileId,
+							tile.id === state.players[0].currentTileId,
 					);
 					const players = [...state.players];
 					if (board[targetTileIndex].info) {
@@ -60,7 +57,7 @@ export default function RevealTileModal() {
 								const items = [...state.itemDeck];
 								const item = items.pop();
 								if (item) {
-									players[currentPlayerIndex].items.push(item);
+									players[0].items.push(item);
 									dispatch({ type: 'DRAW_ITEM_CARD', card: item.type, items });
 								}
 							}

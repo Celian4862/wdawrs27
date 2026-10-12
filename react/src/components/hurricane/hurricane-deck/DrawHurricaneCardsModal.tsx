@@ -1,18 +1,17 @@
 import ConfirmModalButtons from '@/components/ConfirmModalButtons';
 import { useGame } from '@/components/GameContext';
 import PopUp from '@/components/PopUp';
-import { getTilePlayer } from '@/data/actions';
 import { shuffleHurricaneDeck } from '@/data/hurricane/hurricaneDeck';
+import { cyclePlayers } from '@/data/players';
 import { sumSandPoints, toCoordinates, toIndex } from '@/data/tiles';
 
 export default function DrawHurricaneCardsModal() {
 	const { state, dispatch, getGameState } = useGame();
-	const { currentPlayerIndex } = getTilePlayer(state.board, state.players);
 
 	return (
 		<PopUp
 			show={state.showEndTurnModal}
-			heading={`End ${state.players[currentPlayerIndex].role.title}'s Turn?`}
+			heading={`End ${state.players[0].role.title}'s Turn?`}
 			description={
 				<>
 					This will automatically draw{' '}
@@ -167,21 +166,15 @@ export default function DrawHurricaneCardsModal() {
 				}
 			}
 
-			let playerIndex = currentPlayers.findIndex((player) => player.isTurn);
-			currentPlayers[playerIndex].isTurn = false;
+			currentPlayers = cyclePlayers(currentPlayers);
 
-			if (++playerIndex === currentPlayers.length) {
-				playerIndex = 0;
-			}
-			currentPlayers[playerIndex].isTurn = true;
-			currentPlayers = [...currentPlayers];
 			// End of turn rest delay & notification phase
 			dispatch({
 				type: 'SET_TURN_STATUS',
 				players: currentPlayers,
 				status: 'Turn complete! Passing to next player...',
 				turnCount:
-					currentPlayers[playerIndex].id === state.firstPlayerId
+					currentPlayers[0].id === state.firstPlayerId
 						? state.turnCount + 1
 						: state.turnCount,
 			});

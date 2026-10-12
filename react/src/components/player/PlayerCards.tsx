@@ -1,12 +1,11 @@
 import GameInfoHeading from '@/components/game-info/GameInfoHeading';
 import GameInfoSection from '@/components/game-info/GameInfoSection';
-import { findCurrentPlayer } from '@/data/players';
 import { useGame } from '../GameContext';
 import PawnCircle from './PawnCircle';
 
 export default function PlayerCards() {
 	const { state } = useGame();
-	const currentPlayer = state.players[findCurrentPlayer(state.players)];
+	const currentPlayer = state.players[0];
 
 	return (
 		<GameInfoSection>
