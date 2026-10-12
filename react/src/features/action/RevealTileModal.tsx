@@ -1,6 +1,6 @@
-import ConfirmModalButtons from '../ConfirmModalButtons';
-import { useGame } from '../GameContext';
-import PopUp from '../PopUp';
+import ConfirmModalButtons from '../utility/ConfirmModalButtons';
+import { useGame } from '../utility/GameContext';
+import PopUp from '../utility/PopUp';
 
 export default function RevealTileModal() {
 	const { state, dispatch } = useGame();

@@ -1,4 +1,4 @@
-import { useGame } from '@/components/GameContext';
+import { useGame } from '@/features/utility/GameContext';
 
 export default function ResetButton() {
 	const { state, dispatch } = useGame();

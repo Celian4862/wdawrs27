@@ -1,7 +1,7 @@
-import { countItemCards } from '@/data/items';
-import { useGame } from './GameContext';
-import GameInfoHeading from './game-info/GameInfoHeading';
-import GameInfoSection from './game-info/GameInfoSection';
+import { countItemCards } from '@/features/item/items';
+import GameInfoHeading from '../game-info/GameInfoHeading';
+import GameInfoSection from '../game-info/GameInfoSection';
+import { useGame } from '../utility/GameContext';
 
 export default function ItemDeck() {
 	const { state } = useGame();

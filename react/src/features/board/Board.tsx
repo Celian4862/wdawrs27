@@ -1,7 +1,7 @@
-import { useGame } from '@/components/GameContext';
-import { getTileIndex } from '@/data/actions';
-import { findMoveable, findNeighboring, findSandPoints } from '@/data/tiles';
-import PawnCircle from './player/PawnCircle';
+import { getTileIndex } from '@/features/action/actions';
+import { findMoveable, findNeighboring, findSandPoints } from '@/features/board/tiles';
+import { useGame } from '@/features/utility/GameContext';
+import PawnCircle from '@/features/player/PawnCircle';
 
 export default function Board({ className }: { className?: string }) {
 	const { state, dispatch } = useGame();

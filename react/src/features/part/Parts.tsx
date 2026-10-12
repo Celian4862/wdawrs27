@@ -1,6 +1,6 @@
-import { useGame } from './GameContext';
-import GameInfoHeading from './game-info/GameInfoHeading';
-import GameInfoSection from './game-info/GameInfoSection';
+import GameInfoHeading from '../game-info/GameInfoHeading';
+import GameInfoSection from '../game-info/GameInfoSection';
+import { useGame } from '../utility/GameContext';
 
 export default function Parts() {
 	const { state } = useGame();

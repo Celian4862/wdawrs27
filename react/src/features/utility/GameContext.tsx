@@ -6,21 +6,21 @@ import {
 	useReducer,
 	useRef,
 } from 'react';
-import type { EndGameState } from '@/components/EndGameScreen';
-import { getTileIndex } from '@/data/actions';
-import {
-	type HurricaneCard,
-	shuffleHurricaneDeck,
-} from '@/data/hurricane/hurricaneDeck';
-import { initHurricaneMeter } from '@/data/hurricane/initHurricaneMeter';
-import { type ItemType, shuffleItemDeck } from '@/data/items';
-import { type ActivePlayer, assignPlayers } from '@/data/players';
+import { getTileIndex } from '@/features/action/actions';
+import { type ActivePlayer, assignPlayers } from '@/features/player/players';
 import {
 	findNeighboring,
 	findSandPoints,
 	shuffleBoard,
 	type Tile,
-} from '@/data/tiles';
+} from '@/features/board/tiles';
+import type { EndGameState } from '@/features/EndGameScreen';
+import {
+	type HurricaneCard,
+	shuffleHurricaneDeck,
+} from '@/features/hurricane/hurricane-deck/hurricaneDeck';
+import { initHurricaneMeter } from '@/features/hurricane/hurricane-meter/initHurricaneMeter';
+import { type ItemType, shuffleItemDeck } from '@/features/item/items';
 
 interface GameState {
 	gameId: boolean;

@@ -1,4 +1,4 @@
-import { shuffle } from '../shuffle';
+import { shuffle } from '../../utility/shuffle';
 
 export const hurricaneDistances = [1, 2, 3];
 export const hurricaneDirections = ['Up', 'Down', 'Left', 'Right'];

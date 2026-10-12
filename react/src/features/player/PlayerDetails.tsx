@@ -1,4 +1,4 @@
-import type { ActivePlayer } from '@/data/players';
+import type { ActivePlayer } from '@/features/player/players';
 import PawnCircle from './PawnCircle';
 
 export default function PlayerDetails({

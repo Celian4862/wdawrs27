@@ -1,6 +1,6 @@
-import { parts } from './parts';
-import type { ActivePlayer } from './players';
-import { shuffle } from './shuffle';
+import type { ActivePlayer } from '../../components/player/players';
+import { parts } from '../part/parts';
+import { shuffle } from '../utility/shuffle';
 
 export interface Tile {
 	id: number;

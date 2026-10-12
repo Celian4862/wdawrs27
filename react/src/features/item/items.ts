@@ -1,4 +1,4 @@
-import { shuffle } from '@/data/shuffle';
+import { shuffle } from '@/features/utility/shuffle';
 
 export interface ItemType {
 	id: number;

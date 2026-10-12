@@ -1,5 +1,5 @@
-import type { ItemType } from './items';
-import { shuffle } from './shuffle';
+import { shuffle } from '../../features/utility/shuffle';
+import type { ItemType } from '../item/items';
 
 export function assignPlayers(playerCount: number) {
 	const roles = shuffle(roleTemplates).slice(0, playerCount);

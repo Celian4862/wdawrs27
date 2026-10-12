@@ -1,6 +1,6 @@
-import GameInfoHeading from '@/components/game-info/GameInfoHeading';
-import GameInfoSection from '@/components/game-info/GameInfoSection';
-import { useGame } from '../GameContext';
+import GameInfoHeading from '@/features/game-info/GameInfoHeading';
+import GameInfoSection from '@/features/game-info/GameInfoSection';
+import { useGame } from '../../features/utility/GameContext';
 import PlayerDetails from './PlayerDetails';
 
 export default function PlayerCards() {

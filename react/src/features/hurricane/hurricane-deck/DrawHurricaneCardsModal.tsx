@@ -1,9 +1,9 @@
-import ConfirmModalButtons from '@/components/ConfirmModalButtons';
-import { useGame } from '@/components/GameContext';
-import PopUp from '@/components/PopUp';
-import { shuffleHurricaneDeck } from '@/data/hurricane/hurricaneDeck';
-import { cyclePlayers } from '@/data/players';
-import { sumSandPoints, toCoordinates, toIndex } from '@/data/tiles';
+import { cyclePlayers } from '@/features/player/players';
+import { sumSandPoints, toCoordinates, toIndex } from '@/features/board/tiles';
+import { shuffleHurricaneDeck } from '@/features/hurricane/hurricane-deck/hurricaneDeck';
+import ConfirmModalButtons from '@/features/utility/ConfirmModalButtons';
+import { useGame } from '@/features/utility/GameContext';
+import PopUp from '@/features/utility/PopUp';
 
 export default function DrawHurricaneCardsModal() {
 	const { state, dispatch, getGameState } = useGame();
