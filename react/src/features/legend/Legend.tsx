@@ -1,6 +1,6 @@
 import GameInfoHeading from '../game-info/GameInfoHeading';
 import GameInfoSection from '../game-info/GameInfoSection';
-import { legend } from './legend';
+import { tileLegend } from './legend';
 
 export default function Legend() {
 	return (
@@ -9,12 +9,12 @@ export default function Legend() {
 			<table className="w-full border-separate border-spacing-2 text-center text-lg">
 				<thead>
 					<tr>
-						<th>Color / Symbol</th>
+						<th>Tile Color</th>
 						<th>Meaning</th>
 					</tr>
 				</thead>
 				<tbody>
-					{legend.map((sym) => {
+					{tileLegend.map((sym) => {
 						return (
 							<tr key={sym[1]}>
 								<td
