@@ -87,4 +87,12 @@ const iconLegend = [
 			</>
 		),
 	},
+	{
+		icon: <>↔️</>,
+		meaning: <>Row Part Hint</>,
+	},
+	{
+		icon: <>↕️</>,
+		meaning: <>Column Part Hint</>,
+	},
 ];
