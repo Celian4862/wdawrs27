@@ -74,38 +74,42 @@ export default function ActionPanel() {
 				)}
 				<div className="mt-3 flex flex-wrap justify-center gap-2 lg:m-0">
 					{actions.map((action) => (
-						<button
-							key={action.name}
-							type="button"
-							disabled={disabled(action)}
-							onClick={() => {
-								if (state.isDrawingHurricaneCards || action.disableCondition) {
-									return;
-								}
-								if (action.name === 'Reveal Tile') {
+						<div key={action.name} className="relative inline-block">
+							{action.name === 'Collect Part' && !action.disableCondition && (
+								<PingCircle />
+							)}
+							<button
+								type="button"
+								disabled={disabled(action)}
+								onClick={() => {
+									if (
+										state.isDrawingHurricaneCards ||
+										action.disableCondition
+									) {
+										return;
+									}
+									if (action.name === 'Reveal Tile') {
+										dispatch({
+											type: 'SET_SHOW_REVEAL_MODAL',
+											prevAction: state.selectedAction,
+											show: true,
+										});
+									}
 									dispatch({
-										type: 'SET_SHOW_REVEAL_MODAL',
-										prevAction: state.selectedAction,
-										show: true,
+										type: 'SELECT_ACTION',
+										action:
+											state.selectedAction === action.name ? null : action.name,
 									});
-								}
-								dispatch({
-									type: 'SELECT_ACTION',
-									action:
-										state.selectedAction === action.name ? null : action.name,
-								});
-							}}
-							className={`p-3 border rounded-lg motion-safe:transition ${disabled(action) ? 'brightness-50' : action.name === 'Reveal Tile' ? 'bg-green-700 hover:bg-green-600' : 'hover:bg-yellow-600 active:scale-115'} ${state.selectedAction === action.name ? `scale-115 ${action.name === 'Reveal Tile' ? 'bg-green-700' : 'bg-yellow-600 '}` : ''}`}
-						>
-							{action.name}
-						</button>
+								}}
+								className={`p-3 border rounded-lg motion-safe:transition ${disabled(action) ? 'brightness-50' : action.name === 'Reveal Tile' ? 'bg-green-700 hover:bg-green-600' : 'hover:bg-yellow-600 active:scale-115'} ${state.selectedAction === action.name ? `scale-115 ${action.name === 'Reveal Tile' ? 'bg-green-700' : 'bg-yellow-600 '}` : ''}`}
+							>
+								{action.name}
+							</button>
+						</div>
 					))}
 					<div className="relative inline-block">
 						{state.actionCount === 0 && !state.isDrawingHurricaneCards && (
-							<span className="absolute -top-1 -right-1 flex h-3 w-3">
-								<span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
-								<span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500" />
-							</span>
+							<PingCircle />
 						)}
 						<button
 							type="button"
@@ -125,5 +129,14 @@ export default function ActionPanel() {
 				</div>
 			</div>
 		</GameInfoSection>
+	);
+}
+
+function PingCircle() {
+	return (
+		<span className="absolute -top-1 -right-1 flex h-3 w-3">
+			<span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
+			<span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500" />
+		</span>
 	);
 }
