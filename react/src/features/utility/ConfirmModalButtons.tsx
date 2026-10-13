@@ -3,17 +3,19 @@ export default function ConfirmModalButtons({
 	onConfirm,
 	onCancel,
 	defeat = false,
+	className = 'bg-red-600 hover:bg-red-500 active:bg-red-700',
 }: {
 	confirmMessage: string;
 	onConfirm: () => void;
 	onCancel?: () => void;
 	defeat?: boolean;
+	className?: string;
 }) {
 	return (
 		<div className="pt-2 flex flex-col gap-3 justify-center md:flex-row">
 			<button
 				type="button"
-				className="px-5 py-2 bg-red-600 font-bold rounded-lg hover:bg-red-500 active:bg-red-700 motion-safe:transition"
+				className={`px-5 py-2 font-bold rounded-lg motion-safe:transition ${className ?? ''}`}
 				onClick={onConfirm}
 			>
 				{confirmMessage}

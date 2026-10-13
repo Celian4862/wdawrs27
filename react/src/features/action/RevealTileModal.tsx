@@ -13,6 +13,7 @@ export default function RevealTileModal() {
 		>
 			<ConfirmModalButtons
 				confirmMessage="Confirm & Reveal"
+				className="bg-green-700 hover:bg-green-500 active:bg-red-700"
 				onCancel={() => {
 					dispatch({ type: 'SELECT_ACTION', action: state.prevAction });
 					dispatch({

@@ -1,8 +1,8 @@
-import { getTileIndex } from '@/features/action/actions';
 import { findNeighboring, findSandPoints } from '@/features/board/tiles';
-import GameInfoHeading from '../game-info/GameInfoHeading';
-import GameInfoSection from '../game-info/GameInfoSection';
-import { useGame } from '../utility/GameContext';
+import GameInfoHeading from '@/features/game-info/GameInfoHeading';
+import GameInfoSection from '@/features/game-info/GameInfoSection';
+import { useGame } from '@/features/utility/GameContext';
+import { getTileIndex } from '@/features/utility/getTileIndex';
 
 export default function ActionPanel() {
 	const { state, dispatch } = useGame();
@@ -39,7 +39,7 @@ export default function ActionPanel() {
 			name: 'Reveal Tile',
 			disableCondition:
 				(state.board[currentTileIndex].info?.sandPoints ?? 0) > 0 ||
-				state.board[currentTileIndex].info?.revealed,
+				(state.board[currentTileIndex].info?.revealed ?? false),
 		},
 	];
 
@@ -53,7 +53,7 @@ export default function ActionPanel() {
 			<GameInfoHeading
 				heading="Action Panel"
 				subheading={`${state.actionCount} actions left`}
-				className="hidden w-full lg:block lg:flex"
+				className="w-full lg:block lg:flex"
 			/>
 			{state.recentlyDrawnHurricaneCard && (
 				<div className="w-full text-center py-1 px-3 bg-slate-800/80 rounded-lg border border-slate-700 text-sm flex justify-between items-center lg:hidden">
@@ -95,25 +95,33 @@ export default function ActionPanel() {
 										state.selectedAction === action.name ? null : action.name,
 								});
 							}}
-							className={`p-3 border rounded-lg motion-safe:transition ${disabled(action) ? 'brightness-50' : 'hover:bg-yellow-600 active:scale-115'} ${state.selectedAction === action.name ? 'bg-yellow-600 scale-115' : ''}`}
+							className={`p-3 border rounded-lg motion-safe:transition ${disabled(action) ? 'brightness-50' : action.name === 'Reveal Tile' ? 'bg-green-700 hover:bg-green-600' : 'hover:bg-yellow-600 active:scale-115'} ${state.selectedAction === action.name ? `scale-115 ${action.name === 'Reveal Tile' ? 'bg-green-700' : 'bg-yellow-600 '}` : ''}`}
 						>
 							{action.name}
 						</button>
 					))}
-					<button
-						type="button"
-						disabled={state.isDrawingHurricaneCards || state.showEndTurnModal}
-						className={`p-3 bg-red-600/70 rounded-lg font-semibold border motion-safe:transition ${
-							state.isDrawingHurricaneCards || state.showEndTurnModal
-								? 'brightness-50 cursor-not-allowed'
-								: 'hover:bg-red-600 active:brightness-50'
-						}`}
-						onClick={() =>
-							dispatch({ type: 'SET_SHOW_END_TURN_MODAL', show: true })
-						}
-					>
-						End Turn
-					</button>
+					<div className="relative inline-block">
+						{state.actionCount === 0 && (
+							<span className="absolute -top-1 -right-1 flex h-3 w-3">
+								<span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
+								<span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500" />
+							</span>
+						)}
+						<button
+							type="button"
+							disabled={state.isDrawingHurricaneCards || state.showEndTurnModal}
+							className={`p-3 bg-red-600/70 rounded-lg font-semibold border motion-safe:transition ${
+								state.isDrawingHurricaneCards || state.showEndTurnModal
+									? 'brightness-50 cursor-not-allowed'
+									: 'hover:bg-red-600 active:brightness-50'
+							}`}
+							onClick={() =>
+								dispatch({ type: 'SET_SHOW_END_TURN_MODAL', show: true })
+							}
+						>
+							End Turn
+						</button>
+					</div>
 				</div>
 			</div>
 		</GameInfoSection>

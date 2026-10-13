@@ -1,4 +1,3 @@
-import { getTileIndex } from '@/features/action/actions';
 import {
 	findMoveable,
 	findNeighboring,
@@ -6,6 +5,7 @@ import {
 } from '@/features/board/tiles';
 import PawnCircle from '@/features/player/PawnCircle';
 import { useGame } from '@/features/utility/GameContext';
+import { getTileIndex } from '@/features/utility/getTileIndex';
 
 export default function Board({ className }: { className?: string }) {
 	const { state, dispatch } = useGame();

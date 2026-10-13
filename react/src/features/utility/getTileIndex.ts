@@ -1,5 +1,5 @@
+import type { Tile } from '@/features/board/tiles';
 import type { ActivePlayer } from '@/features/player/players';
-import type { Tile } from '../board/tiles';
 
 export function getTileIndex(board: Tile[], player: ActivePlayer) {
 	const currentTileIndex = board.findIndex(

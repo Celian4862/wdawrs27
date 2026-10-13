@@ -1,4 +1,4 @@
-export const tileLegend = [
+export const colorLegend = [
 	['bg-red-700', 'Start'],
 	['bg-white/80', 'Exit'],
 	['bg-slate-700', 'Item'],
@@ -12,3 +12,5 @@ export const tileLegend = [
 	['bg-orange-500', 'Core'],
 	['bg-yellow-600', 'Fan'],
 ];
+
+export const iconLegend = [];

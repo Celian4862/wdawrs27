@@ -6,7 +6,6 @@ import {
 	useReducer,
 	useRef,
 } from 'react';
-import { getTileIndex } from '@/features/action/actions';
 import {
 	findNeighboring,
 	findSandPoints,
@@ -21,6 +20,7 @@ import {
 import { initHurricaneMeter } from '@/features/hurricane/hurricane-meter/initHurricaneMeter';
 import { type ItemType, shuffleItemDeck } from '@/features/item/items';
 import { type ActivePlayer, assignPlayers } from '@/features/player/players';
+import { getTileIndex } from '@/features/utility/getTileIndex';
 
 interface GameState {
 	gameId: boolean;

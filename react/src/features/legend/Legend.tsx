@@ -1,6 +1,6 @@
-import GameInfoHeading from '../game-info/GameInfoHeading';
-import GameInfoSection from '../game-info/GameInfoSection';
-import { tileLegend } from './legend';
+import GameInfoHeading from '@/features/game-info/GameInfoHeading';
+import GameInfoSection from '@/features/game-info/GameInfoSection';
+import { colorLegend } from './legend';
 
 export default function Legend() {
 	return (
@@ -14,7 +14,7 @@ export default function Legend() {
 					</tr>
 				</thead>
 				<tbody>
-					{tileLegend.map((sym) => {
+					{colorLegend.map((sym) => {
 						return (
 							<tr key={sym[1]}>
 								<td
