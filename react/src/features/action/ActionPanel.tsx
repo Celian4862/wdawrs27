@@ -56,7 +56,7 @@ export default function ActionPanel() {
 				className="w-full lg:block lg:flex"
 			/>
 			{state.recentlyDrawnHurricaneCard && (
-				<div className="w-full text-center py-1 px-3 bg-slate-800/80 rounded-lg border border-slate-700 text-sm flex justify-between items-center lg:hidden">
+				<div className="w-full text-center py-1 px-3 mt-3 bg-slate-800/80 rounded-lg border border-slate-700 text-sm flex justify-between items-center lg:hidden">
 					<span className="text-slate-400 font-medium">Last Card:</span>
 					<span className="font-bold text-amber-400">
 						{state.recentlyDrawnHurricaneCard.type !== 'Move'
@@ -66,66 +66,77 @@ export default function ActionPanel() {
 				</div>
 			)}
 
-			<div className="flex flex-col lg:flex-col-reverse">
+			<div className="w-full flex flex-col lg:flex-col-reverse">
 				{state.turnStatus && (
 					<p className="mt-3 text-center text-amber-400 font-semibold animate-pulse text-sm md:text-base">
 						{state.turnStatus}
 					</p>
 				)}
-				<div className="mt-3 flex flex-wrap justify-center gap-2 lg:m-0">
-					{actions.map((action) => (
-						<div key={action.name} className="relative inline-block">
-							{action.name === 'Collect Part' && !action.disableCondition && (
-								<PingCircle />
-							)}
-							<button
-								type="button"
-								disabled={disabled(action)}
-								onClick={() => {
-									if (
-										state.isDrawingHurricaneCards ||
-										action.disableCondition
-									) {
-										return;
+				<div>
+					<details open className="mt-3 w-full">
+						<summary className="mb-3">Main Actions</summary>
+						<div className="mt-3 flex flex-wrap justify-center gap-2 lg:m-0">
+							{actions.map((action) => (
+								<div key={action.name} className="relative inline-block">
+									{action.name === 'Collect Part' &&
+										!action.disableCondition && <PingCircle />}
+									<button
+										type="button"
+										disabled={disabled(action)}
+										onClick={() => {
+											if (
+												state.isDrawingHurricaneCards ||
+												action.disableCondition
+											) {
+												return;
+											}
+											if (action.name === 'Reveal Tile') {
+												dispatch({
+													type: 'SET_SHOW_REVEAL_MODAL',
+													prevAction: state.selectedAction,
+													show: true,
+												});
+											}
+											dispatch({
+												type: 'SELECT_ACTION',
+												action:
+													state.selectedAction === action.name
+														? null
+														: action.name,
+											});
+										}}
+										className={`p-3 border rounded-lg motion-safe:transition ${disabled(action) ? 'brightness-50' : action.name === 'Reveal Tile' ? 'bg-green-700 hover:bg-green-600' : 'hover:bg-yellow-600 active:scale-115'} ${state.selectedAction === action.name ? `scale-115 ${action.name === 'Reveal Tile' ? 'bg-green-700' : 'bg-yellow-600 '}` : ''}`}
+									>
+										{action.name}
+									</button>
+								</div>
+							))}
+							<div className="relative inline-block">
+								{state.actionCount === 0 && !state.isDrawingHurricaneCards && (
+									<PingCircle />
+								)}
+								<button
+									type="button"
+									disabled={
+										state.isDrawingHurricaneCards || state.showEndTurnModal
 									}
-									if (action.name === 'Reveal Tile') {
-										dispatch({
-											type: 'SET_SHOW_REVEAL_MODAL',
-											prevAction: state.selectedAction,
-											show: true,
-										});
+									className={`p-3 bg-red-600/70 rounded-lg font-semibold border motion-safe:transition ${
+										state.isDrawingHurricaneCards || state.showEndTurnModal
+											? 'brightness-50 cursor-not-allowed'
+											: 'hover:bg-red-600 active:brightness-50'
+									}`}
+									onClick={() =>
+										dispatch({ type: 'SET_SHOW_END_TURN_MODAL', show: true })
 									}
-									dispatch({
-										type: 'SELECT_ACTION',
-										action:
-											state.selectedAction === action.name ? null : action.name,
-									});
-								}}
-								className={`p-3 border rounded-lg motion-safe:transition ${disabled(action) ? 'brightness-50' : action.name === 'Reveal Tile' ? 'bg-green-700 hover:bg-green-600' : 'hover:bg-yellow-600 active:scale-115'} ${state.selectedAction === action.name ? `scale-115 ${action.name === 'Reveal Tile' ? 'bg-green-700' : 'bg-yellow-600 '}` : ''}`}
-							>
-								{action.name}
-							</button>
+								>
+									End Turn
+								</button>
+							</div>
 						</div>
-					))}
-					<div className="relative inline-block">
-						{state.actionCount === 0 && !state.isDrawingHurricaneCards && (
-							<PingCircle />
-						)}
-						<button
-							type="button"
-							disabled={state.isDrawingHurricaneCards || state.showEndTurnModal}
-							className={`p-3 bg-red-600/70 rounded-lg font-semibold border motion-safe:transition ${
-								state.isDrawingHurricaneCards || state.showEndTurnModal
-									? 'brightness-50 cursor-not-allowed'
-									: 'hover:bg-red-600 active:brightness-50'
-							}`}
-							onClick={() =>
-								dispatch({ type: 'SET_SHOW_END_TURN_MODAL', show: true })
-							}
-						>
-							End Turn
-						</button>
-					</div>
+					</details>
+					<details className="mt-3">
+						<summary>Role Actions</summary>
+					</details>
 				</div>
 			</div>
 		</GameInfoSection>
