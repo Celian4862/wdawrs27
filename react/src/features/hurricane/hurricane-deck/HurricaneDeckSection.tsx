@@ -16,7 +16,7 @@ export default function HurricaneDeck() {
 		<GameInfoSection>
 			<GameInfoHeading
 				heading="Hurricane Deck"
-				subheading={`${state.hurricaneDeck.length}`}
+				subheading={`${state.hurricaneDeck.length} cards`}
 			/>
 			<div className="grid md:grid-cols-2 gap-3 *:py-1 *:text-lg *:border *:rounded-lg">
 				<div
