@@ -5,7 +5,7 @@ import EndGameScreen from '@/features/EndGameScreen';
 import DrawHurricaneCardsModal from '@/features/hurricane/hurricane-deck/DrawHurricaneCardsModal';
 import HurricaneDeck from '@/features/hurricane/hurricane-deck/HurricaneDeckSection';
 import ItemDeck from '@/features/item/ItemDeck';
-import Legend from '@/features/legend/Legend';
+import Legend from '@/features/Legend';
 import Parts from '@/features/part/Parts';
 import PlayerCards from '@/features/player/PlayerCards';
 import ResetButton from '@/features/reset/ResetButton';
