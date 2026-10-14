@@ -72,9 +72,9 @@ export default function ActionPanel() {
 						{state.turnStatus}
 					</p>
 				)}
-				<div>
-					<details open className="mt-3 w-full">
-						<summary className="mb-3">Main Actions</summary>
+				<div className="relative">
+					<details open className="mt-3">
+						<summary className="mb-3 cursor-pointer">Main Actions</summary>
 						<div className="mt-3 flex flex-wrap justify-center gap-2 lg:m-0">
 							{actions.map((action) => (
 								<div key={action.name} className="relative inline-block">
@@ -135,7 +135,7 @@ export default function ActionPanel() {
 						</div>
 					</details>
 					<details className="mt-3">
-						<summary>Role Actions</summary>
+						<summary className="cursor-pointer">Role Actions</summary>
 					</details>
 				</div>
 			</div>
