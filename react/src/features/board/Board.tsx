@@ -111,10 +111,10 @@ export default function Board({ className }: { className?: string }) {
 								})}
 						</div>
 
-						<div className="absolute left-1 bottom-1 grid grid-rows-3 grid-flow-col rtl gap-0.5 items-start pointer-events-none"></div>
+						<div className="absolute left-1 bottom-1 grid grid-rows-2 grid-flow-col ltr gap-0.5 items-start pointer-events-none"></div>
 
 						{tile.info?.orientationEmoji && (
-							<span className="absolute bottom-1 right-1 text-[10px] leading-none sm:text-sm md:text-lg">
+							<span className="absolute -bottom-1 -right-2 text-sm leading-none md:text-lg lg:bottom-1 lg:right-1">
 								{tile.info.revealed ? tile.info.orientationEmoji : ''}
 							</span>
 						)}
