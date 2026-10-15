@@ -14,7 +14,7 @@ export interface Tile {
 		unrevealedTileColor: string;
 		revealedTileColor: string;
 		orientationEmoji?: string;
-		partCount: number;
+		parts: string[];
 	};
 }
 
@@ -36,7 +36,7 @@ export function shuffleBoard() {
 			revealedType: 'Item',
 			unrevealedTileColor: 'bg-red-700',
 			revealedTileColor: 'bg-slate-700',
-			partCount: 0,
+			parts: [],
 		},
 	};
 
@@ -53,7 +53,7 @@ export function shuffleBoard() {
 				unrevealedTileColor: 'bg-lime-600',
 				revealedTileColor:
 					greenthTiles[index] === 'Water' ? 'bg-blue-700' : 'bg-amber-700',
-				partCount: 0,
+				parts: [],
 			},
 		};
 	});
@@ -107,7 +107,7 @@ export function shuffleBoard() {
 							: sandTiles[index].partOrientation === 'Col'
 								? '↕️'
 								: '',
-					partCount: 0,
+					parts: [],
 				},
 			};
 		});

@@ -32,7 +32,7 @@ export default function ActionPanel() {
 		{
 			name: 'Collect Part',
 			disableCondition:
-				state.board[currentTileIndex].info?.partCount === 0 ||
+				state.board[currentTileIndex].info?.parts.length === 0 ||
 				!state.board[currentTileIndex].info?.revealed,
 		},
 		{
