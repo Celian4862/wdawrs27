@@ -2,11 +2,11 @@ import { findNeighboring, findSandPoints } from '@/features/board/tiles';
 import GameInfoHeading from '@/features/game-info/GameInfoHeading';
 import GameInfoSection from '@/features/game-info/GameInfoSection';
 import { useGame } from '@/features/utility/GameContext';
-import { getTileIndex } from '@/features/utility/getTileIndex';
+import { getPlayerTileIndex } from '@/features/utility/getTileIndex';
 
 export default function ActionPanel() {
 	const { state, dispatch } = useGame();
-	const currentTileIndex = getTileIndex(state.board, state.players[0]);
+	const currentTileIndex = getPlayerTileIndex(state.board, state.players[0]);
 
 	const actions = [
 		{

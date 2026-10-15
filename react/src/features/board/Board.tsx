@@ -5,12 +5,13 @@ import {
 } from '@/features/board/tiles';
 import PawnCircle from '@/features/player/PawnCircle';
 import { useGame } from '@/features/utility/GameContext';
-import { getTileIndex } from '@/features/utility/getTileIndex';
+import { getPlayerTileIndex } from '@/features/utility/getTileIndex';
+import { parts } from '../part/parts';
 
 export default function Board({ className }: { className?: string }) {
 	const { state, dispatch } = useGame();
 
-	const currentTileIndex = getTileIndex(state.board, state.players[0]);
+	const currentTileIndex = getPlayerTileIndex(state.board, state.players[0]);
 	const hikerPosition = (() => {
 		const hikerIndex = state.players.findIndex(
 			(player) => player.role.title === 'Hiker',
@@ -87,7 +88,7 @@ export default function Board({ className }: { className?: string }) {
 						{!tile.info && '🌪'}
 						{tile.info && tile.info.sandPoints > 0 && (
 							<span
-								className={`absolute -right-2 -top-2 lg:right-1 lg:top-1 border rounded-full px-1.5 py-0.5 text-[8px] font-bold text-slate-950 ${tile.info.sandPoints > 1 ? 'bg-orange-600' : 'bg-amber-500/90'} md:text-[10px] xl:px-2 xl:text-base`}
+								className={`absolute -right-1 -top-1 lg:right-1 lg:top-1 border rounded-full px-1.5 py-0.5 text-[8px] font-bold text-slate-950 ${tile.info.sandPoints > 1 ? 'bg-orange-600' : 'bg-amber-500/90'} md:text-[10px] xl:px-2 xl:text-base`}
 							>
 								{tile.info.sandPoints}
 							</span>
@@ -111,10 +112,20 @@ export default function Board({ className }: { className?: string }) {
 								})}
 						</div>
 
-						<div className="absolute left-1 bottom-1 grid grid-rows-2 grid-flow-col ltr gap-0.5 items-start pointer-events-none"></div>
+						{tile.info && tile.info.parts.length > 0 && (
+							<div className="absolute left-1 bottom-1 grid grid-rows-2 grid-flow-col ltr gap-0.5 items-start pointer-events-none">
+								{tile.info.parts.map((part) => {
+									return (
+										<span key={part} className="bg-black text-xs">
+											{parts.find((partInfo) => partInfo.part === part)?.emoji}
+										</span>
+									);
+								})}
+							</div>
+						)}
 
 						{tile.info?.orientationEmoji && (
-							<span className="absolute -bottom-1 -right-2 text-sm leading-none md:text-lg lg:bottom-1 lg:right-1">
+							<span className="absolute -bottom-0.5 -right-1 text-sm leading-none md:text-lg lg:bottom-1 lg:right-1">
 								{tile.info.revealed ? tile.info.orientationEmoji : ''}
 							</span>
 						)}

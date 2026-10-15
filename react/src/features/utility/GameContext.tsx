@@ -20,7 +20,7 @@ import {
 import { initHurricaneMeter } from '@/features/hurricane/hurricane-meter/initHurricaneMeter';
 import { type ItemType, shuffleItemDeck } from '@/features/item/items';
 import { type ActivePlayer, assignPlayers } from '@/features/player/players';
-import { getTileIndex } from '@/features/utility/getTileIndex';
+import { getPlayerTileIndex } from '@/features/utility/getTileIndex';
 
 interface GameState {
 	gameId: boolean;
@@ -131,7 +131,10 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 			}
 			const newBoard = [...state.board];
 			const targetTile = newBoard[action.tilePosition];
-			const currentTileIndex = getTileIndex(state.board, state.players[0]);
+			const currentTileIndex = getPlayerTileIndex(
+				state.board,
+				state.players[0],
+			);
 
 			if (targetTile.info) {
 				newBoard[action.tilePosition] = {

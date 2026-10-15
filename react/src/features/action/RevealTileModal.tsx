@@ -1,5 +1,7 @@
+import { toIndex } from '../board/tiles';
 import ConfirmModalButtons from '../utility/ConfirmModalButtons';
 import { useGame } from '../utility/GameContext';
+import { getPlayerTileIndex } from '../utility/getTileIndex';
 import PopUp from '../utility/PopUp';
 
 export default function RevealTileModal() {
@@ -33,22 +35,29 @@ export default function RevealTileModal() {
 						show: false,
 					});
 
-					const targetTileId = state.players[0].currentTileId;
-					const board = state.board.map((tile) => {
-						if (tile.id === targetTileId && tile.info) {
-							return {
-								...tile,
-								info: { ...tile.info, revealed: true },
-							};
-						}
-						return tile;
-					});
+					const currentTileIndex = getPlayerTileIndex(
+						state.board,
+						state.players[0],
+					);
+					const board = [...state.board];
+					if (board[currentTileIndex].info) {
+						board[currentTileIndex] = {
+							...board[currentTileIndex],
+							info: {
+								...board[currentTileIndex].info,
+								revealed: true,
+							},
+						};
+					} else {
+						throw new Error('Tile is not valid');
+					}
 
 					const players = [...state.players];
-					const revealedType = state.board.find((t) => t.id === targetTileId)
-						?.info?.revealedType;
 
-					if (revealedType === 'Shade' || revealedType === 'Item') {
+					if (
+						board[currentTileIndex].info?.revealedType === 'Shade' ||
+						board[currentTileIndex].info?.revealedType === 'Item'
+					) {
 						const items = [...state.itemDeck];
 						let drawnItem = null;
 						drawnItem = items.pop();
@@ -59,9 +68,9 @@ export default function RevealTileModal() {
 								items: [...players[0].items, drawnItem],
 							};
 						}
-					} else if (revealedType === 'Water') {
+					} else if (board[currentTileIndex].info?.revealedType === 'Water') {
 						players.forEach((player, index) => {
-							if (player.currentTileId === targetTileId) {
+							if (player.currentTileId === state.board[currentTileIndex].id) {
 								const newWater = player.currentWaterLevel + 2;
 								players[index] = {
 									...player,
@@ -72,7 +81,37 @@ export default function RevealTileModal() {
 								};
 							}
 						});
-					} else if (revealedType === 'Hint') {
+					} else if (board[currentTileIndex].info?.revealedType === 'Hint') {
+						const partHint = board[currentTileIndex].info?.partHint;
+						const pairTileIndex = board.findIndex(
+							(tile) =>
+								tile.id !== board[currentTileIndex].id &&
+								tile.info?.partHint === partHint,
+						);
+						if (pairTileIndex > -1 && board[pairTileIndex].info?.revealed) {
+							const rowHintIndex =
+								board[currentTileIndex].info?.partOrientation === 'Row'
+									? currentTileIndex
+									: pairTileIndex;
+							const colHintIndex =
+								currentTileIndex === rowHintIndex
+									? pairTileIndex
+									: currentTileIndex;
+
+							const partTileIndex = toIndex(
+								Math.floor(rowHintIndex / 5),
+								colHintIndex % 5,
+							);
+							if (board[partTileIndex].info) {
+								board[partTileIndex] = {
+									...board[partTileIndex],
+									info: {
+										...board[partTileIndex].info,
+										parts: [...board[partTileIndex].info.parts, partHint ?? ''],
+									},
+								};
+							}
+						}
 					}
 
 					dispatch({

@@ -3,7 +3,7 @@ import { shuffleHurricaneDeck } from '@/features/hurricane/hurricane-deck/hurric
 import { cyclePlayers } from '@/features/player/players';
 import ConfirmModalButtons from '@/features/utility/ConfirmModalButtons';
 import { useGame } from '@/features/utility/GameContext';
-import { getTileIndex } from '@/features/utility/getTileIndex';
+import { getPlayerTileIndex } from '@/features/utility/getTileIndex';
 import PopUp from '@/features/utility/PopUp';
 
 export default function DrawHurricaneCardsModal() {
@@ -72,8 +72,9 @@ export default function DrawHurricaneCardsModal() {
 								if (getGameState().gameId !== currentGameId) return;
 
 								if (
-									currentBoard[getTileIndex(currentBoard, currentPlayers[j])]
-										.info?.revealedType !== 'Shade' &&
+									currentBoard[
+										getPlayerTileIndex(currentBoard, currentPlayers[j])
+									].info?.revealedType !== 'Shade' &&
 									--currentPlayers[j].currentWaterLevel < 0
 								) {
 									endGame = true;
