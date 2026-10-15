@@ -3,6 +3,7 @@ import { shuffleHurricaneDeck } from '@/features/hurricane/hurricane-deck/hurric
 import { cyclePlayers } from '@/features/player/players';
 import ConfirmModalButtons from '@/features/utility/ConfirmModalButtons';
 import { useGame } from '@/features/utility/GameContext';
+import { getTileIndex } from '@/features/utility/getTileIndex';
 import PopUp from '@/features/utility/PopUp';
 
 export default function DrawHurricaneCardsModal() {
@@ -34,6 +35,7 @@ export default function DrawHurricaneCardsModal() {
 
 	async function handleDrawHurricaneCards() {
 		const currentGameId = state.gameId;
+
 		dispatch({ type: 'START_DRAWING' });
 
 		const delay = (ms: number) =>
@@ -70,15 +72,11 @@ export default function DrawHurricaneCardsModal() {
 								if (getGameState().gameId !== currentGameId) return;
 
 								if (
-									currentBoard[
-										currentBoard.findIndex(
-											(tile) => tile.id === currentPlayers[j].currentTileId,
-										)
-									].info?.revealedType !== 'Shade'
+									currentBoard[getTileIndex(currentBoard, currentPlayers[j])]
+										.info?.revealedType !== 'Shade' &&
+									--currentPlayers[j].currentWaterLevel < 0
 								) {
-									if (--currentPlayers[j].currentWaterLevel < 0) {
-										endGame = true;
-									}
+									endGame = true;
 								}
 							}
 							currentPlayers = [...currentPlayers];

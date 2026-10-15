@@ -61,7 +61,6 @@ export default function RevealTileModal() {
 						// Copy the player object
 						const updatedPlayer = { ...player };
 
-						// Handle Water logic
 						if (
 							revealedType === 'Water' &&
 							player.currentTileId === state.players[0].currentTileId
@@ -71,10 +70,7 @@ export default function RevealTileModal() {
 								newWater > updatedPlayer.role.maxWater
 									? updatedPlayer.role.maxWater
 									: newWater;
-						}
-
-						// Handle Item/Shade logic for player 0
-						if (
+						} else if (
 							(revealedType === 'Shade' || revealedType === 'Item') &&
 							index === 0 &&
 							drawnItem

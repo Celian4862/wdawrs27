@@ -89,8 +89,7 @@ export default function ActionPanel() {
 												action.disableCondition
 											) {
 												return;
-											}
-											if (action.name === 'Reveal Tile') {
+											} else if (action.name === 'Reveal Tile') {
 												dispatch({
 													type: 'SET_SHOW_REVEAL_MODAL',
 													prevAction: state.selectedAction,
