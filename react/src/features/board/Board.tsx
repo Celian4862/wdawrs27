@@ -87,13 +87,13 @@ export default function Board({ className }: { className?: string }) {
 						{!tile.info && '🌪'}
 						{tile.info && tile.info.sandPoints > 0 && (
 							<span
-								className={`absolute -left-1 -top-1 lg:left-1 lg:top-1 border rounded-full px-1.5 py-0.5 text-[8px] font-bold text-slate-950 ${tile.info.sandPoints > 1 ? 'bg-orange-600' : 'bg-amber-500/90'} md:text-[10px] xl:px-2 xl:text-base`}
+								className={`absolute -right-2 -top-2 lg:right-1 lg:top-1 border rounded-full px-1.5 py-0.5 text-[8px] font-bold text-slate-950 ${tile.info.sandPoints > 1 ? 'bg-orange-600' : 'bg-amber-500/90'} md:text-[10px] xl:px-2 xl:text-base`}
 							>
 								{tile.info.sandPoints}
 							</span>
 						)}
 
-						<div className="absolute right-1 top-1 grid grid-rows-3 grid-flow-col rtl gap-0.5 items-start pointer-events-none">
+						<div className="absolute left-1 top-1 grid grid-rows-2 grid-flow-col rtl gap-0.5 items-start pointer-events-none">
 							{state.players
 								.filter((player) => player.currentTileId === tile.id)
 								.map((player) => {
@@ -110,6 +110,8 @@ export default function Board({ className }: { className?: string }) {
 									);
 								})}
 						</div>
+
+						<div className="absolute left-1 bottom-1 grid grid-rows-3 grid-flow-col rtl gap-0.5 items-start pointer-events-none"></div>
 
 						{tile.info?.orientationEmoji && (
 							<span className="absolute bottom-1 right-1 text-[10px] leading-none sm:text-sm md:text-lg">

@@ -18,84 +18,6 @@ export interface Tile {
 	};
 }
 
-export function toIndex(row: number, col: number) {
-	if (row < 0 || row > 4 || col < 0 || col > 4) {
-		return -1;
-	}
-	return row * 5 + col;
-}
-
-export function toCoordinates(index: number) {
-	return [Math.floor(index / 5), index % 5];
-}
-
-export function sumSandPoints(board: Tile[]) {
-	return board.reduce((sum, tile) => sum + (tile.info?.sandPoints ?? 0), 0);
-}
-
-export function findNeighboring(
-	board: Tile[],
-	currentPosition: number,
-	playerTitle: string,
-) {
-	const [mainRow, mainCol] = toCoordinates(currentPosition);
-	const isTraveler = playerTitle === 'Traveler';
-
-	const neighboring = [
-		toIndex(mainRow - 1, mainCol),
-		toIndex(mainRow + 1, mainCol),
-		toIndex(mainRow, mainCol - 1),
-		toIndex(mainRow, mainCol + 1),
-	];
-	if (isTraveler) {
-		neighboring.push(
-			toIndex(mainRow - 1, mainCol - 1),
-			toIndex(mainRow - 1, mainCol + 1),
-			toIndex(mainRow + 1, mainCol - 1),
-			toIndex(mainRow + 1, mainCol + 1),
-		);
-	}
-	const filtered = neighboring.filter((tilePosition) => tilePosition >= 0);
-	return filtered.filter((tilePosition) => board[tilePosition].info);
-}
-
-export function findMoveable(
-	board: Tile[],
-	neighboringTilePositions: number[],
-	hikerTilePosition: number,
-	currentPlayer: ActivePlayer,
-) {
-	return neighboringTilePositions.filter((neighboringTilePosition) => {
-		const neighboringTile = board[neighboringTilePosition].info;
-		if (!neighboringTile) {
-			throw new Error('Neighboring Tile is not valid');
-		}
-		return (
-			neighboringTile.sandPoints < 2 ||
-			neighboringTilePosition === hikerTilePosition ||
-			currentPlayer.role.title === 'Hiker'
-		);
-	});
-}
-
-export function findSandPoints(
-	board: Tile[],
-	currentPosition: number,
-	neighboringTilePositions: number[],
-) {
-	const currentAndNeighboringPositions = [
-		...neighboringTilePositions,
-		currentPosition,
-	];
-	return currentAndNeighboringPositions.filter((position) => {
-		const tileInfo = board[position].info;
-		if (!tileInfo) {
-			throw new Error('Tile is not valid');
-		}
-		return tileInfo.sandPoints > 0;
-	});
-}
-
 export function shuffleBoard() {
 	const board: Tile[] = Array(25);
 
@@ -191,4 +113,82 @@ export function shuffleBoard() {
 		});
 
 	return board;
+}
+
+export function findMoveable(
+	board: Tile[],
+	neighboringTilePositions: number[],
+	hikerTilePosition: number,
+	currentPlayer: ActivePlayer,
+) {
+	return neighboringTilePositions.filter((neighboringTilePosition) => {
+		const neighboringTile = board[neighboringTilePosition].info;
+		if (!neighboringTile) {
+			throw new Error('Neighboring Tile is not valid');
+		}
+		return (
+			neighboringTile.sandPoints < 2 ||
+			neighboringTilePosition === hikerTilePosition ||
+			currentPlayer.role.title === 'Hiker'
+		);
+	});
+}
+
+export function findSandPoints(
+	board: Tile[],
+	currentPosition: number,
+	neighboringTilePositions: number[],
+) {
+	const currentAndNeighboringPositions = [
+		...neighboringTilePositions,
+		currentPosition,
+	];
+	return currentAndNeighboringPositions.filter((position) => {
+		const tileInfo = board[position].info;
+		if (!tileInfo) {
+			throw new Error('Tile is not valid');
+		}
+		return tileInfo.sandPoints > 0;
+	});
+}
+
+export function findNeighboring(
+	board: Tile[],
+	currentPosition: number,
+	playerTitle: string,
+) {
+	const [mainRow, mainCol] = toCoordinates(currentPosition);
+	const isTraveler = playerTitle === 'Traveler';
+
+	const neighboring = [
+		toIndex(mainRow - 1, mainCol),
+		toIndex(mainRow + 1, mainCol),
+		toIndex(mainRow, mainCol - 1),
+		toIndex(mainRow, mainCol + 1),
+	];
+	if (isTraveler) {
+		neighboring.push(
+			toIndex(mainRow - 1, mainCol - 1),
+			toIndex(mainRow - 1, mainCol + 1),
+			toIndex(mainRow + 1, mainCol - 1),
+			toIndex(mainRow + 1, mainCol + 1),
+		);
+	}
+	const filtered = neighboring.filter((tilePosition) => tilePosition >= 0);
+	return filtered.filter((tilePosition) => board[tilePosition].info);
+}
+
+export function sumSandPoints(board: Tile[]) {
+	return board.reduce((sum, tile) => sum + (tile.info?.sandPoints ?? 0), 0);
+}
+
+export function toCoordinates(index: number) {
+	return [Math.floor(index / 5), index % 5];
+}
+
+export function toIndex(row: number, col: number) {
+	if (row < 0 || row > 4 || col < 0 || col > 4) {
+		return -1;
+	}
+	return row * 5 + col;
 }

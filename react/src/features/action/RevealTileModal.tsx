@@ -44,42 +44,37 @@ export default function RevealTileModal() {
 						return tile;
 					});
 
-					const targetTile = state.board.find((t) => t.id === targetTileId);
-					const revealedType = targetTile?.info?.revealedType;
+					const players = [...state.players];
+					const revealedType = state.board.find((t) => t.id === targetTileId)
+						?.info?.revealedType;
 
-					// 2. Immutably update the players array and objects
-					const items = [...state.itemDeck];
-					let drawnItem = null;
 					if (revealedType === 'Shade' || revealedType === 'Item') {
+						const items = [...state.itemDeck];
+						let drawnItem = null;
 						drawnItem = items.pop();
 						if (drawnItem) {
 							dispatch({ type: 'DRAW_ITEM_CARD', card: drawnItem.type, items });
+							players[0] = {
+								...players[0],
+								items: [...players[0].items, drawnItem],
+							};
 						}
+					} else if (revealedType === 'Water') {
+						players.forEach((player, index) => {
+							if (player.currentTileId === targetTileId) {
+								const newWater = player.currentWaterLevel + 2;
+								players[index] = {
+									...player,
+									currentWaterLevel:
+										newWater > player.role.maxWater
+											? player.role.maxWater
+											: newWater,
+								};
+							}
+						});
+					} else if (revealedType === 'Hint') {
 					}
 
-					const players = state.players.map((player, index) => {
-						// Copy the player object
-						const updatedPlayer = { ...player };
-
-						if (
-							revealedType === 'Water' &&
-							player.currentTileId === state.players[0].currentTileId
-						) {
-							const newWater = updatedPlayer.currentWaterLevel + 2;
-							updatedPlayer.currentWaterLevel =
-								newWater > updatedPlayer.role.maxWater
-									? updatedPlayer.role.maxWater
-									: newWater;
-						} else if (
-							(revealedType === 'Shade' || revealedType === 'Item') &&
-							index === 0 &&
-							drawnItem
-						) {
-							updatedPlayer.items = [...updatedPlayer.items, drawnItem];
-						}
-
-						return updatedPlayer;
-					});
 					dispatch({
 						type: 'REVEAL_TILE',
 						board,

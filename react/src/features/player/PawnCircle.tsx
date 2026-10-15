@@ -9,7 +9,7 @@ export default function PawnCircle({
 }) {
 	return (
 		<div
-			className={`size-2 rounded-full border-white/90 shadow-md md:size-4 ${isCurrentPlayer ? 'border-2 md:border-4' : 'border-1 md:border-2'} ${className ?? ''}`}
+			className={`size-2 rounded-full border-white/90 shadow-md lg:size-3 xl:size-4 ${isCurrentPlayer ? 'border-2 lg:border-3 xl:border-4' : 'border-1 xl:border-2'} ${className ?? ''}`}
 			style={{
 				backgroundColor: color,
 			}}
