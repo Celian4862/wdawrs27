@@ -2,7 +2,7 @@ import GameInfoHeading from '../game-info/GameInfoHeading';
 import GameInfoSection from '../game-info/GameInfoSection';
 import { useGame } from '../utility/GameContext';
 
-export default function Parts() {
+export default function PartsSection() {
 	const { state } = useGame();
 	return (
 		<GameInfoSection>

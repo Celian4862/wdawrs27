@@ -6,7 +6,7 @@ import DrawHurricaneCardsModal from '@/features/hurricane/hurricane-deck/DrawHur
 import HurricaneDeck from '@/features/hurricane/hurricane-deck/HurricaneDeckSection';
 import ItemDeck from '@/features/item/ItemDeck';
 import Legend from '@/features/Legend';
-import Parts from '@/features/part/Parts';
+import PartsSection from '@/features/part/PartsSection';
 import PlayerCards from '@/features/player/PlayerCards';
 import ResetButton from '@/features/reset/ResetButton';
 import ResetButtonModal from '@/features/reset/ResetButtonModal';
@@ -47,7 +47,7 @@ function GameContent() {
 								<PlayerCards />
 								<HurricaneDeck />
 								<ItemDeck />
-								<Parts />
+								<PartsSection />
 								<Legend />
 								<ResetButton />
 							</div>
