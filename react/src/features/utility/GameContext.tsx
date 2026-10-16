@@ -71,7 +71,6 @@ type GameAction =
 	| { type: 'MOVE_TILES'; players: ActivePlayer[] }
 	| { type: 'REMOVE_SAND'; board: Tile[]; nextAction: boolean }
 	| { type: 'COLLECT_PART'; board: Tile[]; partsCollected: string[] }
-	| { type: 'GAIN_WATER'; players: ActivePlayer[] }
 	| { type: 'SET_SHOW_REVEAL_MODAL'; prevAction: string | null; show: boolean }
 	| { type: 'REVEAL_TILE'; board: Tile[]; players: ActivePlayer[] }
 	| { type: 'SET_SHOW_END_TURN_MODAL'; show: boolean }
