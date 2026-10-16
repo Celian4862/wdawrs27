@@ -59,7 +59,7 @@ const initialState: GameState = {
 	turnCount: 1,
 	itemDeck: shuffleItemDeck(),
 	recentlyDrawnItemCard: 'None',
-	partsCollected: ['Pointer', 'Fan', 'Core', 'Motor'],
+	partsCollected: [],
 	endGameState: {},
 	showResetModal: false,
 };
