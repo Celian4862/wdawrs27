@@ -2,13 +2,13 @@ export default function ConfirmModalButtons({
 	confirmMessage,
 	onConfirm,
 	onCancel,
-	defeat = false,
+	victory,
 	className = 'bg-red-600 hover:bg-red-500 active:bg-red-700',
 }: {
 	confirmMessage: string;
 	onConfirm: () => void;
 	onCancel?: () => void;
-	defeat?: boolean;
+	victory?: boolean;
 	className?: string;
 }) {
 	return (
@@ -20,7 +20,7 @@ export default function ConfirmModalButtons({
 			>
 				{confirmMessage}
 			</button>
-			{!defeat ? (
+			{!victory ? (
 				<button
 					type="button"
 					className="px-5 py-2 border rounded-lg hover:bg-slate-700 active:bg-slate-800 motion-safe:transition"

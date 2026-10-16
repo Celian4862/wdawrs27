@@ -90,17 +90,22 @@ export default function ActionPanel() {
 											) {
 												return;
 											}
-											
+
 											if (action.name === 'Collect Part') {
 												const board = [...state.board];
 												const partsCollected = [...state.partsCollected];
 												if (board[currentTileIndex].info) {
-													const partToCollect = board[currentTileIndex].info.parts.pop();
+													const partToCollect =
+														board[currentTileIndex].info.parts.pop();
 													if (partToCollect) {
 														partsCollected.push(partToCollect);
 													}
 												}
-												dispatch({ type: 'COLLECT_PART', board, partsCollected })
+												dispatch({
+													type: 'COLLECT_PART',
+													board,
+													partsCollected,
+												});
 											} else if (action.name === 'Reveal Tile') {
 												dispatch({
 													type: 'SET_SHOW_REVEAL_MODAL',

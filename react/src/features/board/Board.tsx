@@ -76,10 +76,39 @@ export default function Board({ className }: { className?: string }) {
 									break;
 								}
 								case 'Remove Sand': {
-									dispatch({ type: 'REMOVE_SAND', tilePosition: index });
-									break;
-								}
-								case 'Collect Part': {
+									const board = [...state.board];
+									const targetTile = board[index];
+									const currentTileIndex = getPlayerTileIndex(
+										state.board,
+										state.players[0],
+									);
+
+									if (targetTile.info) {
+										board[index] = {
+											id: targetTile.id,
+											info: {
+												...targetTile.info,
+												sandPoints:
+													state.players[0].role.title === 'Digger'
+														? targetTile.info.sandPoints - 2
+														: targetTile.info.sandPoints - 1,
+											},
+										};
+									}
+									dispatch({
+										type: 'REMOVE_SAND',
+										board,
+										nextAction:
+											findSandPoints(
+												board,
+												currentTileIndex,
+												findNeighboring(
+													board,
+													currentTileIndex,
+													state.players[0].role.title,
+												),
+											).length === 0 && state.actionCount > 1,
+									});
 									break;
 								}
 							}

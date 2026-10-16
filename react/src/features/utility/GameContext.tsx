@@ -6,12 +6,7 @@ import {
 	useReducer,
 	useRef,
 } from 'react';
-import {
-	findNeighboring,
-	findSandPoints,
-	shuffleBoard,
-	type Tile,
-} from '@/features/board/tiles';
+import { shuffleBoard, type Tile } from '@/features/board/tiles';
 import type { EndGameState } from '@/features/EndGameScreen';
 import {
 	type HurricaneCard,
@@ -20,7 +15,6 @@ import {
 import { initHurricaneMeter } from '@/features/hurricane/hurricane-meter/initHurricaneMeter';
 import { type ItemType, shuffleItemDeck } from '@/features/item/items';
 import { type ActivePlayer, assignPlayers } from '@/features/player/players';
-import { getPlayerTileIndex } from '@/features/utility/getTileIndex';
 
 interface GameState {
 	gameId: boolean;
@@ -65,7 +59,7 @@ const initialState: GameState = {
 	turnCount: 1,
 	itemDeck: shuffleItemDeck(),
 	recentlyDrawnItemCard: 'None',
-	partsCollected: [],
+	partsCollected: ['Pointer', 'Fan', 'Core', 'Motor'],
 	endGameState: {},
 	showResetModal: false,
 };
@@ -75,7 +69,7 @@ type GameAction =
 	| { type: 'SET_DIFFICULTY'; index: number }
 	| { type: 'SELECT_ACTION'; action: string | null }
 	| { type: 'MOVE_TILES'; players: ActivePlayer[] }
-	| { type: 'REMOVE_SAND'; tilePosition: number }
+	| { type: 'REMOVE_SAND'; board: Tile[]; nextAction: boolean }
 	| { type: 'COLLECT_PART'; board: Tile[]; partsCollected: string[] }
 	| { type: 'GAIN_WATER'; players: ActivePlayer[] }
 	| { type: 'SET_SHOW_REVEAL_MODAL'; prevAction: string | null; show: boolean }
@@ -99,176 +93,202 @@ type GameAction =
 	| { type: 'RESET_GAME' };
 
 function gameReducer(state: GameState, action: GameAction): GameState {
+	let nextState: GameState;
 	const actionCount = state.actionCount - 1;
 	const selectedAction = actionCount === 0 ? null : state.selectedAction;
+	const exitTileIndex = state.board.findIndex(
+		(tile) => tile.info?.revealedType === 'Exit',
+	);
 
 	switch (action.type) {
-		case 'SET_PLAYERS': {
-			const players = assignPlayers(action.count);
-			return {
-				...state,
-				players,
-				firstPlayerId: players[0].id,
-				hurricaneMeter: initHurricaneMeter(action.count),
-			};
-		}
+		case 'SET_PLAYERS':
+			{
+				const players = assignPlayers(action.count);
+				nextState = {
+					...state,
+					players,
+					firstPlayerId: players[0].id,
+					hurricaneMeter: initHurricaneMeter(action.count),
+				};
+			}
+			break;
 		case 'SET_DIFFICULTY':
-			return { ...state, meterProgress: action.index };
+			nextState = { ...state, meterProgress: action.index };
+			break;
 		case 'SELECT_ACTION':
-			return { ...state, selectedAction: action.action };
+			nextState = {
+				...state,
+				selectedAction: action.action,
+				prevAction: state.selectedAction,
+			};
+			break;
 		case 'MOVE_TILES':
 			if (state.actionCount === 0) {
-				return state;
+				nextState = state;
 			}
-			return {
+			nextState = {
 				...state,
 				actionCount,
 				selectedAction,
 				players: action.players,
 			};
-		case 'REMOVE_SAND': {
-			if (state.actionCount === 0) {
-				return state;
-			}
-			const newBoard = [...state.board];
-			const targetTile = newBoard[action.tilePosition];
-			const currentTileIndex = getPlayerTileIndex(
-				state.board,
-				state.players[0],
-			);
-
-			if (targetTile.info) {
-				newBoard[action.tilePosition] = {
-					id: targetTile.id,
-					info: {
-						...targetTile.info,
-						sandPoints:
-							state.players[0].role.title === 'Digger'
-								? targetTile.info.sandPoints - 2
-								: targetTile.info.sandPoints - 1,
-					},
-				};
-				return {
+			break;
+		case 'REMOVE_SAND':
+			{
+				if (state.actionCount === 0) {
+					nextState = state;
+				}
+				nextState = {
 					...state,
 					actionCount,
-					selectedAction:
-						findSandPoints(
-							newBoard,
-							currentTileIndex,
-							findNeighboring(
-								newBoard,
-								currentTileIndex,
-								state.players[0].role.title,
-							),
-						).length === 0
-							? null
-							: selectedAction,
-					board: newBoard,
+					selectedAction: action.nextAction ? state.prevAction : selectedAction,
+					board: action.board,
 				};
-			} else {
-				return { ...state };
 			}
-		}
+			break;
 		case 'COLLECT_PART':
-			return {
+			nextState = {
 				...state,
 				board: action.board,
 				partsCollected: action.partsCollected,
-			}
+			};
+			break;
 		case 'SET_SHOW_REVEAL_MODAL':
-			return {
+			nextState = {
 				...state,
 				prevAction: action.prevAction,
 				showRevealModal: action.show,
 			};
-		case 'REVEAL_TILE': {
-			return {
-				...state,
-				players: action.players,
-				actionCount: state.actionCount - 1,
-				board: action.board,
-			};
-		}
+			break;
+		case 'REVEAL_TILE':
+			{
+				nextState = {
+					...state,
+					players: action.players,
+					actionCount: state.actionCount - 1,
+					board: action.board,
+				};
+			}
+			break;
 		case 'SET_SHOW_END_TURN_MODAL':
-			return { ...state, showEndTurnModal: action.show };
+			nextState = { ...state, showEndTurnModal: action.show };
+			break;
 		case 'SET_SHOW_RESET_MODAL':
-			return {
+			nextState = {
 				...state,
 				showResetModal: action.show,
 			};
+			break;
 		case 'START_DRAWING':
-			return {
+			nextState = {
 				...state,
 				showEndTurnModal: false,
 				isDrawingHurricaneCards: true,
 				turnStatus: 'Drawing cards...',
 			};
+			break;
 		case 'FINISH_DRAWING':
-			return { ...state, isDrawingHurricaneCards: false, turnStatus: null };
+			nextState = {
+				...state,
+				isDrawingHurricaneCards: false,
+				turnStatus: null,
+			};
+			break;
 		case 'SET_TURN_STATUS':
-			return {
+			nextState = {
 				...state,
 				actionCount: 4,
 				players: action.players,
 				turnStatus: action.status,
 				turnCount: action.turnCount,
 			};
-		case 'MOVE_HURRICANE': {
-			return {
-				...state,
-				board: action.board,
-			};
-		}
-		case 'DRINK_WATER': {
-			return {
-				...state,
-				players: action.players,
-			};
-		}
-		case 'DRAW_HURRICANE_CARD': {
-			return {
-				...state,
-				selectedAction: null,
-				hurricaneDeck: action.deck,
-				recentlyDrawnHurricaneCard: action.card,
-				meterProgress:
-					action.card.type === 'Hurricane Up'
-						? state.meterProgress + 1
-						: state.meterProgress,
-			};
-		}
-		case 'RESHUFFLE_DECK': {
-			return {
-				...state,
-				hurricaneDeck: action.deck,
-			};
-		}
-		case 'DRAW_ITEM_CARD': {
-			if (state.itemDeck.length === 0) {
-				return state;
+			break;
+		case 'MOVE_HURRICANE':
+			{
+				nextState = {
+					...state,
+					board: action.board,
+				};
 			}
-			return {
-				...state,
-				recentlyDrawnItemCard: action.card,
-				itemDeck: action.items,
-			};
-		}
+			break;
+		case 'DRINK_WATER':
+			{
+				nextState = {
+					...state,
+					players: action.players,
+				};
+			}
+			break;
+		case 'DRAW_HURRICANE_CARD':
+			{
+				nextState = {
+					...state,
+					selectedAction: null,
+					hurricaneDeck: action.deck,
+					recentlyDrawnHurricaneCard: action.card,
+					meterProgress:
+						action.card.type === 'Hurricane Up'
+							? state.meterProgress + 1
+							: state.meterProgress,
+				};
+			}
+			break;
+		case 'RESHUFFLE_DECK':
+			{
+				nextState = {
+					...state,
+					hurricaneDeck: action.deck,
+				};
+			}
+			break;
+		case 'DRAW_ITEM_CARD':
+			{
+				if (state.itemDeck.length === 0) {
+					nextState = state;
+				}
+				nextState = {
+					...state,
+					recentlyDrawnItemCard: action.card,
+					itemDeck: action.items,
+				};
+			}
+			break;
 		case 'GAME_OVER':
-			return {
+			nextState = {
 				...state,
 				endGameState: { status: 'Defeat', reason: action.reason },
 			};
+			break;
 		case 'RESET_GAME':
-			return {
+			nextState = {
 				...initialState,
 				gameId: !state.gameId,
 				board: shuffleBoard(),
 				hurricaneDeck: shuffleHurricaneDeck(),
 				itemDeck: shuffleItemDeck(),
 			};
+			break;
 		default:
-			return state;
+			nextState = state;
 	}
+
+	if (
+		!nextState.endGameState.status &&
+		nextState.partsCollected.length === 4 &&
+		nextState.board[exitTileIndex].info?.revealed &&
+		nextState.board[exitTileIndex].info?.sandPoints < 2 &&
+		!nextState.players.find(
+			(player) => player.currentTileId !== nextState.board[exitTileIndex].id,
+		)
+	) {
+		return {
+			...nextState,
+			endGameState: {
+				status: 'Victory',
+			},
+		};
+	}
+	return nextState;
 }
 
 const GameContext = createContext<{
