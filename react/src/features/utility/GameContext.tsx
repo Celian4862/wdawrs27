@@ -273,7 +273,6 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 	}
 
 	if (
-		!nextState.endGameState.status &&
 		nextState.partsCollected.length === 4 &&
 		nextState.board[exitTileIndex].info?.revealed &&
 		nextState.board[exitTileIndex].info?.sandPoints < 2 &&
