@@ -36,7 +36,7 @@ export function shuffleBoard() {
 			revealedType: 'Item',
 			unrevealedTileColor: 'bg-red-700',
 			revealedTileColor: 'bg-slate-700',
-			parts: [],
+			parts: ['Pointer'],
 		},
 	};
 

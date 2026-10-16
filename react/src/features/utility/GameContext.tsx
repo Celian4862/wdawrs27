@@ -76,6 +76,7 @@ type GameAction =
 	| { type: 'SELECT_ACTION'; action: string | null }
 	| { type: 'MOVE_TILES'; players: ActivePlayer[] }
 	| { type: 'REMOVE_SAND'; tilePosition: number }
+	| { type: 'COLLECT_PART'; board: Tile[]; partsCollected: string[] }
 	| { type: 'GAIN_WATER'; players: ActivePlayer[] }
 	| { type: 'SET_SHOW_REVEAL_MODAL'; prevAction: string | null; show: boolean }
 	| { type: 'REVEAL_TILE'; board: Tile[]; players: ActivePlayer[] }
@@ -168,6 +169,12 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 				return { ...state };
 			}
 		}
+		case 'COLLECT_PART':
+			return {
+				...state,
+				board: action.board,
+				partsCollected: action.partsCollected,
+			}
 		case 'SET_SHOW_REVEAL_MODAL':
 			return {
 				...state,

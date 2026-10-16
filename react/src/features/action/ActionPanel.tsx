@@ -89,6 +89,18 @@ export default function ActionPanel() {
 												action.disableCondition
 											) {
 												return;
+											}
+											
+											if (action.name === 'Collect Part') {
+												const board = [...state.board];
+												const partsCollected = [...state.partsCollected];
+												if (board[currentTileIndex].info) {
+													const partToCollect = board[currentTileIndex].info.parts.pop();
+													if (partToCollect) {
+														partsCollected.push(partToCollect);
+													}
+												}
+												dispatch({ type: 'COLLECT_PART', board, partsCollected })
 											} else if (action.name === 'Reveal Tile') {
 												dispatch({
 													type: 'SET_SHOW_REVEAL_MODAL',
@@ -104,7 +116,7 @@ export default function ActionPanel() {
 														: action.name,
 											});
 										}}
-										className={`p-3 border rounded-lg motion-safe:transition ${disabled(action) ? 'brightness-50' : action.name === 'Reveal Tile' ? 'bg-green-700 hover:bg-green-600' : 'hover:bg-yellow-600 active:scale-115'} ${state.selectedAction === action.name ? `scale-115 ${action.name === 'Reveal Tile' ? 'bg-green-700' : 'bg-yellow-600 '}` : ''}`}
+										className={`p-3 border rounded-lg motion-safe:transition ${disabled(action) ? 'brightness-50' : action.name === 'Reveal Tile' ? 'bg-green-700 hover:bg-green-600' : 'hover:bg-yellow-600'} ${action.name !== 'Collect Part' && state.selectedAction === action.name ? `scale-115 ${action.name === 'Reveal Tile' ? 'bg-green-700' : 'bg-yellow-600 '}` : ''}`}
 									>
 										{action.name}
 									</button>
