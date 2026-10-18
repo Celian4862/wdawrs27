@@ -3,7 +3,6 @@ import { shuffleHurricaneDeck } from '@/hurricane/hurricane-deck/hurricaneDeck';
 import { cyclePlayers } from '@/player/players';
 import ConfirmModalButtons from '@/utility/ConfirmModalButtons';
 import { useGame } from '@/utility/GameContext';
-import { getPlayerTileIndex } from '@/utility/getTileIndex';
 import PopUp from '@/utility/PopUp';
 
 export default function DrawHurricaneCardsModal() {
@@ -73,7 +72,9 @@ export default function DrawHurricaneCardsModal() {
 
 								if (
 									currentBoard[
-										getPlayerTileIndex(currentBoard, currentPlayers[j])
+										currentBoard.findIndex(
+											(tile) => tile.id === currentPlayers[j].currentTileId,
+										)
 									].info?.revealedType !== 'Shade' &&
 									--currentPlayers[j].currentWaterLevel < 0
 								) {

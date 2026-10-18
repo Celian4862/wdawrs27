@@ -1,11 +1,10 @@
 import { toIndex } from '../board/tiles';
 import ConfirmModalButtons from '../utility/ConfirmModalButtons';
 import { useGame } from '../utility/GameContext';
-import { getPlayerTileIndex } from '../utility/getTileIndex';
 import PopUp from '../utility/PopUp';
 
 export default function RevealTileModal() {
-	const { state, dispatch } = useGame();
+	const { state, dispatch, currentTileIndex } = useGame();
 
 	return (
 		<PopUp
@@ -35,22 +34,19 @@ export default function RevealTileModal() {
 						show: false,
 					});
 
-					const currentTileIndex = getPlayerTileIndex(
-						state.board,
-						state.players[0],
-					);
 					const board = [...state.board];
-					if (board[currentTileIndex].info) {
-						board[currentTileIndex] = {
-							...board[currentTileIndex],
-							info: {
-								...board[currentTileIndex].info,
-								revealed: true,
-							},
-						};
-					} else {
+					const tileInfo = board[currentTileIndex].info;
+
+					if (!tileInfo) {
 						throw new Error('Tile is not valid');
 					}
+					board[currentTileIndex] = {
+						...board[currentTileIndex],
+						info: {
+							...tileInfo,
+							revealed: true,
+						},
+					};
 
 					const players = [...state.players];
 
@@ -68,9 +64,13 @@ export default function RevealTileModal() {
 								items: [...players[0].items, drawnItem],
 							};
 						}
-					} else if (board[currentTileIndex].info?.revealedType === 'Water') {
+					} else if (
+						board[currentTileIndex].info?.revealedType === 'Water'
+					) {
 						players.forEach((player, index) => {
-							if (player.currentTileId === state.board[currentTileIndex].id) {
+							if (
+								player.currentTileId === state.board[currentTileIndex].id
+							) {
 								const newWater = player.currentWaterLevel + 2;
 								players[index] = {
 									...player,
@@ -81,7 +81,9 @@ export default function RevealTileModal() {
 								};
 							}
 						});
-					} else if (board[currentTileIndex].info?.revealedType === 'Hint') {
+					} else if (
+						board[currentTileIndex].info?.revealedType === 'Hint'
+					) {
 						const partHint = board[currentTileIndex].info?.partHint;
 						const pairTileIndex = board.findIndex(
 							(tile) =>

@@ -1,14 +1,12 @@
 import { findSandPoints } from '@/board/tiles';
 import PawnCircle from '@/player/PawnCircle';
 import { useGame } from '@/utility/GameContext';
-import { getPlayerTileIndex } from '@/utility/getTileIndex';
 import { parts } from '../part/parts';
 
 export default function Board({ className }: { className?: string }) {
-	const { state, dispatch, findNeighboring } = useGame();
+	const { state, dispatch, currentTileIndex, findNeighboring } = useGame();
 	const currentPlayer = state.players[0];
 
-	const currentTileIndex = getPlayerTileIndex(state.board, currentPlayer);
 	const hiker = state.players.find((player) => player.role.title === 'Hiker');
 	const neighboringTilePositions = findNeighboring(state.board);
 	const validTiles =
@@ -64,10 +62,6 @@ export default function Board({ className }: { className?: string }) {
 								case 'Remove Sand': {
 									const board = [...state.board];
 									const targetTile = board[index];
-									const currentTileIndex = getPlayerTileIndex(
-										state.board,
-										currentPlayer,
-									);
 
 									if (targetTile.info) {
 										board[index] = {

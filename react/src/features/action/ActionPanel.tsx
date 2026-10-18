@@ -2,11 +2,9 @@ import { findSandPoints } from '@/board/tiles';
 import GameInfoHeading from '@/game-info/GameInfoHeading';
 import GameInfoSection from '@/game-info/GameInfoSection';
 import { useGame } from '@/utility/GameContext';
-import { getPlayerTileIndex } from '@/utility/getTileIndex';
 
 export default function ActionPanel() {
-	const { state, dispatch, findNeighboring } = useGame();
-	const currentTileIndex = getPlayerTileIndex(state.board, state.players[0]);
+	const { state, dispatch, currentTileIndex, findNeighboring } = useGame();
 
 	const actions = [
 		{
@@ -90,9 +88,15 @@ export default function ActionPanel() {
 											if (action.name === 'Collect Part') {
 												const board = [...state.board];
 												const partsCollected = [...state.partsCollected];
-												if (board[currentTileIndex].info) {
-													const partToCollect =
-														board[currentTileIndex].info.parts.pop();
+												const tileInfo = board[currentTileIndex].info;
+												if (tileInfo) {
+													const partToCollect = tileInfo.parts.pop();
+													board[currentTileIndex] = {
+														...board[currentTileIndex],
+														info: {
+															...tileInfo,
+														},
+													};
 													if (partToCollect) {
 														partsCollected.push(partToCollect);
 													}

@@ -317,6 +317,7 @@ const GameContext = createContext<{
 	state: GameState;
 	dispatch: React.Dispatch<GameAction>;
 	getGameState: () => GameState;
+	currentTileIndex: number;
 	findNeighboring: (board: Tile[]) => number[];
 } | null>(null);
 
@@ -329,6 +330,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
 	}, [state]);
 
 	const getGameState = () => stateRef.current;
+
+	const currentTileIndex = state.players.length > 0 ? state.board.findIndex((tile) => tile.id === state.players[0].currentTileId) : -1;
 
 	const findNeighboring = (board: Tile[]) => {
 		const [mainRow, mainCol] = toCoordinates(
@@ -358,7 +361,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
 	return (
 		<GameContext.Provider
-			value={{ state, dispatch, getGameState, findNeighboring }}
+			value={{ state, dispatch, getGameState, currentTileIndex, findNeighboring }}
 		>
 			{children}
 		</GameContext.Provider>
