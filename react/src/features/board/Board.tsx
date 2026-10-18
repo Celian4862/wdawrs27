@@ -1,32 +1,26 @@
-import { findMoveable, findNeighboring, findSandPoints } from '@/board/tiles';
+import { findSandPoints } from '@/board/tiles';
 import PawnCircle from '@/player/PawnCircle';
 import { useGame } from '@/utility/GameContext';
 import { getPlayerTileIndex } from '@/utility/getTileIndex';
 import { parts } from '../part/parts';
 
 export default function Board({ className }: { className?: string }) {
-	const { state, dispatch } = useGame();
+	const { state, dispatch, findNeighboring } = useGame();
+	const currentPlayer = state.players[0];
 
-	const currentTileIndex = getPlayerTileIndex(state.board, state.players[0]);
-	const hikerIndex = state.players.findIndex(
-		(player) => player.role.title === 'Hiker',
-	);
-	const neighboringTilePositions = findNeighboring(
-		state.board,
-		currentTileIndex,
-		state.players[0].role.title,
-	);
+	const currentTileIndex = getPlayerTileIndex(state.board, currentPlayer);
+	const hiker = state.players.find((player) => player.role.title === 'Hiker');
+	const neighboringTilePositions = findNeighboring(state.board);
 	const validTiles =
 		state.selectedAction === 'Move'
-			? findMoveable(
-					state.board,
-					neighboringTilePositions,
-					hikerIndex > -1
-						? state.board.findIndex(
-								(tile) => tile.id === state.players[hikerIndex].currentTileId,
-							)
-						: -1,
-					state.players[0],
+			? neighboringTilePositions.filter(
+					(position) =>
+						(state.board[position].info?.sandPoints ?? 2) < 2 ||
+						position ===
+							state.board.findIndex(
+								(tile) => tile.id === hiker?.currentTileId,
+							) ||
+						currentPlayer.role.title === 'Hiker',
 				)
 			: state.selectedAction === 'Remove Sand'
 				? findSandPoints(
@@ -72,7 +66,7 @@ export default function Board({ className }: { className?: string }) {
 									const targetTile = board[index];
 									const currentTileIndex = getPlayerTileIndex(
 										state.board,
-										state.players[0],
+										currentPlayer,
 									);
 
 									if (targetTile.info) {
@@ -81,7 +75,7 @@ export default function Board({ className }: { className?: string }) {
 											info: {
 												...targetTile.info,
 												sandPoints:
-													state.players[0].role.title === 'Digger'
+													currentPlayer.role.title === 'Digger'
 														? targetTile.info.sandPoints - 2
 														: targetTile.info.sandPoints - 1,
 											},
@@ -94,11 +88,7 @@ export default function Board({ className }: { className?: string }) {
 											findSandPoints(
 												board,
 												currentTileIndex,
-												findNeighboring(
-													board,
-													currentTileIndex,
-													state.players[0].role.title,
-												),
+												findNeighboring(board),
 											).length === 0 && state.actionCount > 1,
 									});
 									break;
@@ -119,7 +109,7 @@ export default function Board({ className }: { className?: string }) {
 							{state.players
 								.filter((player) => player.currentTileId === tile.id)
 								.map((player) => {
-									const isCurrentPlayer = player.id === state.players[0].id;
+									const isCurrentPlayer = player.id === currentPlayer.id;
 									return (
 										<PawnCircle
 											key={player.role.color}

@@ -6,7 +6,7 @@ import {
 	useReducer,
 	useRef,
 } from 'react';
-import { shuffleBoard, type Tile } from '@/board/tiles';
+import { shuffleBoard, type Tile, toCoordinates, toIndex } from '@/board/tiles';
 import type { EndGameState } from '@/EndGameScreen';
 import {
 	type HurricaneCard,
@@ -317,6 +317,7 @@ const GameContext = createContext<{
 	state: GameState;
 	dispatch: React.Dispatch<GameAction>;
 	getGameState: () => GameState;
+	findNeighboring: (board: Tile[]) => number[];
 } | null>(null);
 
 export function GameProvider({ children }: { children: ReactNode }) {
@@ -329,8 +330,36 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
 	const getGameState = () => stateRef.current;
 
+	const findNeighboring = (board: Tile[]) => {
+		const [mainRow, mainCol] = toCoordinates(
+			state.board.findIndex(
+				(tile) => tile.id === state.players[0].currentTileId,
+			),
+		);
+		const isTraveler = state.players[0].role.title === 'Traveler';
+
+		const neighboring = [
+			toIndex(mainRow - 1, mainCol),
+			toIndex(mainRow + 1, mainCol),
+			toIndex(mainRow, mainCol - 1),
+			toIndex(mainRow, mainCol + 1),
+		];
+		if (isTraveler) {
+			neighboring.push(
+				toIndex(mainRow - 1, mainCol - 1),
+				toIndex(mainRow - 1, mainCol + 1),
+				toIndex(mainRow + 1, mainCol - 1),
+				toIndex(mainRow + 1, mainCol + 1),
+			);
+		}
+		const filtered = neighboring.filter((tilePosition) => tilePosition >= 0);
+		return filtered.filter((tilePosition) => board[tilePosition].info);
+	};
+
 	return (
-		<GameContext.Provider value={{ state, dispatch, getGameState }}>
+		<GameContext.Provider
+			value={{ state, dispatch, getGameState, findNeighboring }}
+		>
 			{children}
 		</GameContext.Provider>
 	);
