@@ -8,17 +8,9 @@ export default function Board({ className }: { className?: string }) {
 	const { state, dispatch } = useGame();
 
 	const currentTileIndex = getPlayerTileIndex(state.board, state.players[0]);
-	const hikerPosition = (() => {
-		const hikerIndex = state.players.findIndex(
-			(player) => player.role.title === 'Hiker',
-		);
-		if (hikerIndex >= 0) {
-			return state.board.findIndex(
-				(tile) => tile.id === state.players[hikerIndex].currentTileId,
-			);
-		}
-		return -1;
-	})();
+	const hikerIndex = state.players.findIndex(
+		(player) => player.role.title === 'Hiker',
+	);
 	const neighboringTilePositions = findNeighboring(
 		state.board,
 		currentTileIndex,
@@ -29,7 +21,11 @@ export default function Board({ className }: { className?: string }) {
 			? findMoveable(
 					state.board,
 					neighboringTilePositions,
-					state.board.findIndex((tile) => tile.id === hikerPosition),
+					hikerIndex > -1
+						? state.board.findIndex(
+								(tile) => tile.id === state.players[hikerIndex].currentTileId,
+							)
+						: -1,
 					state.players[0],
 				)
 			: state.selectedAction === 'Remove Sand'
@@ -39,6 +35,10 @@ export default function Board({ className }: { className?: string }) {
 						neighboringTilePositions,
 					)
 				: [];
+	const hasNoActions = state.actionCount === 0;
+	const isMoveOrRemoveAction = ['Move', 'Remove Sand'].includes(
+		state.selectedAction ?? '',
+	);
 
 	return (
 		<section
@@ -47,10 +47,6 @@ export default function Board({ className }: { className?: string }) {
 			{state.board.map((tile, index) => {
 				const isHurricane = !tile.info;
 				const invalidTile = !validTiles.includes(index);
-				const isMoveOrRemoveAction = ['Move', 'Remove Sand'].includes(
-					state.selectedAction ?? '',
-				);
-				const hasNoActions = state.actionCount === 0;
 
 				return (
 					<button

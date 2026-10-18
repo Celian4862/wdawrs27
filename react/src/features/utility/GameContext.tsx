@@ -18,49 +18,67 @@ import { type ActivePlayer, assignPlayers } from '@/player/players';
 
 interface GameState {
 	gameId: boolean;
+
 	players: ActivePlayer[];
 	firstPlayerId: number;
+
 	board: Tile[];
+
 	selectedAction: string | null;
 	prevAction: string | null;
 	actionCount: number;
 	showRevealModal: boolean;
+
 	hurricaneMeter: number[];
 	meterProgress: number;
+
 	hurricaneDeck: HurricaneCard[];
 	recentlyDrawnHurricaneCard: HurricaneCard;
 	isDrawingHurricaneCards: boolean;
 	showEndTurnModal: boolean;
 	turnStatus: string | null;
 	turnCount: number;
+
 	itemDeck: ItemType[];
 	recentlyDrawnItemCard: string;
+
 	partsCollected: string[];
+
 	endGameState: EndGameState;
+
 	showResetModal: boolean;
 }
 
 const initialState: GameState = {
 	gameId: false,
+
 	players: [],
 	firstPlayerId: -1,
+
 	board: shuffleBoard(),
+
 	actionCount: 4,
 	selectedAction: null,
 	prevAction: null,
 	showRevealModal: false,
+
 	hurricaneMeter: [],
 	meterProgress: -1,
+
 	hurricaneDeck: shuffleHurricaneDeck(),
 	recentlyDrawnHurricaneCard: { type: 'None' },
 	isDrawingHurricaneCards: false,
 	showEndTurnModal: false,
 	turnStatus: null,
 	turnCount: 1,
+
 	itemDeck: shuffleItemDeck(),
 	recentlyDrawnItemCard: 'None',
+
 	partsCollected: [],
+
 	endGameState: {},
+
 	showResetModal: false,
 };
 
