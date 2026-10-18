@@ -1,5 +1,5 @@
-import PawnCircle from './PawnCircle';
 import { useGame } from '../utility/GameContext';
+import PawnCircle from './PawnCircle';
 
 export default function PlayerDetails({
 	playerIndex,
@@ -43,9 +43,13 @@ export default function PlayerDetails({
 										onClick={() => {
 											switch (item.type) {
 												case 'Sand Remover':
-													dispatch({ type: 'SELECT_ACTION', action: item.type })
+													dispatch({
+														type: 'SELECT_ACTION',
+														action: item.type,
+													});
 													break;
-										}}}
+											}
+										}}
 									>
 										<h4 className="font-bold">{item.type}</h4>
 										<p>{item.description}</p>

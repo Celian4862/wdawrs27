@@ -1,8 +1,4 @@
-import {
-	findMoveable,
-	findNeighboring,
-	findSandPoints,
-} from '@/board/tiles';
+import { findMoveable, findNeighboring, findSandPoints } from '@/board/tiles';
 import PawnCircle from '@/player/PawnCircle';
 import { useGame } from '@/utility/GameContext';
 import { getPlayerTileIndex } from '@/utility/getTileIndex';

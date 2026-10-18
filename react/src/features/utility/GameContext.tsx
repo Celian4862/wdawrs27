@@ -96,7 +96,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 	let nextState: GameState;
 	const actionCount = state.actionCount - 1;
 	const selectedAction = actionCount === 0 ? null : state.selectedAction;
-	
+
 	switch (action.type) {
 		case 'SET_PLAYERS':
 			{
@@ -250,10 +250,10 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 				};
 			}
 			break;
-		case 'USE_ITEM': 
+		case 'USE_ITEM':
 			nextState = {
-				...state
-			}
+				...state,
+			};
 			break;
 		case 'GAME_OVER':
 			nextState = {
