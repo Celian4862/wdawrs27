@@ -1,4 +1,4 @@
-import type { ActivePlayer } from '@/features/player/players';
+import type { ActivePlayer } from '@/player/players';
 import { parts } from '../part/parts';
 import { shuffle } from '../utility/shuffle';
 

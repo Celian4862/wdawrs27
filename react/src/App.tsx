@@ -1,17 +1,17 @@
-import ActionPanel from '@/features/action/ActionPanel';
-import RevealTileModal from '@/features/action/RevealTileModal';
-import Board from '@/features/board/Board';
-import EndGameScreen from '@/features/EndGameScreen';
-import DrawHurricaneCardsModal from '@/features/hurricane/hurricane-deck/DrawHurricaneCardsModal';
-import HurricaneDeck from '@/features/hurricane/hurricane-deck/HurricaneDeckSection';
-import ItemDeck from '@/features/item/ItemDeck';
-import Legend from '@/features/Legend';
-import PartsSection from '@/features/part/PartsSection';
-import PlayerCards from '@/features/player/PlayerCards';
-import ResetButton from '@/features/reset/ResetButton';
-import ResetButtonModal from '@/features/reset/ResetButtonModal';
-import { GameProvider, useGame } from '@/features/utility/GameContext';
-import Setup from '@/features/utility/Setup';
+import ActionPanel from '@/action/ActionPanel';
+import RevealTileModal from '@/action/RevealTileModal';
+import Board from '@/board/Board';
+import EndGameScreen from '@/EndGameScreen';
+import DrawHurricaneCardsModal from '@/hurricane/hurricane-deck/DrawHurricaneCardsModal';
+import HurricaneDeck from '@/hurricane/hurricane-deck/HurricaneDeckSection';
+import ItemDeck from '@/item/ItemDeck';
+import Legend from '@/Legend';
+import PartsSection from '@/part/PartsSection';
+import PlayerCards from '@/player/PlayerCards';
+import ResetButton from '@/reset/ResetButton';
+import ResetButtonModal from '@/reset/ResetButtonModal';
+import { GameProvider, useGame } from '@/utility/GameContext';
+import Setup from '@/utility/Setup';
 import HurricaneMeter from './features/hurricane/hurricane-meter/HurricaneMeter';
 
 function GameContent() {

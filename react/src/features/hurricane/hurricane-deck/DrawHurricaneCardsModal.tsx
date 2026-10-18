@@ -1,10 +1,10 @@
-import { sumSandPoints, toCoordinates, toIndex } from '@/features/board/tiles';
-import { shuffleHurricaneDeck } from '@/features/hurricane/hurricane-deck/hurricaneDeck';
-import { cyclePlayers } from '@/features/player/players';
-import ConfirmModalButtons from '@/features/utility/ConfirmModalButtons';
-import { useGame } from '@/features/utility/GameContext';
-import { getPlayerTileIndex } from '@/features/utility/getTileIndex';
-import PopUp from '@/features/utility/PopUp';
+import { sumSandPoints, toCoordinates, toIndex } from '@/board/tiles';
+import { shuffleHurricaneDeck } from '@/hurricane/hurricane-deck/hurricaneDeck';
+import { cyclePlayers } from '@/player/players';
+import ConfirmModalButtons from '@/utility/ConfirmModalButtons';
+import { useGame } from '@/utility/GameContext';
+import { getPlayerTileIndex } from '@/utility/getTileIndex';
+import PopUp from '@/utility/PopUp';
 
 export default function DrawHurricaneCardsModal() {
 	const { state, dispatch, getGameState } = useGame();

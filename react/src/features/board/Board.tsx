@@ -2,10 +2,10 @@ import {
 	findMoveable,
 	findNeighboring,
 	findSandPoints,
-} from '@/features/board/tiles';
-import PawnCircle from '@/features/player/PawnCircle';
-import { useGame } from '@/features/utility/GameContext';
-import { getPlayerTileIndex } from '@/features/utility/getTileIndex';
+} from '@/board/tiles';
+import PawnCircle from '@/player/PawnCircle';
+import { useGame } from '@/utility/GameContext';
+import { getPlayerTileIndex } from '@/utility/getTileIndex';
 import { parts } from '../part/parts';
 
 export default function Board({ className }: { className?: string }) {

@@ -1,12 +1,11 @@
-import GameInfoHeading from '@/features/game-info/GameInfoHeading';
-import GameInfoSection from '@/features/game-info/GameInfoSection';
-import PlayerDetails from '@/features/player/PlayerDetails';
-import { useGame } from '@/features/utility/GameContext';
+import GameInfoHeading from '@/game-info/GameInfoHeading';
+import GameInfoSection from '@/game-info/GameInfoSection';
+import PlayerDetails from '@/player/PlayerDetails';
+import { useGame } from '@/utility/GameContext';
 
 export default function PlayerCards() {
 	const { state } = useGame();
 
-	const currentPlayer = state.players[0];
 	return (
 		<GameInfoSection>
 			<GameInfoHeading
@@ -15,7 +14,7 @@ export default function PlayerCards() {
 			/>
 			<div className="flex flex-col gap-3">
 				<h3 className="text-lg">Current player:</h3>
-				<PlayerDetails player={currentPlayer} isCurrent={true} />
+				<PlayerDetails playerIndex={0} isCurrent={true} />
 				<details>
 					<summary className="mb-3 cursor-pointer">Other players</summary>
 					<div className="flex flex-col gap-3">
@@ -24,7 +23,7 @@ export default function PlayerCards() {
 								return (
 									<PlayerDetails
 										key={player.role.title}
-										player={player}
+										playerIndex={idx}
 										isCurrent={false}
 									/>
 								);

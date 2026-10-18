@@ -6,15 +6,15 @@ import {
 	useReducer,
 	useRef,
 } from 'react';
-import { shuffleBoard, type Tile } from '@/features/board/tiles';
-import type { EndGameState } from '@/features/EndGameScreen';
+import { shuffleBoard, type Tile } from '@/board/tiles';
+import type { EndGameState } from '@/EndGameScreen';
 import {
 	type HurricaneCard,
 	shuffleHurricaneDeck,
-} from '@/features/hurricane/hurricane-deck/hurricaneDeck';
-import { initHurricaneMeter } from '@/features/hurricane/hurricane-meter/initHurricaneMeter';
-import { type ItemType, shuffleItemDeck } from '@/features/item/items';
-import { type ActivePlayer, assignPlayers } from '@/features/player/players';
+} from '@/hurricane/hurricane-deck/hurricaneDeck';
+import { initHurricaneMeter } from '@/hurricane/hurricane-meter/initHurricaneMeter';
+import { type ItemType, shuffleItemDeck } from '@/item/items';
+import { type ActivePlayer, assignPlayers } from '@/player/players';
 
 interface GameState {
 	gameId: boolean;
@@ -87,6 +87,7 @@ type GameAction =
 	| { type: 'DRAW_HURRICANE_CARD'; deck: HurricaneCard[]; card: HurricaneCard }
 	| { type: 'RESHUFFLE_DECK'; deck: HurricaneCard[] }
 	| { type: 'DRAW_ITEM_CARD'; items: ItemType[]; card: string }
+	| { type: 'USE_ITEM'; item: ItemType }
 	| { type: 'GAME_OVER'; reason: string }
 	| { type: 'SET_SHOW_RESET_MODAL'; show: boolean }
 	| { type: 'RESET_GAME' };
@@ -95,10 +96,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 	let nextState: GameState;
 	const actionCount = state.actionCount - 1;
 	const selectedAction = actionCount === 0 ? null : state.selectedAction;
-	const exitTileIndex = state.board.findIndex(
-		(tile) => tile.info?.revealedType === 'Exit',
-	);
-
+	
 	switch (action.type) {
 		case 'SET_PLAYERS':
 			{
@@ -252,6 +250,11 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 				};
 			}
 			break;
+		case 'USE_ITEM': 
+			nextState = {
+				...state
+			}
+			break;
 		case 'GAME_OVER':
 			nextState = {
 				...state,
@@ -271,6 +274,9 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 			nextState = state;
 	}
 
+	const exitTileIndex = state.board.findIndex(
+		(tile) => tile.info?.revealedType === 'Exit',
+	);
 	if (
 		nextState.partsCollected.length === 4 &&
 		nextState.board[exitTileIndex].info?.revealed &&

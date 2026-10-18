@@ -1,4 +1,4 @@
-import { useGame } from '@/features/utility/GameContext';
+import { useGame } from '@/utility/GameContext';
 
 export default function HurricaneMeterTick({
 	hurricaneMeterTier,

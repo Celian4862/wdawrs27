@@ -1,5 +1,5 @@
-import GameInfoHeading from '@/features/game-info/GameInfoHeading';
-import GameInfoSection from '@/features/game-info/GameInfoSection';
+import GameInfoHeading from '@/game-info/GameInfoHeading';
+import GameInfoSection from '@/game-info/GameInfoSection';
 
 export default function Legend() {
 	return (

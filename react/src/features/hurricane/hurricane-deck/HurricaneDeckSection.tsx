@@ -1,12 +1,12 @@
-import { sumSandPoints } from '@/features/board/tiles';
-import GameInfoHeading from '@/features/game-info/GameInfoHeading';
-import GameInfoSection from '@/features/game-info/GameInfoSection';
+import { sumSandPoints } from '@/board/tiles';
+import GameInfoHeading from '@/game-info/GameInfoHeading';
+import GameInfoSection from '@/game-info/GameInfoSection';
 import {
 	countHurricaneCards,
 	hurricaneDirections,
 	hurricaneDistances,
-} from '@/features/hurricane/hurricane-deck/hurricaneDeck';
-import { useGame } from '@/features/utility/GameContext';
+} from '@/hurricane/hurricane-deck/hurricaneDeck';
+import { useGame } from '@/utility/GameContext';
 
 export default function HurricaneDeck() {
 	const { state } = useGame();

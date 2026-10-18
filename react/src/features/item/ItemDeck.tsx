@@ -1,4 +1,4 @@
-import { countItemCards } from '@/features/item/items';
+import { countItemCards } from '@/item/items';
 import GameInfoHeading from '../game-info/GameInfoHeading';
 import GameInfoSection from '../game-info/GameInfoSection';
 import { useGame } from '../utility/GameContext';

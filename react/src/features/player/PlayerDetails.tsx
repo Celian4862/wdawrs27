@@ -1,13 +1,16 @@
-import type { ActivePlayer } from '@/features/player/players';
 import PawnCircle from './PawnCircle';
+import { useGame } from '../utility/GameContext';
 
 export default function PlayerDetails({
-	player,
+	playerIndex,
 	isCurrent,
 }: {
-	player: ActivePlayer;
+	playerIndex: number;
 	isCurrent: boolean;
 }) {
+	const { state, dispatch } = useGame();
+	const player = state.players[playerIndex];
+
 	return (
 		<article className="rounded-xl border border-white/15 bg-white/5 p-4">
 			<div className="flex justify-between">
@@ -36,8 +39,13 @@ export default function PlayerDetails({
 									<button
 										key={`${item.type}-${item.id}`}
 										type="button"
-										className="p-3 space-y-2 bg-black col-span-1 border rounded-lg hover:scale-110 active:bg-gray-800 motion-safe:transition-all"
-										// Must add an onClick to show a modal that confirms usage of an item.
+										className={`p-3 space-y-2 bg-black col-span-1 border rounded-lg hover:scale-110 active:bg-gray-800 motion-safe:transition-all `}
+										onClick={() => {
+											switch (item.type) {
+												case 'Sand Remover':
+													dispatch({ type: 'SELECT_ACTION', action: item.type })
+													break;
+										}}}
 									>
 										<h4 className="font-bold">{item.type}</h4>
 										<p>{item.description}</p>
