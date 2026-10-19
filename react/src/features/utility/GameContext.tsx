@@ -334,10 +334,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
 	const getGameState = () => stateRef.current;
 
 	const currentPlayer = state.players[0];
-	const currentTileIndex =
-		state.players.length > 0
-			? state.board.findIndex((tile) => tile.id === currentPlayer.currentTileId)
-			: -1;
+	const currentTileIndex = state.board.findIndex(
+		(tile) => currentPlayer && tile.id === currentPlayer.currentTileId,
+	);
 	const hikerPlayer = state.players.find(
 		(player) => player.role.title === 'Hiker',
 	);
