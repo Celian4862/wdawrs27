@@ -4,15 +4,21 @@ import GameInfoSection from '@/game-info/GameInfoSection';
 import { useGame } from '@/utility/GameContext';
 
 export default function ActionPanel() {
-	const { state, dispatch, currentTileIndex, findNeighboring } = useGame();
+	const {
+		state,
+		dispatch,
+		currentPlayer,
+		currentTileIndex,
+		hikerPlayer,
+		findNeighboring,
+	} = useGame();
 
 	const actions = [
 		{
 			name: 'Move',
 			disableCondition:
 				(state.board[currentTileIndex].info?.sandPoints ?? 0) > 1 &&
-				state.players.find((player) => player.role.title === 'Hiker')
-					?.currentTileId !== state.players[0].currentTileId,
+				hikerPlayer?.currentTileId !== currentPlayer.currentTileId,
 		},
 		{
 			name: 'Remove Sand',

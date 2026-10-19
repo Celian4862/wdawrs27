@@ -6,12 +6,12 @@ import { useGame } from '@/utility/GameContext';
 import PopUp from '@/utility/PopUp';
 
 export default function DrawHurricaneCardsModal() {
-	const { state, dispatch, getGameState } = useGame();
+	const { state, dispatch, currentPlayer, getGameState } = useGame();
 
 	return (
 		<PopUp
 			show={state.showEndTurnModal}
-			heading={`End ${state.players[0].role.title}'s Turn?`}
+			heading={`End ${currentPlayer.role.title}'s Turn?`}
 			description={
 				<>
 					This will automatically draw{' '}

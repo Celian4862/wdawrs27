@@ -4,12 +4,12 @@ import { useGame } from '../utility/GameContext';
 import PopUp from '../utility/PopUp';
 
 export default function RevealTileModal() {
-	const { state, dispatch, currentTileIndex } = useGame();
+	const { state, dispatch, currentPlayer, currentTileIndex } = useGame();
 
 	return (
 		<PopUp
 			show={state.showRevealModal}
-			heading={`Reveal ${state.players[0].role.title}'s tile?`}
+			heading={`Reveal ${currentPlayer.role.title}'s tile?`}
 			description="This action cannot be undone."
 		>
 			<ConfirmModalButtons
@@ -64,13 +64,9 @@ export default function RevealTileModal() {
 								items: [...players[0].items, drawnItem],
 							};
 						}
-					} else if (
-						board[currentTileIndex].info?.revealedType === 'Water'
-					) {
+					} else if (board[currentTileIndex].info?.revealedType === 'Water') {
 						players.forEach((player, index) => {
-							if (
-								player.currentTileId === state.board[currentTileIndex].id
-							) {
+							if (player.currentTileId === state.board[currentTileIndex].id) {
 								const newWater = player.currentWaterLevel + 2;
 								players[index] = {
 									...player,
@@ -81,9 +77,7 @@ export default function RevealTileModal() {
 								};
 							}
 						});
-					} else if (
-						board[currentTileIndex].info?.revealedType === 'Hint'
-					) {
+					} else if (board[currentTileIndex].info?.revealedType === 'Hint') {
 						const partHint = board[currentTileIndex].info?.partHint;
 						const pairTileIndex = board.findIndex(
 							(tile) =>

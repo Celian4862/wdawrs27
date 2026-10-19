@@ -4,10 +4,15 @@ import { useGame } from '@/utility/GameContext';
 import { parts } from '../part/parts';
 
 export default function Board({ className }: { className?: string }) {
-	const { state, dispatch, currentTileIndex, findNeighboring } = useGame();
-	const currentPlayer = state.players[0];
+	const {
+		state,
+		dispatch,
+		currentPlayer,
+		currentTileIndex,
+		hikerPlayer,
+		findNeighboring,
+	} = useGame();
 
-	const hiker = state.players.find((player) => player.role.title === 'Hiker');
 	const neighboringTilePositions = findNeighboring(state.board);
 	const validTiles =
 		state.selectedAction === 'Move'
@@ -16,9 +21,9 @@ export default function Board({ className }: { className?: string }) {
 						(state.board[position].info?.sandPoints ?? 2) < 2 ||
 						position ===
 							state.board.findIndex(
-								(tile) => tile.id === hiker?.currentTileId,
+								(tile) => tile.id === hikerPlayer?.currentTileId,
 							) ||
-						currentPlayer.role.title === 'Hiker',
+						currentPlayer === hikerPlayer,
 				)
 			: state.selectedAction === 'Remove Sand'
 				? findSandPoints(
