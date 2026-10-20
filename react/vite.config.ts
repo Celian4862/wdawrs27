@@ -17,8 +17,7 @@ export default defineConfig({
 		tsconfigPaths: true,
 	},
 	test: {
-		environment: 'jsdom',
-		globals: true, // Optional: allows using `describe`, `it`, `expect` without importing them every time
+		environment: 'happy-dom',
 		setupFiles: './src/test/setup.ts', // Optional: for global matchers setup
 	},
 });
