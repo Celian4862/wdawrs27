@@ -318,7 +318,6 @@ const GameContext = createContext<{
 	dispatch: React.Dispatch<GameAction>;
 	getGameState: () => GameState;
 	currentPlayer: ActivePlayer;
-	currentTileIndex: number;
 	hikerPlayer?: ActivePlayer;
 	findNeighboring: (board: Tile[]) => number[];
 } | null>(null);
@@ -334,9 +333,6 @@ export function GameProvider({ children }: { children: ReactNode }) {
 	const getGameState = () => stateRef.current;
 
 	const currentPlayer = state.players[0];
-	const currentTileIndex = state.board.findIndex(
-		(tile) => currentPlayer && tile.id === currentPlayer.currentTileId,
-	);
 	const hikerPlayer = state.players.find(
 		(player) => player.role.title === 'Hiker',
 	);
@@ -372,7 +368,6 @@ export function GameProvider({ children }: { children: ReactNode }) {
 				dispatch,
 				getGameState,
 				currentPlayer,
-				currentTileIndex,
 				hikerPlayer,
 				findNeighboring,
 			}}

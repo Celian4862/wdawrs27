@@ -27,12 +27,13 @@ function GameModals() {
 }
 
 function GameLayout({
-	state,
+	// state,
 	// dispatch,
 }: {
 	state: GameState;
 	dispatch: React.ActionDispatch<[action: GameAction]>;
 }) {
+	const { state } = useGame();
 	return (
 		<div className="lg:h-dvh w-screen p-10 box-border grid grid-cols-1 gap-6 lg:pb-0 lg:grid-cols-11 lg:gap-10 xl:grid-cols-2">
 			<div className="h-full flex flex-col gap-4 lg:pb-10 lg:min-h-0 lg:overflow-hidden lg:col-span-5 xl:col-span-1">

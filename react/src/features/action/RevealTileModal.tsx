@@ -4,7 +4,9 @@ import { useGame } from '../utility/GameContext';
 import PopUp from '../utility/PopUp';
 
 export default function RevealTileModal() {
-	const { state, dispatch, currentPlayer, currentTileIndex } = useGame();
+	const { state, dispatch, currentPlayer } = useGame();
+
+	const currentTileIndex = state.board.findIndex((tile) => tile.id === currentPlayer.currentTileId)
 
 	return (
 		<PopUp

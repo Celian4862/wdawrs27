@@ -8,10 +8,11 @@ export default function ActionPanel() {
 		state,
 		dispatch,
 		currentPlayer,
-		currentTileIndex,
 		hikerPlayer,
 		findNeighboring,
 	} = useGame();
+
+	const currentTileIndex = state.board.findIndex((tile) => tile.id === currentPlayer.currentTileId)
 
 	const actions = [
 		{
