@@ -11,10 +11,7 @@ import PlayerCards from '@/player/PlayerCards';
 import ResetButton from '@/reset/ResetButton';
 import ResetButtonModal from '@/reset/ResetButtonModal';
 import { GameProvider, useGame } from '@/utility/GameContext';
-import {
-	type GameAction,
-	type GameState,
-} from '@/utility/GameReducer';
+import type { GameAction, GameState } from '@/utility/GameReducer';
 import { DifficultySetup, PlayerSetup } from '@/utility/Setup';
 import HurricaneMeter from './features/hurricane/hurricane-meter/HurricaneMeter';
 
@@ -64,13 +61,7 @@ function GameLayout({
 	);
 }
 
-function GameFlow({
-	// state,
-	// dispatch,
-}: {
-	// state: GameState;
-	// dispatch: React.ActionDispatch<[action: GameAction]>;
-}) {
+function GameFlow() {
 	const { state, dispatch } = useGame();
 	if (state.players.length === 0) {
 		return <PlayerSetup dispatch={dispatch} />;
@@ -92,9 +83,7 @@ export default function App() {
 	// const [state, dispatch] = useReducer(gameReducer, initialState);
 	return (
 		<GameProvider>
-			<GameFlow
-			// state={state} dispatch={dispatch}
-			/>
+			<GameFlow />
 		</GameProvider>
 	);
 }
