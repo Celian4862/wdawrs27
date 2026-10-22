@@ -1,37 +1,63 @@
-import { useGame } from './GameContext';
+import type React from 'react';
+import { Button } from './Button';
+import type { GameAction } from './GameReducer';
 
-export default function Setup({ playerSetup }: { playerSetup: boolean }) {
-	const { dispatch } = useGame();
+const buttonClasses =
+	'p-2 text-xl border rounded-lg touch-manipulation active:bg-gray-100';
 
+function SetupLayout({
+	title,
+	children,
+}: {
+	title: string;
+	children: React.ReactNode;
+}) {
 	return (
 		<div className="min-h-lvh flex justify-center items-center box-border">
 			<div className="md:w-full max-w-sm text-center">
-				<h1 className="text-2xl pb-6">
-					{playerSetup ? 'How many players?' : 'What difficulty level?'}
-				</h1>
-				<div className="grid grid-cols-2 gap-3">
-					{(playerSetup
-						? [2, 3, 4, 5]
-						: ['Easy', 'Normal', 'Difficult', 'Extreme']
-					).map((element, index) => (
-						<button
-							key={element}
-							type="button"
-							className="p-2 text-xl border rounded-lg touch-manipulation active:bg-gray-100"
-							onClick={() =>
-								playerSetup
-									? dispatch({
-											type: 'SET_PLAYERS',
-											count: element as number,
-										})
-									: dispatch({ type: 'SET_DIFFICULTY', index })
-							}
-						>
-							{element}
-						</button>
-					))}
-				</div>
+				<h1 className="text-2xl pb-6">{title}</h1>
+				<div className="grid grid-cols-2 gap-3">{children}</div>
 			</div>
 		</div>
+	);
+}
+
+export function PlayerSetup({
+	dispatch,
+}: {
+	dispatch: React.ActionDispatch<[action: GameAction]>;
+}) {
+	return (
+		<SetupLayout title="How many players?">
+			{[2, 3, 4, 5].map((count) => (
+				<Button
+					key={count}
+					className={buttonClasses}
+					onClick={() => dispatch({ type: 'SET_PLAYERS', count })}
+				>
+					{count}
+				</Button>
+			))}
+		</SetupLayout>
+	);
+}
+
+export function DifficultySetup({
+	dispatch,
+}: {
+	dispatch: React.ActionDispatch<[action: GameAction]>;
+}) {
+	return (
+		<SetupLayout title="What difficulty level?">
+			{['Easy', 'Normal', 'Difficult', 'Extreme'].map((diff, index) => (
+				<Button
+					key={diff}
+					className={buttonClasses}
+					onClick={() => dispatch({ type: 'SET_DIFFICULTY', index })}
+				>
+					{diff}
+				</Button>
+			))}
+		</SetupLayout>
 	);
 }

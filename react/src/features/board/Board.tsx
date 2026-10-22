@@ -45,6 +45,7 @@ export default function Board({ className }: { className?: string }) {
 				const isHurricane = !tile.info;
 				const invalidTile = !validTiles.includes(index);
 
+				// return <TileButton tile={tile} />
 				return (
 					<button
 						key={tile.id}
