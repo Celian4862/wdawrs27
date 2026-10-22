@@ -14,7 +14,7 @@ export default function HurricaneMeterTier({
 
 	return (
 		<div
-			className={`h-10 relative py-2 flex justify-center items-center text-l border ${edgeRoundingStyle}`}
+			className={`text-l relative flex h-10 items-center justify-center border py-2 ${edgeRoundingStyle}`}
 			style={{ gridColumn: `span ${span} / span ${span}` }}
 		>
 			{/**

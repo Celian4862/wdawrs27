@@ -79,7 +79,7 @@ export default function Board({ className }: { className?: string }) {
 
 	return (
 		<section
-			className={`aspect-square w-100 md:max-w-full box-border grid grid-cols-5 gap-2 lg:w-auto lg:h-full ${className ?? ''}`}
+			className={`box-border grid aspect-square w-100 grid-cols-5 gap-2 md:max-w-full lg:h-full lg:w-auto ${className ?? ''}`}
 		>
 			{state.board.map((tile, index) => {
 				const invalidTile = !getIsValidTile(index);
@@ -92,9 +92,9 @@ export default function Board({ className }: { className?: string }) {
 								type="button"
 								disabled={!state.selectedAction || invalidTile || hasNoActions}
 								onClick={() => handleTileClick(index, tile.id)}
-								className={`relative aspect-square border rounded-lg ease-in-out hover:duration-250 active:duration-100 motion-safe:transition-all ${
+								className={`relative aspect-square rounded-lg border ease-in-out hover:duration-250 active:duration-100 motion-safe:transition-all ${
 									invalidTile && isMoveOrRemoveAction
-										? 'brightness-50 cursor-not-allowed'
+										? 'cursor-not-allowed brightness-50'
 										: !invalidTile && isMoveOrRemoveAction
 											? 'hover:scale-115 active:brightness-50'
 											: ''
@@ -103,14 +103,14 @@ export default function Board({ className }: { className?: string }) {
 								{/* Sand Counter Badge */}
 								{info.sandPoints > 0 && (
 									<span
-										className={`absolute -right-1 -top-1 lg:right-1 lg:top-1 border rounded-full px-1.5 py-0.5 text-[8px] font-bold text-slate-950 ${info.sandPoints > 1 ? 'bg-orange-600' : 'bg-amber-500/90'} md:text-[10px] xl:px-2 xl:text-base`}
+										className={`absolute -top-1 -right-1 rounded-full border px-1.5 py-0.5 text-[8px] font-bold text-slate-950 lg:top-1 lg:right-1 ${info.sandPoints > 1 ? 'bg-orange-600' : 'bg-amber-500/90'} md:text-[10px] xl:px-2 xl:text-base`}
 									>
 										{info.sandPoints}
 									</span>
 								)}
 
 								{/* Players on Tile */}
-								<div className="absolute left-1 top-1 grid grid-rows-2 grid-flow-col rtl gap-0.5 items-start pointer-events-none">
+								<div className="rtl pointer-events-none absolute top-1 left-1 grid grid-flow-col grid-rows-2 items-start gap-0.5">
 									{state.players
 										.filter((player) => player.currentTileId === tile.id)
 										.map((player) => {
@@ -130,7 +130,7 @@ export default function Board({ className }: { className?: string }) {
 
 								{/* Parts on Tile */}
 								{info.parts.length > 0 && (
-									<div className="absolute left-1 bottom-1 grid grid-rows-2 grid-flow-col ltr gap-0.5 items-start pointer-events-none">
+									<div className="ltr pointer-events-none absolute bottom-1 left-1 grid grid-flow-col grid-rows-2 items-start gap-0.5">
 										{info.parts.map((part) => (
 											<span key={part} className="bg-black text-xs">
 												{parts.find((p) => p.part === part)?.emoji}
@@ -141,7 +141,7 @@ export default function Board({ className }: { className?: string }) {
 
 								{/* Orientation Emoji */}
 								{info.orientationEmoji && (
-									<span className="absolute -bottom-0.5 -right-1 text-sm leading-none md:text-lg lg:bottom-1 lg:right-1">
+									<span className="absolute -right-1 -bottom-0.5 text-sm leading-none md:text-lg lg:right-1 lg:bottom-1">
 										{info.revealed ? info.orientationEmoji : ''}
 									</span>
 								)}

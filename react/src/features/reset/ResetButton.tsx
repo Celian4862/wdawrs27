@@ -7,7 +7,7 @@ export default function ResetButton() {
 		<button
 			type="button"
 			onClick={() => dispatch({ type: 'SET_SHOW_RESET_MODAL', show: true })}
-			className={`p-3 bg-red-700 text-xl text-center rounded-lg motion-safe:transition ${state.showResetModal ? 'brightness-50 cursor-not-allowed' : 'hover:brightness-150 active:brightness-50'}`}
+			className={`rounded-lg bg-red-700 p-3 text-center text-xl motion-safe:transition ${state.showResetModal ? 'cursor-not-allowed brightness-50' : 'hover:brightness-150 active:brightness-50'}`}
 		>
 			Reset Game
 		</button>

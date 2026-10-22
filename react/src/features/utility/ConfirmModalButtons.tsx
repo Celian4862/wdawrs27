@@ -12,10 +12,10 @@ export default function ConfirmModalButtons({
 	className?: string;
 }) {
 	return (
-		<div className="pt-2 flex flex-col gap-3 justify-center md:flex-row">
+		<div className="flex flex-col justify-center gap-3 pt-2 md:flex-row">
 			<button
 				type="button"
-				className={`px-5 py-2 font-bold rounded-lg motion-safe:transition ${className ?? ''}`}
+				className={`rounded-lg px-5 py-2 font-bold motion-safe:transition ${className ?? ''}`}
 				onClick={onConfirm}
 			>
 				{confirmMessage}
@@ -23,7 +23,7 @@ export default function ConfirmModalButtons({
 			{!victory ? (
 				<button
 					type="button"
-					className="px-5 py-2 border rounded-lg hover:bg-slate-700 active:bg-slate-800 motion-safe:transition"
+					className="rounded-lg border px-5 py-2 hover:bg-slate-700 active:bg-slate-800 motion-safe:transition"
 					onClick={onCancel}
 				>
 					Cancel

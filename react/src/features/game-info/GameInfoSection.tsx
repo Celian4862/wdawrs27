@@ -6,7 +6,7 @@ export default function GameInfoSection({
 	children: React.ReactNode;
 }) {
 	return (
-		<section className={`border rounded-xl p-6 ${className ?? ''}`}>
+		<section className={`rounded-xl border p-6 ${className ?? ''}`}>
 			{children}
 		</section>
 	);

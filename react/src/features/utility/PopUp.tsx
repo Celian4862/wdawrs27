@@ -15,13 +15,13 @@ export default function PopUp({
 }) {
 	return (
 		<div
-			className={`fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 motion-safe:transition-all motion-safe:ease-in-out ${
+			className={`fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm motion-safe:transition-all motion-safe:ease-in-out ${
 				show
-					? 'opacity-100 pointer-events-auto'
-					: 'opacity-0 pointer-events-none'
+					? 'pointer-events-auto opacity-100'
+					: 'pointer-events-none opacity-0'
 			} ${className ?? ''}`}
 		>
-			<div className="bg-slate-900 border border-slate-700 rounded-xl p-6 max-w-md w-full shadow-2xl text-center space-y-4">
+			<div className="w-full max-w-md space-y-4 rounded-xl border border-slate-700 bg-slate-900 p-6 text-center shadow-2xl">
 				<h3
 					className={`text-2xl font-bold ${victory === false ? 'text-red-600' : victory === true ? 'text-green-400' : ''}`}
 				>

@@ -13,9 +13,9 @@ function SetupLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<div className="min-h-lvh flex justify-center items-center box-border">
-			<div className="md:w-full max-w-sm text-center">
-				<h1 className="text-2xl pb-6">{title}</h1>
+		<div className="box-border flex min-h-lvh items-center justify-center">
+			<div className="max-w-sm text-center md:w-full">
+				<h1 className="pb-6 text-2xl">{title}</h1>
 				<div className="grid grid-cols-2 gap-3">{children}</div>
 			</div>
 		</div>

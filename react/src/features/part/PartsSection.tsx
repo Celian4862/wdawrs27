@@ -12,7 +12,7 @@ export default function PartsSection() {
 			/>
 			<div className="flex flex-wrap gap-2">
 				{state.partsCollected.map((part) => (
-					<div key={part} className="p-3 border rounded-lg">
+					<div key={part} className="rounded-lg border p-3">
 						{part}
 					</div>
 				))}

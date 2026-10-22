@@ -47,15 +47,15 @@ export default function ActionPanel() {
 		state.actionCount === 0;
 
 	return (
-		<GameInfoSection className="sticky bottom-0 z-20 flex flex-col justify-center items-center bg-slate-900/90 backdrop-blur-md border-slate-700/60 lg:top-0">
+		<GameInfoSection className="sticky bottom-0 z-20 flex flex-col items-center justify-center border-slate-700/60 bg-slate-900/90 backdrop-blur-md lg:top-0">
 			<GameInfoHeading
 				heading="Action Panel"
 				subheading={`${state.actionCount} actions left`}
 				className="w-full lg:block lg:flex"
 			/>
 			{state.recentlyDrawnHurricaneCard && (
-				<div className="w-full text-center py-1 px-3 mt-3 bg-slate-800/80 rounded-lg border border-slate-700 text-sm flex justify-between items-center lg:hidden">
-					<span className="text-slate-400 font-medium">Last Card:</span>
+				<div className="mt-3 flex w-full items-center justify-between rounded-lg border border-slate-700 bg-slate-800/80 px-3 py-1 text-center text-sm lg:hidden">
+					<span className="font-medium text-slate-400">Last Card:</span>
 					<span className="font-bold text-amber-400">
 						{state.recentlyDrawnHurricaneCard.type !== 'Move'
 							? state.recentlyDrawnHurricaneCard.type
@@ -64,9 +64,9 @@ export default function ActionPanel() {
 				</div>
 			)}
 
-			<div className="w-full flex flex-col lg:flex-col-reverse">
+			<div className="flex w-full flex-col lg:flex-col-reverse">
 				{state.turnStatus && (
-					<p className="mt-3 text-center text-amber-400 font-semibold animate-pulse text-sm md:text-base">
+					<p className="mt-3 animate-pulse text-center text-sm font-semibold text-amber-400 md:text-base">
 						{state.turnStatus}
 					</p>
 				)}
@@ -125,7 +125,7 @@ export default function ActionPanel() {
 														: action.name,
 											});
 										}}
-										className={`p-3 border rounded-lg motion-safe:transition ${disabled(action) ? 'brightness-50' : action.name === 'Reveal Tile' ? 'bg-green-700 hover:bg-green-600' : 'hover:bg-yellow-600'} ${action.name !== 'Collect Part' && state.selectedAction === action.name ? `scale-115 ${action.name === 'Reveal Tile' ? 'bg-green-700' : 'bg-yellow-600 '}` : ''}`}
+										className={`rounded-lg border p-3 motion-safe:transition ${disabled(action) ? 'brightness-50' : action.name === 'Reveal Tile' ? 'bg-green-700 hover:bg-green-600' : 'hover:bg-yellow-600'} ${action.name !== 'Collect Part' && state.selectedAction === action.name ? `scale-115 ${action.name === 'Reveal Tile' ? 'bg-green-700' : 'bg-yellow-600'}` : ''}`}
 									>
 										{action.name}
 									</button>
@@ -140,9 +140,9 @@ export default function ActionPanel() {
 									disabled={
 										state.isDrawingHurricaneCards || state.showEndTurnModal
 									}
-									className={`p-3 bg-red-600/70 rounded-lg font-semibold border motion-safe:transition ${
+									className={`rounded-lg border bg-red-600/70 p-3 font-semibold motion-safe:transition ${
 										state.isDrawingHurricaneCards || state.showEndTurnModal
-											? 'brightness-50 cursor-not-allowed'
+											? 'cursor-not-allowed brightness-50'
 											: 'hover:bg-red-600 active:brightness-50'
 									}`}
 									onClick={() =>
@@ -166,8 +166,8 @@ export default function ActionPanel() {
 function PingCircle() {
 	return (
 		<span className="absolute -top-1 -right-1 flex h-3 w-3">
-			<span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
-			<span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500" />
+			<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
+			<span className="relative inline-flex h-3 w-3 rounded-full bg-amber-500" />
 		</span>
 	);
 }

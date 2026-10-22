@@ -19,7 +19,7 @@ export default function PlayerDetails({
 			</div>
 			<details open={isCurrent}>
 				<summary className="mt-1 cursor-pointer">Abilities</summary>
-				<h3 className="mt-1 text-md font-medium text-white/65">
+				<h3 className="text-md mt-1 font-medium text-white/65">
 					{player.role.ability}
 				</h3>
 			</details>
@@ -28,7 +28,7 @@ export default function PlayerDetails({
 			</p>
 			<details open={player.items.length > 0}>
 				<summary className="cursor-pointer">Items</summary>
-				<div className="mt-3 text-md text-white/80 grid gap-3 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
+				<div className="text-md mt-3 grid gap-3 text-white/80 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
 					{player.items.length === 0
 						? 'No items.'
 						: player.items.map((item) => {
@@ -39,7 +39,7 @@ export default function PlayerDetails({
 									<button
 										key={`${item.type}-${item.id}`}
 										type="button"
-										className={`p-3 space-y-2 bg-black col-span-1 border rounded-lg hover:scale-110 active:bg-gray-800 motion-safe:transition-all `}
+										className={`col-span-1 space-y-2 rounded-lg border bg-black p-3 hover:scale-110 active:bg-gray-800 motion-safe:transition-all`}
 										onClick={() => {
 											switch (item.type) {
 												case 'Sand Remover':

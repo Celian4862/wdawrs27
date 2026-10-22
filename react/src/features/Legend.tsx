@@ -65,7 +65,7 @@ const colorLegend = [
 const iconLegend = [
 	{
 		icon: (
-			<span className="border rounded-full px-1.5 py-0.5 text-[8px] font-bold text-slate-950 bg-amber-500/90 md:text-[10px] xl:px-2 xl:text-base">
+			<span className="rounded-full border bg-amber-500/90 px-1.5 py-0.5 text-[8px] font-bold text-slate-950 md:text-[10px] xl:px-2 xl:text-base">
 				1
 			</span>
 		),
@@ -77,7 +77,7 @@ const iconLegend = [
 	},
 	{
 		icon: (
-			<span className="border rounded-full px-1.5 py-0.5 text-[8px] font-bold text-slate-950 bg-orange-600 md:text-[10px] xl:px-2 xl:text-base">
+			<span className="rounded-full border bg-orange-600 px-1.5 py-0.5 text-[8px] font-bold text-slate-950 md:text-[10px] xl:px-2 xl:text-base">
 				2
 			</span>
 		),

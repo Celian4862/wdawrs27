@@ -13,7 +13,7 @@ export default function ItemDeck() {
 				heading="Item Deck"
 				subheading={`${state.itemDeck.length} items in stock`}
 			/>
-			<table className="py-1 w-full text-lg text-center border rounded-lg border-separate border-spacing-2">
+			<table className="w-full border-separate border-spacing-2 rounded-lg border py-1 text-center text-lg">
 				<thead>
 					<tr>
 						<th>Items</th>

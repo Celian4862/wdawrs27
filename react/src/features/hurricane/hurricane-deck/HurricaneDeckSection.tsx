@@ -18,15 +18,15 @@ export default function HurricaneDeck() {
 				heading="Hurricane Deck"
 				subheading={`${state.hurricaneDeck.length} cards`}
 			/>
-			<div className="grid md:grid-cols-2 gap-3 *:py-1 *:text-lg *:border *:rounded-lg">
+			<div className="grid gap-3 *:rounded-lg *:border *:py-1 *:text-lg md:grid-cols-2">
 				<div
-					className={`${state.recentlyDrawnHurricaneCard.type === 'Thirst' ? 'bg-blue-700' : 'bg-none'} flex justify-around items-center`}
+					className={`${state.recentlyDrawnHurricaneCard.type === 'Thirst' ? 'bg-blue-700' : 'bg-none'} flex items-center justify-around`}
 				>
 					<h3 className="font-bold">Thirst</h3>
 					<span>{hurricaneCount.Thirst ?? 0}</span>
 				</div>
 				<div
-					className={`${state.recentlyDrawnHurricaneCard.type === 'Hurricane Up' ? 'bg-red-700/80' : 'bg-none'} flex flex-wrap justify-around items-center`}
+					className={`${state.recentlyDrawnHurricaneCard.type === 'Hurricane Up' ? 'bg-red-700/80' : 'bg-none'} flex flex-wrap items-center justify-around`}
 				>
 					<h3 className="font-bold">Hurricane Up</h3>
 					<span>{hurricaneCount['Hurricane Up'] ?? 0}</span>
@@ -71,7 +71,7 @@ export default function HurricaneDeck() {
 						})}
 					</tbody>
 				</table>
-				<div className="flex flex-wrap justify-around items-center md:col-span-2">
+				<div className="flex flex-wrap items-center justify-around md:col-span-2">
 					<h3 className="font-bold">Sand Point Stock: </h3>
 					{48 - sumSandPoints(state.board)} / 48
 				</div>
