@@ -324,6 +324,7 @@ const GameContext = createContext<{
 
 export function GameProvider({ children }: { children: ReactNode }) {
 	const [state, dispatch] = useReducer(gameReducer, initialState);
+
 	const stateRef = useRef(state);
 
 	useEffect(() => {
@@ -333,6 +334,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
 	const getGameState = () => stateRef.current;
 
 	const currentPlayer = state.players[0];
+
 	const hikerPlayer = state.players.find(
 		(player) => player.role.title === 'Hiker',
 	);
@@ -366,7 +368,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
 			value={{
 				state,
 				dispatch,
-				getGameState,
+				getGameState: getGameState,
 				currentPlayer,
 				hikerPlayer,
 				findNeighboring,

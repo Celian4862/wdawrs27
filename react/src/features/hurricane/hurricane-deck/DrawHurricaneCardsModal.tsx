@@ -6,7 +6,7 @@ import { useGame } from '@/utility/GameContext';
 import PopUp from '@/utility/PopUp';
 
 export default function DrawHurricaneCardsModal() {
-	const { state, dispatch, currentPlayer, getGameState } = useGame();
+	const { state, dispatch, currentPlayer, getGameState: getGameId } = useGame();
 
 	return (
 		<PopUp
@@ -49,7 +49,7 @@ export default function DrawHurricaneCardsModal() {
 			for (let i = 0; i < state.hurricaneMeter[state.meterProgress]; i++) {
 				await delay(1000);
 
-				if (getGameState().gameId !== currentGameId) return;
+				if (getGameId().gameId !== currentGameId) return;
 
 				if (deck.length === 0) {
 					deck = shuffleHurricaneDeck();
@@ -68,7 +68,7 @@ export default function DrawHurricaneCardsModal() {
 							let endGame = false;
 
 							for (let j = 0; j < currentPlayers.length; j++) {
-								if (getGameState().gameId !== currentGameId) return;
+								if (getGameId().gameId !== currentGameId) return;
 
 								if (
 									currentBoard[
@@ -85,7 +85,7 @@ export default function DrawHurricaneCardsModal() {
 							dispatch({ type: 'DRINK_WATER', players: currentPlayers });
 							if (endGame) {
 								await delay(1500);
-								if (getGameState().gameId !== currentGameId) return;
+								if (getGameId().gameId !== currentGameId) return;
 
 								dispatch({
 									type: 'GAME_OVER',
@@ -98,7 +98,7 @@ export default function DrawHurricaneCardsModal() {
 						default:
 							await delay(400);
 							for (let j = 0; j < (drawnCard.distance ?? 0); j++) {
-								if (getGameState().gameId !== currentGameId) return;
+								if (getGameId().gameId !== currentGameId) return;
 
 								const stormPosition = currentBoard.findIndex(
 									(tile) => !tile.info,
@@ -138,7 +138,7 @@ export default function DrawHurricaneCardsModal() {
 
 								if (sumSandPoints(currentBoard) > 48) {
 									await delay(1500);
-									if (getGameState().gameId !== currentGameId) return;
+									if (getGameId().gameId !== currentGameId) return;
 
 									dispatch({
 										type: 'GAME_OVER',
@@ -155,7 +155,7 @@ export default function DrawHurricaneCardsModal() {
 
 				if (meterProgress === state.hurricaneMeter.length - 1) {
 					await delay(1500);
-					if (getGameState().gameId !== currentGameId) return;
+					if (getGameId().gameId !== currentGameId) return;
 
 					dispatch({
 						type: 'GAME_OVER',
@@ -179,7 +179,7 @@ export default function DrawHurricaneCardsModal() {
 			});
 			await delay(1500); // Guard delay to display message before unlocking UI
 		} finally {
-			if (getGameState().gameId === currentGameId) {
+			if (getGameId().gameId === currentGameId) {
 				dispatch({ type: 'FINISH_DRAWING' });
 			}
 		}

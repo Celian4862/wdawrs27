@@ -4,15 +4,12 @@ import GameInfoSection from '@/game-info/GameInfoSection';
 import { useGame } from '@/utility/GameContext';
 
 export default function ActionPanel() {
-	const {
-		state,
-		dispatch,
-		currentPlayer,
-		hikerPlayer,
-		findNeighboring,
-	} = useGame();
+	const { state, dispatch, currentPlayer, hikerPlayer, findNeighboring } =
+		useGame();
 
-	const currentTileIndex = state.board.findIndex((tile) => tile.id === currentPlayer.currentTileId)
+	const currentTileIndex = state.board.findIndex(
+		(tile) => tile.id === currentPlayer.currentTileId,
+	);
 
 	const actions = [
 		{
