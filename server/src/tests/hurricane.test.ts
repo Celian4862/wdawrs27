@@ -36,7 +36,7 @@ describe('hurricane unit tests', () => {
 
 			const counts = countHurricaneCards(mockDeck);
 
-			expect(counts['Thirst']).toBe(2);
+			expect(counts.Thirst).toBe(2);
 			expect(counts['Hurricane Up']).toBe(1);
 			expect(counts['Move Up 1']).toBe(2);
 			expect(counts['Move Down 2']).toBeUndefined(); // or 0 depending on how you handle missing keys

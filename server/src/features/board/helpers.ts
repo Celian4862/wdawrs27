@@ -1,4 +1,3 @@
-import { HurricaneCard } from '../hurricane/types';
 import { shuffle } from '../shuffle';
 import { partNames, partOrientations } from './data';
 import type { HintTile, OtherRevTile, RevSandTile, Tile } from './types';
