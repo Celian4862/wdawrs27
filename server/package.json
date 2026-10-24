@@ -10,11 +10,17 @@
 		"check": "biome check --write ."
 	},
 	"dependencies": {
-		"elysia": "latest"
+		"@libsql/client": "^0.18.0",
+		"drizzle-orm": "^0.45.4",
+		"elysia": "latest",
+		"nanoid": "^6.0.2"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.14",
-		"bun-types": "latest"
+		"@types/better-sqlite3": "^9.6.0",
+		"better-sqlite3": "^13.0.3",
+		"bun-types": "latest",
+		"drizzle-kit": "^0.31.11"
 	},
 	"module": "src/index.js"
 }

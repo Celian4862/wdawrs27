@@ -49,7 +49,7 @@ export function DifficultySetup({
 }) {
 	return (
 		<SetupLayout title="What difficulty level?">
-			{['Easy', 'Normal', 'Difficult', 'Extreme'].map((diff, index) => (
+			{['Easy', 'Normal', 'Hard', 'Expert'].map((diff, index) => (
 				<Button
 					key={diff}
 					className={buttonClasses}

@@ -3,6 +3,11 @@ import GameInfoHeading from '@/game-info/GameInfoHeading';
 import GameInfoSection from '@/game-info/GameInfoSection';
 import { useGame } from '@/utility/GameContext';
 
+interface ActionType {
+	name: string;
+	disableCondition: boolean;
+}
+
 export default function ActionPanel() {
 	const { state, dispatch, currentPlayer, hikerPlayer, findNeighboring } =
 		useGame();
@@ -11,7 +16,7 @@ export default function ActionPanel() {
 		(tile) => tile.id === currentPlayer.currentTileId,
 	);
 
-	const actions = [
+	const actions: ActionType[] = [
 		{
 			name: 'Move',
 			disableCondition:
@@ -40,6 +45,21 @@ export default function ActionPanel() {
 				(state.board[currentTileIndex].info?.revealed ?? false),
 		},
 	];
+
+	let roleActions: ActionType[] | null = null;
+	switch (currentPlayer.role.title) {
+		case 'Hiker':
+			roleActions = state.players.flatMap((player) => {
+				if (player.id === currentPlayer.id) return [];
+
+				return {
+					name: `Pick Up ${player.role.title}`,
+					disableCondition:
+						currentPlayer.currentTileId !== player.currentTileId,
+				};
+			});
+			break;
+	}
 
 	const disabled = (action: (typeof actions)[number]) =>
 		action.disableCondition ||
@@ -73,7 +93,7 @@ export default function ActionPanel() {
 				<div className="relative">
 					<details open className="mt-3">
 						<summary className="mb-3 cursor-pointer">Main Actions</summary>
-						<div className="mt-3 flex flex-wrap justify-center gap-2 lg:m-0">
+						<div className="mt-3 flex flex-wrap justify-start gap-2 lg:m-0">
 							{actions.map((action) => (
 								<div key={action.name} className="relative inline-block">
 									{action.name === 'Collect Part' &&
@@ -155,7 +175,38 @@ export default function ActionPanel() {
 						</div>
 					</details>
 					<details className="mt-3">
-						<summary className="cursor-pointer">Role Actions</summary>
+						<summary className="mb-3 cursor-pointer">Role Actions</summary>
+						<div className="mt-3 flex flex-wrap justify-start gap-2 lg:m-0">
+							{roleActions
+								? roleActions.map((action) => (
+										<div key={action.name} className="relative inline-block">
+											<button
+												type="button"
+												disabled={disabled(action)}
+												onClick={() => {
+													if (
+														state.isDrawingHurricaneCards ||
+														action.disableCondition
+													) {
+														return;
+													}
+
+													dispatch({
+														type: 'SELECT_ACTION',
+														action:
+															state.selectedAction === action.name
+																? null
+																: action.name,
+													});
+												}}
+												className={`rounded-lg border p-3 motion-safe:transition ${disabled(action) ? 'brightness-50' : 'hover:bg-yellow-600'} ${state.selectedAction === action.name ? 'scale-115 bg-yellow-600' : ''}`}
+											>
+												{action.name}
+											</button>
+										</div>
+									))
+								: undefined}
+						</div>
 					</details>
 				</div>
 			</div>

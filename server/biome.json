@@ -7,12 +7,7 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"includes": [
-			"**",
-			"!!**/.vercel",
-			"!!**/node_modules",
-			"!bun.lock"
-		]
+		"includes": ["**", "!!**/.vercel", "!!**/node_modules", "!bun.lock"]
 	},
 	"formatter": {
 		"enabled": true,
@@ -20,16 +15,14 @@
 		"formatWithErrors": true,
 		"lineEnding": "lf",
 		"lineWidth": 80,
-		"expand": "always"
+		"expand": "auto"
 	},
 	"linter": {
 		"enabled": true,
 		"rules": {
 			"preset": "recommended"
 		},
-		"includes": [
-			"**"
-		]
+		"includes": ["**"]
 	},
 	"javascript": {
 		"formatter": {
