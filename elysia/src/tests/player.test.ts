@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from 'bun:test';
-import { assignPlayers, nextPlayer } from '../features/player/helpers';
-import type { ActivePlayer } from '../features/player/types';
+import { assignPlayers, nextPlayer } from '@/player/helpers';
+import type { ActivePlayer } from '@/player/types';
 
 describe('player unit tests', () => {
 	let playerCount: number;

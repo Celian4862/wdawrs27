@@ -1,4 +1,4 @@
-import { shuffle } from '../shuffle';
+import { shuffle } from '@/shared/shuffle';
 import { hurricaneDirections, hurricaneDistances } from './data';
 import type { HurricaneCard } from './types';
 
@@ -24,7 +24,7 @@ export function shuffleHurricaneDeck(): HurricaneCard[] {
 	]);
 }
 
-export function countHurricaneCards(hurricaneDeck: HurricaneCard[]) {
+export function countHurricaneCards(hurricaneDeck: readonly HurricaneCard[]) {
 	const counts: Record<string, number> = {};
 
 	for (const card of hurricaneDeck) {

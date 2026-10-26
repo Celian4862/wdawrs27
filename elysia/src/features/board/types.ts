@@ -1,4 +1,4 @@
-import type { partNames, partOrientations } from './data';
+import type { hurricaneId, partNames, partOrientations, tileIds } from './data';
 
 interface GreenthTile {
 	unrevealedType: 'Greenth';
@@ -31,13 +31,11 @@ interface StartTile {
 }
 
 interface HurricaneTile {
-	type: 'hurricane';
-	id: 12;
+	id: typeof hurricaneId;
 }
 
 type BoardTile = {
-	type: 'board';
-	id: number;
+	id: (typeof tileIds)[number];
 	sandPoints: number;
 	revealed: boolean;
 	parts: Set<PartNames>;

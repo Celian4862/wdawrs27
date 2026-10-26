@@ -10,9 +10,11 @@
 		"check": "biome check --write ."
 	},
 	"dependencies": {
+		"@elysia/openapi": "^1.4.16",
 		"@libsql/client": "^0.18.0",
 		"drizzle-orm": "^0.45.4",
 		"elysia": "latest",
+		"ioredis": "^6.0.0",
 		"nanoid": "^6.0.2"
 	},
 	"devDependencies": {

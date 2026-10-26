@@ -1,4 +1,6 @@
+import { openapi } from '@elysia/openapi';
 import { Elysia, t } from 'elysia';
+import Redis from 'ioredis';
 import { customAlphabet } from 'nanoid';
 import { db } from './db';
 import { gamesTable } from './schema';
@@ -8,22 +10,50 @@ const generateGameId = customAlphabet(
 	8,
 );
 
+const redis = new Redis(
+	(() => {
+		const redisUrl = process.env.REDIS_URL;
+
+		if (!redisUrl) {
+			throw new Error(
+				'❌ REDIS_URL or KV_URL is missing from your environment variables. Please check your Vercel integration settings.',
+			);
+		}
+		return redisUrl;
+	})(),
+);
+
 const app = new Elysia()
+	.use(openapi())
+	.onBeforeHandle(async ({ request, set }) => {
+		try {
+			const clientIp = request.headers.get('x-forwarded-for') ?? 'local';
+			const windowKey = Math.floor(Date.now() / 60_000); // changes every minute
+			const redisKey = `ratelimit:${clientIp}:${windowKey}`;
+
+			// Increment count and set a 60-second expiration atomically
+			const requests = await redis.incr(redisKey);
+			if (requests === 1) {
+				await redis.expire(redisKey, 60);
+			} else if (requests > 10) {
+				set.status = 429;
+				return { error: 'Too many requests, please try again later.' };
+			}
+		} catch (err) {
+			console.error('Redis rate-limiter failed, failing open:', err);
+			// If Redis is down, we allow the request to proceed instead of crashing
+		}
+	})
 	.get('/', () => ({
 		name: 'Game Backend API',
 		status: 'online',
 		version: '1.0.0',
 		timestamp: new Date().toISOString(),
-		endpoints: {
-			createGame: 'POST /game/setup',
-			getGame: 'GET /games/:id',
-			performAction: 'POST /games/:id/actions',
-		},
 	}))
 	.group('/game', (app) =>
 		app.post(
 			'/setup',
-			async ({ body, set }) => {
+			async ({ set }) => {
 				const gameId = generateGameId();
 				const gameSession = await db.insert(gamesTable).values({
 					id: gameId,
@@ -34,6 +64,8 @@ const app = new Elysia()
 				return gameSession;
 			},
 			{
+				// To be used later
+				// Deleted the parameter for the sake of removing lint noise
 				body: t.Object({
 					playerCount: t.Number({
 						minimum: 2,

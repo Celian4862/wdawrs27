@@ -1,4 +1,4 @@
-import { shuffle } from '../shuffle';
+import { shuffle } from '@/shared/shuffle';
 import { playerRoles } from './data';
 import type { ActivePlayer } from './types';
 
@@ -22,10 +22,30 @@ export function assignPlayers(playerCount: number): ActivePlayer[] {
 	}));
 }
 
-export function nextPlayer(players: ActivePlayer[]): ActivePlayer[] {
+export function nextPlayer(players: readonly ActivePlayer[]): ActivePlayer[] {
 	if (players.length === 0) {
 		throw new Error('Cannot rotate players: player array is empty');
 	}
 	const [current, ...remaining] = players;
 	return [...remaining, current];
+}
+
+export function adjustWater(
+	players: readonly ActivePlayer[],
+	indices: Set<number>,
+	delta: number,
+) {
+	return players.map((player, i) => {
+		if (indices.has(i)) {
+			const newWater = Math.max(
+				0,
+				Math.min(player.role.maxWater, player.water + delta),
+			);
+			return {
+				...player,
+				water: newWater,
+			};
+		}
+		return player;
+	});
 }

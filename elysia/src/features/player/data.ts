@@ -1,6 +1,4 @@
-import type { PlayerRole } from './types';
-
-export const playerRoles: PlayerRole[] = [
+export const playerRoles = [
 	{
 		title: 'Digger',
 		ability: 'Digs two sand points at once.',
@@ -34,4 +32,4 @@ export const playerRoles: PlayerRole[] = [
 			'Can share water to players on neighboring tiles, and can use an action to increase their water level by one when standing on revealed Water tiles.',
 		maxWater: 5,
 	},
-];
+] as const;
