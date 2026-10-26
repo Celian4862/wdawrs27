@@ -2,6 +2,8 @@ import { openapi } from '@elysia/openapi';
 import { Elysia, t } from 'elysia';
 import Redis from 'ioredis';
 import { customAlphabet } from 'nanoid';
+import { assignPlayers } from '@/player/helpers';
+import type { ActivePlayer } from '@/player/types';
 import { db } from './db';
 import { gamesTable } from './schema';
 
@@ -53,15 +55,20 @@ const app = new Elysia()
 	.group('/game', (app) =>
 		app.post(
 			'/setup',
-			async ({ set }) => {
-				const gameId = generateGameId();
-				const gameSession = await db.insert(gamesTable).values({
-					id: gameId,
-					status: 'waiting',
-					stateJSON: {},
-				});
+			async ({ body: { playerCount }, set }) => {
+				const players = assignPlayers(playerCount);
+				const gameSession = await db
+					.insert(gamesTable)
+					.values({
+						id: generateGameId(),
+						status: 'waiting',
+						stateJSON: {
+							players,
+						} as { players: ActivePlayer[] },
+					})
+					.returning();
 				set.status = 201;
-				return gameSession;
+				return gameSession[0];
 			},
 			{
 				// To be used later

@@ -62,14 +62,13 @@ describe('shuffleBoard', () => {
 			});
 			expect(tile.id).not.toBe(12);
 			if (tile.id !== 12) {
-				expect(tile.sandPoints).toBe(sandPointIds.includes(sandTileId) ? 1 : 0);
+				expect(tile.sandPoints).toBe(sandPointIds.has(sandTileId) ? 1 : 0);
 			}
 		}
 	});
 
 	it('uses every hint tile combination exactly once', () => {
 		const board = shuffleBoard();
-		console.log(board);
 		const hintTiles = board.filter(
 			(tile) => tile.id !== 12 && tile.revealedType === 'Hint',
 		);

@@ -2,7 +2,7 @@ import { shuffle } from '@/shared/shuffle';
 import { hurricaneDirections, hurricaneDistances } from './data';
 import type { HurricaneCard } from './types';
 
-export function shuffleHurricaneDeck(): HurricaneCard[] {
+export function shuffleHurricaneDeck(): readonly HurricaneCard[] {
 	return shuffle<HurricaneCard>([
 		...Array<HurricaneCard>(4).fill({
 			type: 'Thirst',

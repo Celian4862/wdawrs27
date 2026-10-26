@@ -1,11 +1,4 @@
-export type ItemCardType = {
-	id: number;
-	type:
-		| 'Sand Remover'
-		| 'Flying Tool'
-		| 'Thirst Shield'
-		| 'X-Ray Goggles'
-		| 'Add 2 Water'
-		| 'Speed Boost';
-	description: string;
-};
+import type { itemTypes } from './data';
+
+export type ItemKey = keyof typeof itemTypes;
+export type ItemCard = typeof itemTypes;

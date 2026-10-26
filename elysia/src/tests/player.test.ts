@@ -1,5 +1,6 @@
 import { beforeAll, describe, expect, it } from 'bun:test';
-import { assignPlayers, nextPlayer } from '@/player/helpers';
+import { playerRoles } from '@/player/data';
+import { assignPlayers, passTurn } from '@/player/helpers';
 import type { ActivePlayer } from '@/player/types';
 
 describe('player unit tests', () => {
@@ -12,27 +13,23 @@ describe('player unit tests', () => {
 	it('correctly initializes players', () => {
 		expect(players).toBeArrayOfSize(playerCount);
 
-		const seenIds = new Set<number>();
-		const firstPlayerWater = players[0].water;
+		const firstPlayerWater = players[0].currentWater;
 
-		players.forEach((player, index) => {
-			// Check ID exists and is unique (no repeating IDs)
-			expect(player.id).toBe(index);
-			expect(seenIds.has(player.id)).toBe(false);
-			seenIds.add(player.id);
-
+		players.forEach((player) => {
 			// Check water matches role's maxWater exactly
-			expect(player.water).toBe(player.role.maxWater);
+			expect(player.currentWater).toBe(playerRoles[player.roleKey].maxWater);
 
 			// Check static starting properties
 			expect(player.tileId).toBe(19);
 
 			// Check first player's water is min
 
-			expect(firstPlayerWater).toBeLessThanOrEqual(player.water);
+			expect(firstPlayerWater).toBeLessThanOrEqual(player.currentWater);
 
-			// Check items array starts empty
-			expect(player.items).toBeEmpty();
+			// Check items Record starts with 0 counts
+			for (const count of Object.values(player.inventory)) {
+				expect(count).toBe(0);
+			}
 		});
 	});
 
@@ -40,7 +37,7 @@ describe('player unit tests', () => {
 		const originalFirst = players[0];
 		const originalSecond = players[1];
 
-		const rotatedPlayers = nextPlayer(players);
+		const rotatedPlayers = passTurn(players);
 
 		expect(rotatedPlayers).toBeArrayOfSize(players.length);
 
@@ -50,6 +47,6 @@ describe('player unit tests', () => {
 	});
 
 	it('throws an error when given an empty array', () => {
-		expect(() => nextPlayer([])).toThrow(Error);
+		expect(() => passTurn([])).toThrow(Error);
 	});
 });

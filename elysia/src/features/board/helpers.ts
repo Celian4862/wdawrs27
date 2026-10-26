@@ -10,7 +10,7 @@ import {
 } from './data';
 import type { HintTile, OtherRevTile, RevSandTile, Tile } from './types';
 
-export function shuffleBoard() {
+export function shuffleBoard(): readonly Tile[] {
 	const board = Array<Tile>(25);
 
 	// HURRICANE TILE

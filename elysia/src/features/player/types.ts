@@ -1,12 +1,13 @@
-import type { ItemCardType } from '@/item/types';
+import type { ItemKey } from '@/item/types';
 import type { playerRoles } from './data';
 
-export type PlayerRole = (typeof playerRoles)[number];
+export type RoleKey = keyof typeof playerRoles;
+export type PlayerTitle = (typeof playerRoles)[RoleKey]['title'];
+export type PlayerInventory = Record<ItemKey, number>;
 
 export interface ActivePlayer {
-	id: number;
-	role: PlayerRole;
-	water: number;
+	readonly roleKey: RoleKey;
+	currentWater: number;
 	tileId: number;
-	items: ItemCardType[];
+	inventory: PlayerInventory;
 }
