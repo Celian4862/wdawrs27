@@ -1,5 +1,5 @@
 import { defineConfig } from 'drizzle-kit';
-import { tursoUrl } from '~/db';
+import { tursoUrl } from './src/db';
 
 export default defineConfig({
 	schema: './src/schema.ts',

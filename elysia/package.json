@@ -4,7 +4,6 @@
 	"version": "1.0.50",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"build": "bun build ./src/index.ts --target=bun --outdir=dist",
 		"dev": "bun run --watch src/index.ts",
 		"format": "biome format --write .",
 		"lint": "biome lint --write .",
