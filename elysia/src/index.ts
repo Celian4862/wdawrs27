@@ -6,7 +6,6 @@ import { redis } from '@/shared/helpers';
 import { setup } from '@/shared/routes';
 
 const app = new Elysia()
-	.use(setup)
 	.use(
 		openapi({
 			documentation: {
