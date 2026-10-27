@@ -1,4 +1,4 @@
-import { shuffle } from '@/shared/shuffle';
+import { shuffle } from '@/shared/helpers';
 import { hurricaneDirections, hurricaneDistances } from './data';
 import type { CardName, HurricaneCard } from './types';
 

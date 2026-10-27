@@ -1,4 +1,4 @@
-import { shuffle } from '@/shared/shuffle';
+import { shuffle } from '@/shared/helpers';
 import {
 	greenthTileIds,
 	hurricaneId,
