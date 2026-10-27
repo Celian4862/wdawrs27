@@ -1,5 +1,5 @@
-import type { ItemKey } from '@/item/types';
-import { shuffle } from '@/shared/helpers';
+import type { ItemKey } from '../item/types';
+import { shuffle } from '../shared/helpers';
 import { playerRoles, roleKeys } from './data';
 import type {
 	ActivePlayer,

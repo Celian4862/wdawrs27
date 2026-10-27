@@ -1,8 +1,8 @@
 import { openapi } from '@elysia/openapi';
 import { Elysia } from 'elysia';
-import { gameRoutes } from '@/game/routes';
-import { appVersion } from '@/shared/data';
-import { redis } from '@/shared/helpers';
+import { gameRoutes } from './features/game/routes';
+import { appVersion } from './features/shared/data';
+import { redis } from './features/shared/helpers';
 
 const app = new Elysia()
 	.use(

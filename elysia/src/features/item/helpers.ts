@@ -1,4 +1,4 @@
-import { shuffle } from '@/shared/helpers';
+import { shuffle } from '../shared/helpers';
 import { itemTypes } from './data';
 import type { ItemCard } from './types';
 

@@ -1,4 +1,4 @@
-import type { ItemKey } from '@/item/types';
+import type { ItemKey } from '../item/types';
 import type { playerRoles } from './data';
 
 export type RoleKey = keyof typeof playerRoles;

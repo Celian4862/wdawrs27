@@ -1,11 +1,11 @@
 import { eq } from 'drizzle-orm';
 import { Elysia, t } from 'elysia';
-import { assignPlayers } from '@/player/helpers';
-import { oneDayInSeconds } from '@/shared/data';
-import { generateGameId } from '@/shared/helpers';
-import { setup } from '@/shared/routes';
-import { db } from '~/db';
-import { gamesTable } from '~/schema';
+import { db } from '../../db';
+import { gamesTable } from '../../schema';
+import { assignPlayers } from '../player/helpers';
+import { oneDayInSeconds } from '../shared/data';
+import { generateGameId } from '../shared/helpers';
+import { setup } from '../shared/routes';
 import type { GameState } from './types';
 
 export const gameRoutes = new Elysia().use(setup).group('/game', (app) =>
@@ -15,7 +15,7 @@ export const gameRoutes = new Elysia().use(setup).group('/game', (app) =>
 			async ({ body: { playerCount }, set }) => {
 				try {
 					const gameState: GameState = {
-						players: [],
+						players: assignPlayers(playerCount),
 					};
 					const gameSession = await db
 						.insert(gamesTable)
