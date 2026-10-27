@@ -1,32 +1,22 @@
 import { openapi } from '@elysia/openapi';
-import { Elysia, t } from 'elysia';
-import Redis from 'ioredis';
-import { customAlphabet } from 'nanoid';
-import { assignPlayers } from '@/player/helpers';
-import type { ActivePlayer } from '@/player/types';
-import { db } from './db';
-import { gamesTable } from './schema';
-
-const generateGameId = customAlphabet(
-	'0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
-	8,
-);
-
-const redis = new Redis(
-	(() => {
-		const redisUrl = process.env.REDIS_URL;
-
-		if (!redisUrl) {
-			throw new Error(
-				'❌ REDIS_URL or KV_URL is missing from your environment variables. Please check your Vercel integration settings.',
-			);
-		}
-		return redisUrl;
-	})(),
-);
+import { Elysia } from 'elysia';
+import { gameRoutes } from '@/game/routes';
+import { appVersion } from '@/shared/data';
+import { redis } from '@/shared/helpers';
+import { setup } from '@/shared/routes';
 
 const app = new Elysia()
-	.use(openapi())
+	.use(setup)
+	.use(
+		openapi({
+			documentation: {
+				info: {
+					title: 'wdawrs27 API Documentation',
+					version: '0.0.0',
+				},
+			},
+		}),
+	)
 	.onBeforeHandle(async ({ request, set }) => {
 		try {
 			const clientIp = request.headers.get('x-forwarded-for') ?? 'local';
@@ -46,55 +36,22 @@ const app = new Elysia()
 			// If Redis is down, we allow the request to proceed instead of crashing
 		}
 	})
-	.get('/', () => ({
-		name: 'Game Backend API',
-		status: 'online',
-		version: '1.0.0',
-		timestamp: new Date().toISOString(),
-	}))
-	.group('/game', (app) =>
-		app.post(
-			'/setup',
-			async ({ body: { playerCount }, set }) => {
-				const players = assignPlayers(playerCount);
-				const gameSession = await db
-					.insert(gamesTable)
-					.values({
-						id: generateGameId(),
-						status: 'waiting',
-						stateJSON: {
-							players,
-						} as { players: ActivePlayer[] },
-					})
-					.returning();
-				set.status = 201;
-				return gameSession[0];
+	.get(
+		'/',
+		() => ({
+			name: 'Game Backend API',
+			status: 'online',
+			version: appVersion,
+			timestamp: new Date().toISOString(),
+		}),
+		{
+			detail: {
+				summary: 'Home Route',
+				description: 'General API information',
 			},
-			{
-				// To be used later
-				// Deleted the parameter for the sake of removing lint noise
-				body: t.Object({
-					playerCount: t.Number({
-						minimum: 2,
-						maximum: 5,
-						error: 'playerCount must be between 2 and 5 players',
-					}),
-					difficulty: t.Union(
-						[
-							t.Literal('easy'),
-							t.Literal('normal'),
-							t.Literal('hard'),
-							t.Literal('expert'),
-						],
-						{
-							error:
-								'Difficulty must be either "easy", "normal", "hard", or "expert"',
-						},
-					),
-				}),
-			},
-		),
-	);
+		},
+	)
+	.use(gameRoutes);
 
 if (import.meta.main) {
 	app.listen(3000);
