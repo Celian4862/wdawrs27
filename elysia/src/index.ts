@@ -3,7 +3,6 @@ import { Elysia } from 'elysia';
 import { gameRoutes } from '@/game/routes';
 import { appVersion } from '@/shared/data';
 import { redis } from '@/shared/helpers';
-import { setup } from '@/shared/routes';
 
 const app = new Elysia()
 	.use(
