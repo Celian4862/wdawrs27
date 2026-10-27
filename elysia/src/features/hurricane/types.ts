@@ -4,9 +4,11 @@ import type {
 	specialCards,
 } from './data';
 
-export type HurricaneDirection = (typeof hurricaneDirections)[number];
-type HurricaneDistance = (typeof hurricaneDistances)[number];
+export type Direction = (typeof hurricaneDirections)[number];
+type Distance = (typeof hurricaneDistances)[number];
 type SpecialCards = (typeof specialCards)[number];
+type MoveCards = `Move ${Direction} ${Distance}`;
+export type CardName = SpecialCards | MoveCards;
 
 export type HurricaneCard =
 	| {
@@ -14,6 +16,6 @@ export type HurricaneCard =
 	  }
 	| {
 			type: 'Move';
-			direction: HurricaneDirection;
-			distance: HurricaneDistance;
+			direction: Direction;
+			distance: Distance;
 	  };

@@ -8,9 +8,14 @@ import type {
 	RoleKey,
 } from './types';
 
-export function assignPlayers(playerCount: number): ActivePlayer[] {
+/**
+ * Assigns player roles randomly
+ * @param playerCount Number of players (must be between 2 and 5)
+ * @returns Next state of players array
+ */
+export function assignPlayers(playerCount: number): readonly ActivePlayer[] {
 	if (playerCount < 2 || playerCount > 5) {
-		return [];
+		throw new Error('Must call assignPlayers() with 2-5 players');
 	}
 	const roles = shuffle(roleKeys).slice(0, playerCount);
 	const minWaterIdx = roles.reduce(
@@ -39,7 +44,9 @@ export function assignPlayers(playerCount: number): ActivePlayer[] {
 	}));
 }
 
-export function passTurn(players: readonly ActivePlayer[]): ActivePlayer[] {
+export function passTurn(
+	players: readonly ActivePlayer[],
+): readonly ActivePlayer[] {
 	if (players.length === 0) {
 		throw new Error('Cannot rotate players: player array is empty');
 	}
@@ -55,13 +62,20 @@ export function getMaxWater(roleKey: RoleKey): number {
 	return playerRoles[roleKey].maxWater;
 }
 
+/**
+ * Adjusts the water levels of all players with the given `roleKeys`
+ * @param players Current state of players array
+ * @param roleKeys Role keys of each player to adjust water
+ * @param delta Positive or negative amount to adjust water
+ * @returns Next state of players array
+ */
 export function adjustWater(
 	players: readonly ActivePlayer[],
-	indices: Set<number>,
+	roleKeys: Set<RoleKey>,
 	delta: number,
-) {
-	return players.map((player, i) => {
-		if (indices.has(i)) {
+): readonly ActivePlayer[] {
+	return players.map((player) => {
+		if (roleKeys.has(player.roleKey)) {
 			const newWater = Math.max(
 				0,
 				Math.min(getMaxWater(player.roleKey), player.currentWater + delta),
@@ -75,6 +89,14 @@ export function adjustWater(
 	});
 }
 
+/**
+ * Transfers items from one player to another
+ * @param players Current state of players array
+ * @param giverRole `roleKey` of player giving the items
+ * @param receiverRole `roleKey` of player receiving the items
+ * @param itemsToGive `Record` of item type counts that the player wants to give
+ * @returns Next state of players array
+ */
 export function transferItems(
 	players: readonly ActivePlayer[],
 	giverRole: RoleKey,
