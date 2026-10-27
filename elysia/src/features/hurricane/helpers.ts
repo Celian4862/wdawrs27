@@ -38,3 +38,12 @@ export function countHurricaneCards(hurricaneDeck: readonly HurricaneCard[]) {
 
 	return counts;
 }
+
+export function drawHurricaneCard(hurricaneDeck: readonly HurricaneCard[]) {
+	const drawnCard = hurricaneDeck[-1];
+	const newDeck = hurricaneDeck.slice(0, -1);
+	return {
+		drawnCard,
+		hurricaneDeck: newDeck.length === 0 ? shuffleHurricaneDeck() : newDeck,
+	};
+}
