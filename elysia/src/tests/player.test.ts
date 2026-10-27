@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'bun:test';
-import { playerRoles } from '@/player/data';
-import { assignPlayers, passTurn } from '@/player/helpers';
+import { playerRoles } from '../features/player/data';
+import { assignPlayers, passTurn } from '../features/player/helpers';
 
 describe('player unit tests', () => {
 	const playerCount = 3;

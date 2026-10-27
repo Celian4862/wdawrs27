@@ -2,6 +2,7 @@ import { eq } from 'drizzle-orm';
 import { Elysia, t } from 'elysia';
 import { db } from '../../db';
 import { gamesTable } from '../../schema';
+import { difficulties } from '../hurricane/data';
 import { assignPlayers } from '../player/helpers';
 import { oneDayInSeconds } from '../shared/data';
 import { generateGameId } from '../shared/helpers';
@@ -42,12 +43,7 @@ export const gameRoutes = new Elysia().use(setup).group('/game', (app) =>
 						error: 'playerCount must be between 2 and 5 players',
 					}),
 					difficulty: t.Union(
-						[
-							t.Literal('easy'),
-							t.Literal('normal'),
-							t.Literal('hard'),
-							t.Literal('expert'),
-						],
+						difficulties.map((difficulty) => t.Literal(difficulty)),
 						{
 							description: 'Game difficulty level',
 							error:

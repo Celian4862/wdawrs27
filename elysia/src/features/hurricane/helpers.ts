@@ -1,6 +1,35 @@
 import { shuffle } from '../shared/helpers';
 import { hurricaneDirections, hurricaneDistances } from './data';
-import type { CardName, HurricaneCard } from './types';
+import type {
+	CardName,
+	Difficulty,
+	HurricaneCard,
+	HurricaneMeter,
+	HurricaneMeterTier,
+} from './types';
+
+export function setHurricaneMeter(difficulty: Difficulty): HurricaneMeter {
+	const initialTierConfig = [
+		{ tier: 2, count: 1 },
+		{
+			tier: 3,
+			count:
+				difficulty === 'easy'
+					? 3
+					: difficulty === 'normal' || difficulty === 'hard'
+						? 4
+						: 5,
+		},
+		{ tier: 4, count: 4 },
+		{ tier: 5, count: 3 },
+		{ tier: 6, count: 2 },
+		{ tier: 7, count: 1 },
+	];
+
+	return initialTierConfig.flatMap<HurricaneMeterTier>(({ tier, count }) =>
+		Array(count).fill(tier),
+	);
+}
 
 export function shuffleHurricaneDeck(): readonly HurricaneCard[] {
 	return shuffle<HurricaneCard>([

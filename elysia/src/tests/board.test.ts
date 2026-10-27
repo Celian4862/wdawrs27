@@ -7,8 +7,8 @@ import {
 	sandPointIds,
 	sandTileIds,
 	startTileId,
-} from '@/board/data';
-import { shuffleBoard } from '@/board/helpers';
+} from '../features/board/data';
+import { shuffleBoard } from '../features/board/helpers';
 
 describe('shuffleBoard', () => {
 	it('builds a complete 25-tile board with the fixed start and hurricane tiles', () => {

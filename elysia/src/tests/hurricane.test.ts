@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'bun:test';
-import { countHurricaneCards, shuffleHurricaneDeck } from '@/hurricane/helpers';
-import type { HurricaneCard } from '@/hurricane/types';
+import {
+	countHurricaneCards,
+	shuffleHurricaneDeck,
+} from '../features/hurricane/helpers';
+import type { HurricaneCard } from '../features/hurricane/types';
 
 describe('hurricane unit tests', () => {
 	describe('shuffleHurricaneDeck()', () => {

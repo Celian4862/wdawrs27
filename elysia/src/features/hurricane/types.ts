@@ -1,4 +1,5 @@
 import type {
+	difficulties,
 	hurricaneDirections,
 	hurricaneDistances,
 	specialCards,
@@ -19,3 +20,7 @@ export type HurricaneCard =
 			direction: Direction;
 			distance: Distance;
 	  };
+
+export type Difficulty = (typeof difficulties)[number];
+export type HurricaneMeterTier = 2 | 3 | 4 | 5 | 6 | 7;
+export type HurricaneMeter = HurricaneMeterTier[];
