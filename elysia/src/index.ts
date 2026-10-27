@@ -2,8 +2,8 @@ import { openapi } from '@elysia/openapi';
 import { Elysia, t } from 'elysia';
 import Redis from 'ioredis';
 import { customAlphabet } from 'nanoid';
+import type { GameState } from '@/game/types';
 import { assignPlayers } from '@/player/helpers';
-import type { ActivePlayer } from '@/player/types';
 import { db } from './db';
 import { gamesTable } from './schema';
 
@@ -53,47 +53,60 @@ const app = new Elysia()
 		timestamp: new Date().toISOString(),
 	}))
 	.group('/game', (app) =>
-		app.post(
-			'/setup',
-			async ({ body: { playerCount }, set }) => {
-				const players = assignPlayers(playerCount);
-				const gameSession = await db
-					.insert(gamesTable)
-					.values({
-						id: generateGameId(),
-						status: 'waiting',
-						stateJSON: {
-							players,
-						} as { players: ActivePlayer[] },
-					})
-					.returning();
-				set.status = 201;
-				return gameSession[0];
-			},
-			{
-				// To be used later
-				// Deleted the parameter for the sake of removing lint noise
-				body: t.Object({
-					playerCount: t.Number({
-						minimum: 2,
-						maximum: 5,
-						error: 'playerCount must be between 2 and 5 players',
+		app
+			.post(
+				'/setup',
+				async ({ body: { playerCount }, set }) => {
+					const gameState: GameState = {
+						players: assignPlayers(playerCount),
+					};
+					const gameSession = await db
+						.insert(gamesTable)
+						.values({
+							id: generateGameId(),
+							status: 'waiting',
+							stateJSON: gameState,
+						})
+						.returning();
+					set.status = 201;
+					return gameSession[0];
+				},
+				{
+					body: t.Object({
+						playerCount: t.Number({
+							minimum: 2,
+							maximum: 5,
+							description: 'Number of players',
+							error: 'playerCount must be between 2 and 5 players',
+						}),
+						difficulty: t.Union(
+							[
+								t.Literal('easy'),
+								t.Literal('normal'),
+								t.Literal('hard'),
+								t.Literal('expert'),
+							],
+							{
+								error:
+									'Difficulty must be either "easy", "normal", "hard", or "expert"',
+							},
+						),
 					}),
-					difficulty: t.Union(
-						[
-							t.Literal('easy'),
-							t.Literal('normal'),
-							t.Literal('hard'),
-							t.Literal('expert'),
-						],
-						{
-							error:
-								'Difficulty must be either "easy", "normal", "hard", or "expert"',
-						},
-					),
+					detail: {
+						summary: 'Game Setup',
+					},
+				},
+			)
+			.group('/:gameId', (app2) =>
+				app2.post('/', () => {}, {
+					params: t.Object({
+						gameId: t.String({
+							maxLength: 8,
+							description: 'Game ID (at least 8 characters)',
+						}),
+					}),
 				}),
-			},
-		),
+			),
 	);
 
 if (import.meta.main) {
