@@ -1,15 +1,10 @@
-import { beforeAll, describe, expect, it } from 'bun:test';
+import { describe, expect, it } from 'bun:test';
 import { playerRoles } from '@/player/data';
 import { assignPlayers, passTurn } from '@/player/helpers';
-import type { ActivePlayer } from '@/player/types';
 
 describe('player unit tests', () => {
-	let playerCount: number;
-	let players: ActivePlayer[];
-	beforeAll(() => {
-		playerCount = 3;
-		players = assignPlayers(playerCount);
-	});
+	const playerCount = 3;
+	const players = assignPlayers(playerCount);
 	it('correctly initializes players', () => {
 		expect(players).toBeArrayOfSize(playerCount);
 
