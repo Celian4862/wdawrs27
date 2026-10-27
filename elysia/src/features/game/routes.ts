@@ -15,7 +15,7 @@ export const gameRoutes = new Elysia().use(setup).group('/game', (app) =>
 			async ({ body: { playerCount }, set }) => {
 				try {
 					const gameState: GameState = {
-						players: assignPlayers(playerCount),
+						players: [],
 					};
 					const gameSession = await db
 						.insert(gamesTable)

@@ -12,12 +12,10 @@ export function shuffle<T>(items: readonly T[]): T[] {
 	return result;
 }
 
-export function generateGameId() {
-	return customAlphabet(
-		'0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
-		8,
-	)();
-}
+export const generateGameId = customAlphabet(
+	'0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
+	8,
+);
 
 export const redis = (() => {
 	const redis = new Redis(
