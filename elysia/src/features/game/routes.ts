@@ -70,7 +70,7 @@ export const gameRoutes = new Elysia().use(setup).group('/game', (app) =>
 					}),
 				})
 				.resolve(({ params: { gameId } }) => ({ gameId }))
-				.post(
+				.get(
 					'/',
 					async ({ redis, gameId, set }) => {
 						try {
