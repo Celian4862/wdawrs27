@@ -1,3 +1,4 @@
+import { produce } from 'immer';
 import type { ItemKey } from '../item/types';
 import { shuffle } from '../shared/helpers';
 import { playerRoles, roleKeys } from './data';
@@ -106,52 +107,30 @@ export function transferItems(
 		return players;
 	}
 
-	const giverIndex = players.findIndex((p) => p.roleKey === giverRole);
-	const receiverIndex = players.findIndex((p) => p.roleKey === receiverRole);
+	return produce(players, (draft) => {
+		const giver = draft.find((p) => p.roleKey === giverRole);
+		const receiver = draft.find((p) => p.roleKey === receiverRole);
 
-	if (giverIndex === -1 || receiverIndex === -1) {
-		return players;
-	}
-
-	const giver = players[giverIndex];
-	const receiver = players[receiverIndex];
-
-	// Validate that the giver has enough of ALL requested items
-	for (const [itemKey, count] of Object.entries(itemsToGive) as [
-		ItemKey,
-		number,
-	][]) {
-		const currentCount = giver.inventory[itemKey];
-		if (currentCount < count) {
-			return players;
+		if (!giver || !receiver) {
+			return;
 		}
-	}
 
-	// Perform Immutable Updates on Inventories
-	const updatedGiverInventory = { ...giver.inventory };
-	const updatedReceiverInventory = {
-		...receiver.inventory,
-	};
+		// Validate that the giver has enough of ALL requested items
+		for (const [itemKey, count] of Object.entries(itemsToGive) as [
+			ItemKey,
+			number,
+		][]) {
+			if (giver.inventory[itemKey] < count) {
+				return;
+			}
+		}
 
-	for (const [itemKey, count] of Object.entries(itemsToGive) as [
-		ItemKey,
-		number,
-	][]) {
-		updatedGiverInventory[itemKey] -= count;
-		updatedReceiverInventory[itemKey] += count;
-	}
-
-	const newPlayers = [...players];
-
-	newPlayers[giverIndex] = {
-		...giver,
-		inventory: updatedGiverInventory,
-	};
-
-	newPlayers[receiverIndex] = {
-		...receiver,
-		inventory: updatedReceiverInventory,
-	};
-
-	return newPlayers;
+		for (const [itemKey, count] of Object.entries(itemsToGive) as [
+			ItemKey,
+			number,
+		][]) {
+			giver.inventory[itemKey] -= count;
+			receiver.inventory[itemKey] += count;
+		}
+	});
 }
