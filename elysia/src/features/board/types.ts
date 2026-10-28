@@ -1,44 +1,44 @@
 import type { hurricaneId, partNames, partOrientations, tileIds } from './data';
 
 interface GreenthTile {
-	unrevealedType: 'Greenth';
-	revealedType: 'Water' | 'Fake';
+	readonly unrevealedType: 'Greenth';
+	readonly revealedType: 'Water' | 'Fake';
 }
 
 type PartNames = (typeof partNames)[number];
 
 export interface HintTile {
-	revealedType: 'Hint';
-	partHint: PartNames;
-	partOrientation: (typeof partOrientations)[number];
+	readonly revealedType: 'Hint';
+	readonly partHint: PartNames;
+	readonly partOrientation: (typeof partOrientations)[number];
 }
 
 type OtherRevNames = 'Exit' | 'Item' | 'Shade';
 
 export interface OtherRevTile {
-	revealedType: OtherRevNames;
+	readonly revealedType: OtherRevNames;
 }
 
 export type RevSandTile = OtherRevTile | HintTile;
 
 type SandTile = {
-	unrevealedType: 'Sand';
+	readonly unrevealedType: 'Sand';
 } & RevSandTile;
 
 interface StartTile {
-	unrevealedType: 'Start';
-	revealedType: 'Item';
+	readonly unrevealedType: 'Start';
+	readonly revealedType: 'Item';
 }
 
 interface HurricaneTile {
-	id: typeof hurricaneId;
+	readonly id: typeof hurricaneId;
 }
 
 type BoardTile = {
-	id: (typeof tileIds)[number];
-	sandPoints: number;
-	revealed: boolean;
-	parts: Set<PartNames>;
+	readonly id: (typeof tileIds)[number];
+	readonly sandPoints: number;
+	readonly revealed: boolean;
+	readonly parts: ReadonlySet<PartNames>;
 } & (StartTile | GreenthTile | SandTile);
 
 export type Tile = HurricaneTile | BoardTile;

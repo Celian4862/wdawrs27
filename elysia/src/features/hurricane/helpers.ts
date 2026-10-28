@@ -9,31 +9,32 @@ import type {
 	HurricaneMeterTier,
 } from './types';
 
-export function setHurricaneMeter(difficulty: Difficulty): HurricaneMeter {
+export function setHurricaneMeter(
+	playerCount: Readonly<number>,
+	difficulty: Difficulty,
+): HurricaneMeter {
+	if (playerCount < 2 || playerCount > 5) {
+		throw new Error(`Player count is not valid (${playerCount})`);
+	}
 	const initialTierConfig = [
 		{ tier: 7, count: 1 },
 		{ tier: 6, count: 2 },
 		{ tier: 5, count: 3 },
 		{ tier: 4, count: 4 },
-		{
-			tier: 3,
-			count:
-				difficulty === 'easy'
-					? 3
-					: difficulty === 'normal' || difficulty === 'hard'
-						? 4
-						: 5,
-		},
+		{ tier: 3, count: { 2: 3, 3: 4, 4: 4, 5: 5 }[playerCount] },
 		{ tier: 2, count: 1 },
 	];
 
-	return initialTierConfig.flatMap<HurricaneMeterTier>(({ tier, count }) =>
-		Array(count).fill(tier),
-	);
+	return {
+		hurricaneMeter: initialTierConfig.flatMap<HurricaneMeterTier>(
+			({ tier, count }) => Array(count).fill(tier),
+		),
+		meterProgress: { easy: 0, normal: 1, hard: 2, expert: 3 }[difficulty],
+	};
 }
 
-export function raiseHurricaneMeter(meter: HurricaneMeter): HurricaneMeter {
-	return meter.slice(0, -1);
+export function raiseHurricaneMeter(meterProgress: number): number {
+	return meterProgress + 1;
 }
 
 export function shuffleHurricaneDeck(): HurricaneDeck {

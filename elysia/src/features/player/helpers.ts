@@ -128,8 +128,8 @@ export function transferItems(
 	}
 
 	// Perform Immutable Updates on Inventories
-	const updatedGiverInventory: PlayerInventory = { ...giver.inventory };
-	const updatedReceiverInventory: PlayerInventory = {
+	const updatedGiverInventory = { ...giver.inventory };
+	const updatedReceiverInventory = {
 		...receiver.inventory,
 	};
 

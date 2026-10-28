@@ -13,15 +13,18 @@ export type CardName = SpecialCards | MoveCards;
 
 export type HurricaneCard =
 	| {
-			type: SpecialCards;
+			readonly type: SpecialCards;
 	  }
 	| {
-			type: 'Move';
-			direction: Direction;
-			distance: Distance;
+			readonly type: 'Move';
+			readonly direction: Direction;
+			readonly distance: Distance;
 	  };
 export type HurricaneDeck = readonly HurricaneCard[];
 
 export type Difficulty = (typeof difficulties)[number];
 export type HurricaneMeterTier = 2 | 3 | 4 | 5 | 6 | 7;
-export type HurricaneMeter = readonly HurricaneMeterTier[];
+export interface HurricaneMeter {
+	readonly hurricaneMeter: readonly HurricaneMeterTier[];
+	readonly meterProgress: number;
+}
