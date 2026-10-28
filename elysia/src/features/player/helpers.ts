@@ -89,6 +89,45 @@ export function adjustWater(
 	});
 }
 
+export function createPlayerInventory({
+	sandRemover = 0,
+	flyingTool = 0,
+	thirstShield = 0,
+	xRayGoggles = 0,
+	addTwoWater = 0,
+	speedBoost = 0,
+}): PlayerInventory {
+	return {
+		sandRemover,
+		flyingTool,
+		thirstShield,
+		xRayGoggles,
+		addTwoWater,
+		speedBoost,
+	};
+}
+
+export function addItem(
+	players: PlayerState,
+	targetRoleKey: RoleKey,
+	itemsToAdd: PlayerInventory,
+): PlayerState {
+	return produce(players, (draft) => {
+		const targetPlayer = draft.find((p) => p.roleKey === targetRoleKey);
+
+		if (!targetPlayer) {
+			return;
+		}
+
+		for (const [itemKey, count] of Object.entries(itemsToAdd) as [
+			ItemKey,
+			number,
+		][]) {
+			targetPlayer.inventory[itemKey] += count;
+		}
+	});
+}
+
 /**
  * Transfers items from one player to another
  * @param players Current state of players array
