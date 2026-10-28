@@ -46,8 +46,8 @@ export function assignPlayers(playerCount: number): PlayerState {
 }
 
 export function passTurn(players: PlayerState): PlayerState {
-	if (players.length === 0) {
-		throw new Error('Cannot rotate players: player array is empty');
+	if (players.length < 2) {
+		throw new Error('Invalid "players" array length');
 	}
 	const [current, ...remaining] = players;
 	return [...remaining, current];
