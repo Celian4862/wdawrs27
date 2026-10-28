@@ -19,7 +19,7 @@
 		"nanoid": "^6.0.2"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.5.14",
+		"@biomejs/biome": "2.6.3",
 		"@types/better-sqlite3": "^9.6.0",
 		"better-sqlite3": "^13.0.3",
 		"bun-types": "latest",
