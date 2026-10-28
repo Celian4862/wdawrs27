@@ -10,7 +10,7 @@ import type {
 } from './types';
 
 export function setHurricaneMeter(
-	playerCount: Readonly<number>,
+	playerCount: number,
 	difficulty: Difficulty,
 ): HurricaneMeter {
 	if (playerCount < 2 || playerCount > 5) {
