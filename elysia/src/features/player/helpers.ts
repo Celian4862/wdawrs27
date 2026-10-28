@@ -107,7 +107,7 @@ export function createPlayerInventory({
 	};
 }
 
-export function addItem(
+export function addItems(
 	players: PlayerState,
 	targetRoleKey: RoleKey,
 	itemsToAdd: PlayerInventory,

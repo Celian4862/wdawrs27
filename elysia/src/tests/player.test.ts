@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'bun:test';
 import { playerRoles } from '../features/player/data';
 import {
-	addItem,
+	addItems,
 	adjustWater,
 	assignPlayers,
 	createPlayerInventory,
@@ -101,7 +101,7 @@ describe('player unit tests', () => {
 	});
 
 	describe('transferring items', () => {
-		let tempPlayers = addItem(
+		let tempPlayers = addItems(
 			players,
 			players[0].roleKey,
 			createPlayerInventory({ flyingTool: 3 }),
