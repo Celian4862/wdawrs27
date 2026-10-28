@@ -45,9 +45,7 @@ export function assignPlayers(playerCount: number): PlayerState {
 	}));
 }
 
-export function passTurn(
-	players: PlayerState,
-): PlayerState {
+export function passTurn(players: PlayerState): PlayerState {
 	if (players.length === 0) {
 		throw new Error('Cannot rotate players: player array is empty');
 	}
