@@ -4,6 +4,7 @@ import { playerRoles, roleKeys } from './data';
 import type {
 	ActivePlayer,
 	PlayerInventory,
+	PlayerState,
 	PlayerTitle,
 	RoleKey,
 } from './types';
@@ -13,7 +14,7 @@ import type {
  * @param playerCount Number of players (must be between 2 and 5)
  * @returns Next state of players array
  */
-export function assignPlayers(playerCount: number): readonly ActivePlayer[] {
+export function assignPlayers(playerCount: number): PlayerState {
 	if (playerCount < 2 || playerCount > 5) {
 		throw new Error('Must call assignPlayers() with 2-5 players');
 	}
@@ -45,8 +46,8 @@ export function assignPlayers(playerCount: number): readonly ActivePlayer[] {
 }
 
 export function passTurn(
-	players: readonly ActivePlayer[],
-): readonly ActivePlayer[] {
+	players: PlayerState,
+): PlayerState {
 	if (players.length === 0) {
 		throw new Error('Cannot rotate players: player array is empty');
 	}
@@ -70,10 +71,10 @@ export function getMaxWater(roleKey: RoleKey): number {
  * @returns Next state of players array
  */
 export function adjustWater(
-	players: readonly ActivePlayer[],
+	players: PlayerState,
 	roleKeys: Set<RoleKey>,
 	delta: number,
-): readonly ActivePlayer[] {
+): PlayerState {
 	return players.map((player) => {
 		if (roleKeys.has(player.roleKey)) {
 			const newWater = Math.max(
@@ -98,11 +99,11 @@ export function adjustWater(
  * @returns Next state of players array
  */
 export function transferItems(
-	players: readonly ActivePlayer[],
+	players: PlayerState,
 	giverRole: RoleKey,
 	receiverRole: RoleKey,
 	itemsToGive: PlayerInventory,
-): readonly ActivePlayer[] {
+): PlayerState {
 	if (giverRole === receiverRole) {
 		return players;
 	}

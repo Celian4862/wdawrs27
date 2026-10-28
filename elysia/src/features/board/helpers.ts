@@ -8,9 +8,9 @@ import {
 	sandTileIds,
 	startTileId,
 } from './data';
-import type { HintTile, OtherRevTile, RevSandTile, Tile } from './types';
+import type { Board, HintTile, OtherRevTile, RevSandTile, Tile } from './types';
 
-export function shuffleBoard(): readonly Tile[] {
+export function shuffleBoard(): Board {
 	const board = Array<Tile>(25);
 
 	// HURRICANE TILE

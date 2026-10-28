@@ -11,3 +11,4 @@ export interface ActivePlayer {
 	tileId: number;
 	inventory: PlayerInventory;
 }
+export type PlayerState = readonly ActivePlayer[];

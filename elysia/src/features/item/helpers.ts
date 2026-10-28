@@ -1,8 +1,8 @@
 import { shuffle } from '../shared/helpers';
 import { itemTypes } from './data';
-import type { ItemCard } from './types';
+import type { ItemCard, ItemDeck } from './types';
 
-export function shuffleItemCards(): readonly ItemCard[] {
+export function shuffleItemCards(): ItemDeck {
 	return shuffle<ItemCard>([
 		...Array(itemTypes.sandRemover.maxCount).fill(itemTypes.sandRemover.info),
 		...Array(itemTypes.flyingTool.maxCount).fill(itemTypes.flyingTool.info),

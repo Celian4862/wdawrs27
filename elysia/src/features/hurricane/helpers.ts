@@ -4,13 +4,17 @@ import type {
 	CardName,
 	Difficulty,
 	HurricaneCard,
+	HurricaneDeck,
 	HurricaneMeter,
 	HurricaneMeterTier,
 } from './types';
 
 export function setHurricaneMeter(difficulty: Difficulty): HurricaneMeter {
 	const initialTierConfig = [
-		{ tier: 2, count: 1 },
+		{ tier: 7, count: 1 },
+		{ tier: 6, count: 2 },
+		{ tier: 5, count: 3 },
+		{ tier: 4, count: 4 },
 		{
 			tier: 3,
 			count:
@@ -20,10 +24,7 @@ export function setHurricaneMeter(difficulty: Difficulty): HurricaneMeter {
 						? 4
 						: 5,
 		},
-		{ tier: 4, count: 4 },
-		{ tier: 5, count: 3 },
-		{ tier: 6, count: 2 },
-		{ tier: 7, count: 1 },
+		{ tier: 2, count: 1 },
 	];
 
 	return initialTierConfig.flatMap<HurricaneMeterTier>(({ tier, count }) =>
@@ -31,7 +32,11 @@ export function setHurricaneMeter(difficulty: Difficulty): HurricaneMeter {
 	);
 }
 
-export function shuffleHurricaneDeck(): readonly HurricaneCard[] {
+export function raiseHurricaneMeter(meter: HurricaneMeter): HurricaneMeter {
+	return meter.slice(0, -1);
+}
+
+export function shuffleHurricaneDeck(): HurricaneDeck {
 	return shuffle<HurricaneCard>([
 		...Array<HurricaneCard>(4).fill({
 			type: 'Thirst',
@@ -53,7 +58,7 @@ export function shuffleHurricaneDeck(): readonly HurricaneCard[] {
 	]);
 }
 
-export function countHurricaneCards(hurricaneDeck: readonly HurricaneCard[]) {
+export function countHurricaneCards(hurricaneDeck: HurricaneDeck) {
 	const counts: Partial<Record<CardName, number>> = {};
 
 	for (const card of hurricaneDeck) {
@@ -68,7 +73,7 @@ export function countHurricaneCards(hurricaneDeck: readonly HurricaneCard[]) {
 	return counts;
 }
 
-export function drawHurricaneCard(hurricaneDeck: readonly HurricaneCard[]) {
+export function drawHurricaneCard(hurricaneDeck: HurricaneDeck) {
 	const drawnCard = hurricaneDeck[-1];
 	const newDeck = hurricaneDeck.slice(0, -1);
 	return {

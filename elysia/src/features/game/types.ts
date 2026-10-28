@@ -1,5 +1,5 @@
-import type { ActivePlayer } from '../player/types';
+import type { PlayerState } from '../player/types';
 
 export interface GameState {
-	players: readonly ActivePlayer[];
+	players: PlayerState;
 }

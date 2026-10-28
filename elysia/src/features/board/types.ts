@@ -42,3 +42,4 @@ type BoardTile = {
 } & (StartTile | GreenthTile | SandTile);
 
 export type Tile = HurricaneTile | BoardTile;
+export type Board = readonly Tile[];
