@@ -1,8 +1,12 @@
 import { openapi } from '@elysia/openapi';
 import { Elysia } from 'elysia';
+import { enableMapSet } from 'immer';
 import { gameRoutes } from './features/game/routes';
 import { appVersion } from './features/shared/data';
 import { redis } from './features/shared/helpers';
+
+// Enable support for Set and Map mutations inside Immer produce blocks
+enableMapSet();
 
 const app = new Elysia()
 	.use(
