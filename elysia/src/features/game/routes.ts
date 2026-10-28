@@ -3,6 +3,7 @@ import { Elysia, t } from 'elysia';
 import { db } from '../../db';
 import { gamesTable } from '../../schema';
 import { difficulties } from '../hurricane/data';
+import { setHurricaneMeter } from '../hurricane/helpers';
 import { assignPlayers } from '../player/helpers';
 import { oneDayInSeconds } from '../shared/data';
 import { generateGameId } from '../shared/helpers';
@@ -13,10 +14,11 @@ export const gameRoutes = new Elysia().use(setup).group('/game', (app) =>
 	app
 		.post(
 			'/setup',
-			async ({ body: { playerCount }, set }) => {
+			async ({ body: { playerCount, difficulty }, set }) => {
 				try {
 					const gameState: GameState = {
 						players: assignPlayers(playerCount),
+						hurricaneMeter: setHurricaneMeter(playerCount, difficulty),
 					};
 					const gameSession = await db
 						.insert(gamesTable)

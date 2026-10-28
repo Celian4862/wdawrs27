@@ -25,6 +25,6 @@ export type HurricaneDeck = readonly HurricaneCard[];
 export type Difficulty = (typeof difficulties)[number];
 export type HurricaneMeterTier = 2 | 3 | 4 | 5 | 6 | 7;
 export interface HurricaneMeter {
-	readonly hurricaneMeter: readonly HurricaneMeterTier[];
-	readonly meterProgress: number;
+	readonly meter: readonly HurricaneMeterTier[];
+	readonly progress: number;
 }

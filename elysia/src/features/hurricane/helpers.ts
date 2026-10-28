@@ -17,24 +17,29 @@ export function setHurricaneMeter(
 		throw new Error(`Player count is not valid (${playerCount})`);
 	}
 	const initialTierConfig = [
-		{ tier: 7, count: 1 },
-		{ tier: 6, count: 2 },
-		{ tier: 5, count: 3 },
-		{ tier: 4, count: 4 },
-		{ tier: 3, count: { 2: 3, 3: 4, 4: 4, 5: 5 }[playerCount] },
 		{ tier: 2, count: 1 },
+		{ tier: 3, count: { 2: 3, 3: 4, 4: 4, 5: 5 }[playerCount] },
+		{ tier: 4, count: 4 },
+		{ tier: 5, count: 3 },
+		{ tier: 6, count: 2 },
+		{ tier: 7, count: 1 },
 	];
 
 	return {
-		hurricaneMeter: initialTierConfig.flatMap<HurricaneMeterTier>(
-			({ tier, count }) => Array(count).fill(tier),
+		meter: initialTierConfig.flatMap<HurricaneMeterTier>(({ tier, count }) =>
+			Array(count).fill(tier),
 		),
-		meterProgress: { easy: 0, normal: 1, hard: 2, expert: 3 }[difficulty],
+		progress: { easy: 0, normal: 1, hard: 2, expert: 3 }[difficulty],
 	};
 }
 
-export function raiseHurricaneMeter(meterProgress: number): number {
-	return meterProgress + 1;
+export function raiseHurricaneMeter(
+	hurricaneMeter: HurricaneMeter,
+): HurricaneMeter {
+	return {
+		...hurricaneMeter,
+		progress: hurricaneMeter.progress + 1,
+	};
 }
 
 export function shuffleHurricaneDeck(): HurricaneDeck {
