@@ -154,6 +154,7 @@ export function transferItems(
 			return;
 		}
 
+		let noItems = true;
 		// Validate that the giver has enough of ALL requested items
 		for (const [itemKey, count] of Object.entries(itemsToGive) as [
 			ItemKey,
@@ -162,6 +163,12 @@ export function transferItems(
 			if (giver.inventory[itemKey] < count) {
 				return;
 			}
+			if (count > 0) {
+				noItems = false;
+			}
+		}
+		if (noItems) {
+			return;
 		}
 
 		for (const [itemKey, count] of Object.entries(itemsToGive) as [

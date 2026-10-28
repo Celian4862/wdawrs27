@@ -118,14 +118,33 @@ describe('player unit tests', () => {
 		});
 
 		it('rejects an item transfer', () => {
-			tempPlayers = transferItems(
+			// Initialization
+			// Case: lacking items
+			let unchangedTemp = transferItems(
 				tempPlayers,
 				tempPlayers[0].roleKey,
 				tempPlayers[1].roleKey,
 				createPlayerInventory({ sandRemover: 1 }),
 			);
-			expect(tempPlayers[0].inventory.sandRemover).toBe(0);
-			expect(tempPlayers[1].inventory.sandRemover).toBe(0);
+			expect(unchangedTemp).toBe(tempPlayers);
+
+			// Case: same player
+			unchangedTemp = transferItems(
+				tempPlayers,
+				tempPlayers[0].roleKey,
+				tempPlayers[0].roleKey,
+				createPlayerInventory({ sandRemover: 1 }),
+			);
+			expect(unchangedTemp).toBe(tempPlayers);
+
+			// Case: no items to transfer
+			unchangedTemp = transferItems(
+				tempPlayers,
+				tempPlayers[0].roleKey,
+				tempPlayers[1].roleKey,
+				createPlayerInventory({}),
+			);
+			expect(unchangedTemp).toBe(tempPlayers);
 		});
 	});
 });
