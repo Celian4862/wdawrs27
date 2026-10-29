@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
 import { Elysia, t } from 'elysia';
-import { db } from '#/db';
-import { gamesTable } from '#/schema';
+import { db } from '../../db';
+import { gamesTable } from '../../schema';
 import { difficulties } from '../hurricane/data';
 import { setHurricaneMeter } from '../hurricane/helpers';
 import { assignPlayers } from '../player/helpers';
