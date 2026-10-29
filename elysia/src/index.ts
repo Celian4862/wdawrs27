@@ -40,7 +40,7 @@ const app = new Elysia()
 				await redis.expire(redisKey, 60);
 			} else if (requests > 10) {
 				set.status = 429;
-				return { error: 'Too many requests, please try again later.' };
+				return 'Too many requests, please try again later.';
 			}
 		} catch (err) {
 			console.error('Redis rate-limiter failed, failing open:', err);

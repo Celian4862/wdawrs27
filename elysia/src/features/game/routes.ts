@@ -33,7 +33,7 @@ export const gameRoutes = new Elysia().use(setup).group('/game', (app) =>
 				} catch (e) {
 					console.error(e);
 					set.status = 500;
-					return { error: 'Internal server error' };
+					return 'Internal server error';
 				}
 			},
 			{
@@ -89,14 +89,14 @@ export const gameRoutes = new Elysia().use(setup).group('/game', (app) =>
 								.where(eq(gamesTable.id, gameId));
 							if (queriedGameSession.length === 0) {
 								set.status = 404;
-								return { error: 'Invalid game session' };
+								return 'Invalid game session';
 							}
 							gameSession = queriedGameSession[0].stateJSON as GameState;
 							return gameSession;
 						} catch (e) {
 							console.error(e);
 							set.status = 500;
-							return { error: 'Internal server error' };
+							return 'Internal server error';
 						}
 					},
 					{
