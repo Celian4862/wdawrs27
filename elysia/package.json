@@ -11,6 +11,7 @@
 	},
 	"dependencies": {
 		"@elysia/openapi": "^1.4.16",
+		"@elysiajs/cors": "^1.4.2",
 		"@libsql/client": "^0.18.0",
 		"drizzle-orm": "^0.45.4",
 		"elysia": "latest",

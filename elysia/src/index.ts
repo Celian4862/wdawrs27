@@ -1,4 +1,5 @@
 import { openapi } from '@elysia/openapi';
+import cors from '@elysiajs/cors';
 import { Elysia } from 'elysia';
 import { enableMapSet } from 'immer';
 import { gameRoutes } from './features/game/routes';
@@ -9,6 +10,14 @@ import { redis } from './features/shared/helpers';
 enableMapSet();
 
 const app = new Elysia()
+	.use(
+		cors({
+			origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+			methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+			allowedHeaders: ['Content-Type', 'Authorization'],
+			credentials: true,
+		}),
+	)
 	.use(
 		openapi({
 			documentation: {
