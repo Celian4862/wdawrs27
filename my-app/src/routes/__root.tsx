@@ -37,14 +37,14 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 	shellComponent: RootDocument,
 	notFoundComponent: () => {
 		return (
-			<div className="flex flex-col items-center justify-center min-h-screen p-4 text-center">
-				<h1 className="text-2xl font-bold mb-2">404 - Page Not Found</h1>
-				<p className="text-gray-600 mb-4">
+			<div className="flex min-h-screen flex-col items-center justify-center p-4 text-center">
+				<h1 className="mb-2 text-2xl font-bold">404 - Page Not Found</h1>
+				<p className="mb-4 text-gray-600">
 					Looks like this tile is buried under too much sand.
 				</p>
 				<a
 					href="/"
-					className="px-4 py-2 bg-amber-600 text-white rounded hover:bg-amber-700"
+					className="rounded bg-amber-600 px-4 py-2 text-white hover:bg-amber-700"
 				>
 					Return Home
 				</a>
