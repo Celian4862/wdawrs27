@@ -11,7 +11,7 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"format": "biome format --write .",
-		"format:tailwind": "prettier --write \"src/routes/*.tsx\" \"src/routes/*.jsx\"",
+		"format:tailwind": "prettier --write \"src/routes/*.tsx\"",
 		"lint": "biome lint --write .",
 		"check": "biome check --write .",
 		"db:generate": "drizzle-kit generate",
