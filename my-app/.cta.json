@@ -24,8 +24,6 @@
     "drizzle",
     "compiler",
     "shadcn",
-    "tanstack-query",
-    "t3env",
-    "better-auth"
+    "tanstack-query"
   ]
 }
