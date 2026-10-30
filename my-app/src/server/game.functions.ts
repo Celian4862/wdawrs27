@@ -20,15 +20,21 @@ export const setupGame = createServerFn({ method: "POST", strict: false })
 		z.object({
 			playerCount: z.number().min(2).max(5),
 			difficulty: z.enum(difficulties),
+			// 👇 Optional override for testing specific scenarios
+			debugInitialState: z.custom<GameState>().optional(),
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { playerCount, difficulty } = data;
+		const { playerCount, difficulty, debugInitialState } = data;
 
-		const gameState: GameState = {
-			players: assignPlayers(playerCount),
-			hurricaneMeter: setHurricaneMeter(playerCount, difficulty),
-		};
+		// If we passed a debug state (and we aren't in production), use it!
+		const gameState: GameState =
+			debugInitialState && process.env.NODE_ENV !== "production"
+				? debugInitialState
+				: {
+						players: assignPlayers(playerCount),
+						hurricaneMeter: setHurricaneMeter(playerCount, difficulty),
+					};
 
 		const newGameId = generateGameId();
 
