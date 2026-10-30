@@ -1,12 +1,15 @@
-import { sqliteTable, integer, text } from 'drizzle-orm/sqlite-core'
-import { sql } from 'drizzle-orm'
+import { sql } from "drizzle-orm";
+import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
-export const todos = sqliteTable('todos', {
-  id: integer({ mode: 'number' }).primaryKey({
-    autoIncrement: true,
-  }),
-  title: text().notNull(),
-  createdAt: integer('created_at', { mode: 'timestamp' }).default(
-    sql`(unixepoch())`,
-  ),
-})
+export const gamesTable = sqliteTable("games", {
+	id: text("id").primaryKey(),
+	title: text("status").notNull().default("waiting"),
+	createdAt: integer("created_at", { mode: "timestamp" })
+		.notNull()
+		.default(sql`(unixepoch())`),
+	playersJSON: text("players_json", { mode: "json" }).notNull(),
+	stateJSON: text("state_json", { mode: "json" }).notNull(),
+});
+
+export type GameRecord = typeof gamesTable.$inferSelect;
+export type NewGameRecord = typeof gamesTable.$inferInsert;

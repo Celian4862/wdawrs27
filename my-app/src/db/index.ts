@@ -1,5 +1,18 @@
-import { drizzle } from 'drizzle-orm/better-sqlite3'
+import { createClient } from "@libsql/client";
+import { drizzle } from "drizzle-orm/libsql";
 
-import * as schema from './schema.ts'
+export const tursoURL = (() => {
+	const tursoURL = process.env.TURSO_DATABASE_URL;
+	if (!tursoURL) {
+		throw new Error("Database URL not set");
+	}
 
-export const db = drizzle(process.env.DATABASE_URL!, { schema })
+	return tursoURL;
+})();
+
+export const db = drizzle({
+	client: createClient({
+		url: tursoURL,
+		authToken: process.env.TURSO_AUTH_TOKEN,
+	}),
+});
