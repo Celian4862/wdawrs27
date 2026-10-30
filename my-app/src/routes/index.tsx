@@ -1,14 +1,23 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { setupGame } from "#/server/game.functions";
 
 export const Route = createFileRoute("/")({ component: Home });
 
 function Home() {
+	const navigate = useNavigate();
+
+	const handleCreate = async () => {
+		const newGame = await setupGame({
+			data: { playerCount: 4, difficulty: "normal" },
+		});
+
+		// Navigate to the dynamic route
+		navigate({ to: "/$gameId", params: { gameId: newGame.id } });
+	};
+
 	return (
-		<div className="p-8">
-			<h1 className="text-4xl font-bold">Welcome to TanStack Start</h1>
-			<p className="mt-4 text-lg">
-				Edit <code>src/routes/index.tsx</code> to get started.
-			</p>
-		</div>
+		<button type="button" onClick={handleCreate}>
+			Create Game
+		</button>
 	);
 }

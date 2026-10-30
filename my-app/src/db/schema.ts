@@ -3,7 +3,7 @@ import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const gamesTable = sqliteTable("games", {
 	id: text("id").primaryKey(),
-	title: text("status").notNull().default("waiting"),
+	status: text("status").notNull().default("waiting"),
 	createdAt: integer("created_at", { mode: "timestamp" })
 		.notNull()
 		.default(sql`(unixepoch())`),
