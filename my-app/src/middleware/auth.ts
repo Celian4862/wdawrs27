@@ -1,8 +1,8 @@
 import { createMiddleware } from "@tanstack/react-start";
 import { getCookie, setCookie } from "@tanstack/react-start/server";
 import { eq } from "drizzle-orm";
+import { db } from "#/db";
 import { usersTable } from "#/db/schema";
-import { db } from "@/db"; // your Drizzle DB instance
 
 export const authMiddleware = createMiddleware({ type: "function" }).server(
 	async ({ next }) => {
@@ -16,7 +16,7 @@ export const authMiddleware = createMiddleware({ type: "function" }).server(
 			setCookie("session_id", token, {
 				httpOnly: true,
 				path: "/",
-				maxAge: 60 * 60 * 24 * 30, // 30 days in seconds
+				maxAge: 2592000, // 30 days in seconds
 				sameSite: "lax",
 			});
 		}

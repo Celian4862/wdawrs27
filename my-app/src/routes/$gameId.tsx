@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { getGameState } from "@/server/game.functions";
+import { getGameState } from "#/server/game.functions";
 
 export const Route = createFileRoute("/$gameId")({ component: GameRoom });
 

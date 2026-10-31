@@ -4,6 +4,7 @@ import { z } from "zod";
 import { db } from "#/db";
 import { gamesTable } from "#/db/schema";
 import { redis } from "#/lib/redis";
+import { authMiddleware } from "#/middleware/auth";
 import type { GameState } from "./features/game/types";
 import { difficulties } from "./features/hurricane/data";
 import { setHurricaneMeter } from "./features/hurricane/helpers";
@@ -16,6 +17,7 @@ import { generateGameId } from "./features/shared/helpers";
  * Replaces: POST /game/setup
  */
 export const setupGame = createServerFn({ method: "POST", strict: false })
+	.middleware([authMiddleware])
 	.validator(
 		z.object({
 			playerCount: z.number().min(2).max(5),
@@ -63,8 +65,9 @@ export const setupGame = createServerFn({ method: "POST", strict: false })
  * Replaces: GET /game/:gameId
  */
 export const getGameState = createServerFn({ method: "GET", strict: false })
+	.middleware([authMiddleware])
 	.validator((gameId: string) => {
-		if (!gameId || gameId.length > 8) {
+		if (!gameId || gameId.length < 8 || gameId.length > 8) {
 			throw new Error("Invalid game ID format");
 		}
 		return gameId;

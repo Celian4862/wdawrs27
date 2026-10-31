@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import type { Difficulty } from "#/server/features/hurricane/types";
-import { setupGame } from "#/server/game.functions";
+import { getGameState, setupGame } from "#/server/game.functions";
 
 export const Route = createFileRoute("/")({ component: Home });
 
@@ -10,6 +10,7 @@ function Home() {
 	const [difficulty, setDifficulty] = useState<Difficulty>("easy");
 	const [loading, setLoading] = useState(false);
 	const [createError, setCreateError] = useState<string | null>(null);
+	const [gameId, setGameId] = useState("");
 	const [joinError, setJoinError] = useState<string | null>(null);
 	const navigate = useNavigate();
 
@@ -25,6 +26,7 @@ function Home() {
 						e.preventDefault();
 						setLoading(true);
 						setCreateError(null);
+						setJoinError(null);
 
 						try {
 							const newGame = await setupGame({
@@ -111,21 +113,24 @@ function Home() {
 					onSubmit={async (e) => {
 						e.preventDefault();
 						setLoading(true);
+						setCreateError(null);
 						setJoinError(null);
 
 						try {
-							// Navigate to the dynamic route
-							navigate({ to: "/" });
+							// It shouldn't return an error if the game exists
+							await getGameState({ data: gameId });
+
+							navigate({ to: "/$gameId", params: { gameId } });
 						} catch (err) {
 							if (err instanceof Error) {
 								console.error(err);
 								try {
 									const error = JSON.parse(err.message);
 									if (Array.isArray(error)) {
-										setCreateError(error[0].message);
+										setJoinError(error[0].message);
 									}
 								} catch {
-									setCreateError(err.message);
+									setJoinError(err.message);
 								}
 							} else {
 								setCreateError("An unexpected error occurred.");
@@ -139,13 +144,15 @@ function Home() {
 						Join Game
 					</h2>
 					<div className="mt-1">
-						<label htmlFor="gameID" className="block">
+						<label htmlFor="gameId" className="block">
 							Game ID
 						</label>
 						<input
-							id="gameID"
+							id="gameId"
 							className="mt-2 w-full rounded-lg border px-3 py-2"
 							type="text"
+							value={gameId}
+							onChange={(e) => setGameId(e.target.value)}
 							placeholder="8 characters"
 							minLength={8}
 							maxLength={8}

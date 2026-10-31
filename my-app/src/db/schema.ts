@@ -16,7 +16,7 @@ export type NewGameRecord = typeof gamesTable.$inferInsert;
 
 export const usersTable = sqliteTable("users", {
 	token: text("token").primaryKey(),
-	gameID: text("gameID")
+	gameId: text("gameId")
 		.notNull()
 		.references(() => gamesTable.id, { onDelete: "cascade" }),
 });
