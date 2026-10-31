@@ -47,7 +47,7 @@ function Home() {
 							setLoading(false);
 						}
 					}}
-					className="border rounded-lg p-3 w-full *:w-full"
+					className="w-full rounded-lg border p-3 *:w-full"
 				>
 					<h2 className="text-center text-2xl font-bold underline underline-offset-5">
 						Create Game
@@ -67,7 +67,7 @@ function Home() {
 							min="2"
 							max="5"
 							required
-							className="rounded-lg border mt-2 w-full px-3 py-2"
+							className="mt-2 w-full rounded-lg border px-3 py-2"
 							placeholder="2 - 5 players"
 						/>
 					</div>
@@ -81,7 +81,7 @@ function Home() {
 							value={difficulty}
 							onChange={(e) => setDifficulty(e.target.value as Difficulty)}
 							required
-							className="rounded-lg border mt-2 w-full px-3 py-2 *:bg-black"
+							className="mt-2 w-full rounded-lg border px-3 py-2 *:bg-black"
 						>
 							<option value="easy">Easy</option>
 							<option value="normal">Normal</option>
@@ -97,7 +97,7 @@ function Home() {
 					<button
 						type="submit"
 						disabled={loading}
-						className="mt-3 rounded-lg border px-3 py-2 text-xl hover:bg-green-500 motion-safe:transition active:bg-green-300 bg-green-700"
+						className="mt-3 rounded-lg border bg-green-700 px-3 py-2 text-xl hover:bg-green-500 active:bg-green-300 motion-safe:transition"
 					>
 						{loading ? "Setting up..." : "Create Game"}
 					</button>
@@ -107,7 +107,7 @@ function Home() {
 					onSubmit={async (e) => {
 						e.preventDefault();
 					}}
-					className="mt-3 border rounded-lg p-3"
+					className="mt-3 rounded-lg border p-3"
 				>
 					<div>
 						<label>
@@ -122,7 +122,7 @@ function Home() {
 					</div>
 					<button
 						type="submit"
-						className="rounded-lg border mt-3 px-3 py-2 text-xl hover:scale-110 motion-safe:transition active:bg-white/30"
+						className="mt-3 rounded-lg border px-3 py-2 text-xl hover:scale-110 active:bg-white/30 motion-safe:transition"
 					>
 						Submit
 					</button>
