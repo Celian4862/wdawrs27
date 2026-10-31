@@ -8,6 +8,13 @@
       "when": 1793357027174,
       "tag": "0000_dark_trauma",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1793435868933,
+      "tag": "0001_flawless_sentinels",
+      "breakpoints": true
     }
   ]
 }

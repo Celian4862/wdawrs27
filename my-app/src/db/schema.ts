@@ -13,3 +13,10 @@ export const gamesTable = sqliteTable("games", {
 
 export type GameRecord = typeof gamesTable.$inferSelect;
 export type NewGameRecord = typeof gamesTable.$inferInsert;
+
+export const usersTable = sqliteTable("users", {
+	token: text("token").primaryKey(),
+	gameID: text("gameID")
+		.notNull()
+		.references(() => gamesTable.id, { onDelete: "cascade" }),
+});
