@@ -15,6 +15,20 @@
       "when": 1793435868933,
       "tag": "0001_flawless_sentinels",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1793523400341,
+      "tag": "0002_typical_puck",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1793523596050,
+      "tag": "0003_messy_colossus",
+      "breakpoints": true
     }
   ]
 }

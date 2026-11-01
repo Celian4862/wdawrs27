@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import type { Difficulty } from "#/server/features/hurricane/types";
-import { getGameState, setupGame } from "#/server/game.functions";
+import { setupGame } from "#/server/game.functions";
 
 export const Route = createFileRoute("/")({ component: Home });
 
@@ -117,9 +117,6 @@ function Home() {
 						setJoinError(null);
 
 						try {
-							// It shouldn't return an error if the game exists
-							await getGameState({ data: gameId });
-
 							navigate({ to: "/$gameId", params: { gameId } });
 						} catch (err) {
 							if (err instanceof Error) {

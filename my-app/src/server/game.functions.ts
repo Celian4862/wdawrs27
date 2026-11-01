@@ -45,7 +45,6 @@ export const setupGame = createServerFn({ method: "POST", strict: false })
 			.values({
 				id: newGameId,
 				status: "waiting",
-				playersJSON: {},
 				stateJSON: gameState,
 			})
 			.returning();
