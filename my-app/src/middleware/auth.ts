@@ -27,14 +27,14 @@ export const authMiddleware = createMiddleware({ type: "function" }).server(
 			.from(usersTable)
 			.where(eq(usersTable.token, token));
 
-		if (!session) {
+		if (session.length === 0) {
 			throw new Error("Unauthorized: Invalid or expired session.");
 		}
 
 		// Pass down context (like roomCode and playerNumber) to your server function!
 		return next({
 			context: {
-				session,
+				session: session[0],
 			},
 		});
 	},
