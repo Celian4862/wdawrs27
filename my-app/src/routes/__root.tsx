@@ -3,9 +3,11 @@ import type { QueryClient } from "@tanstack/react-query";
 import {
 	createRootRouteWithContext,
 	HeadContent,
+	redirect,
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { getUserSessionStatus } from "#/server/game.functions";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
 
@@ -14,6 +16,15 @@ interface MyRouterContext {
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
+	beforeLoad: async ({ location }) => {
+		const { activeGameId } = await getUserSessionStatus();
+		const currentPath = location.pathname;
+
+		// User has an active game, but isn't currently viewing it
+		if (activeGameId && currentPath !== `/${activeGameId}`) {
+			throw redirect({ to: "/$gameId", params: { gameId: activeGameId } });
+		}
+	},
 	head: () => ({
 		meta: [
 			{

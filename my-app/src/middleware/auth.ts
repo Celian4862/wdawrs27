@@ -15,6 +15,10 @@ export const authMiddleware = createMiddleware({ type: "function" }).server(
 			});
 		}
 
-		return next();
+		return next({
+			context: {
+				token,
+			},
+		});
 	},
 );

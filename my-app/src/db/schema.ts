@@ -23,7 +23,5 @@ export const usersTable = sqliteTable(
 		isAdmin: integer("is_admin", { mode: "boolean" }).notNull().default(false),
 		role: text("role", { mode: "text" }).notNull(),
 	},
-	(table) => ({
-		gameIdIdx: index("users_game_id_idx").on(table.gameId),
-	}),
+	(table) => [index("users_game_id_idx").on(table.gameId)],
 );
