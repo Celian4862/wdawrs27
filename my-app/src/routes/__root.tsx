@@ -21,8 +21,12 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 		const currentPath = location.pathname;
 
 		// User has an active game, but isn't currently viewing it
-		if (activeGameId && currentPath !== `/${activeGameId}`) {
-			throw redirect({ to: "/$gameId", params: { gameId: activeGameId } });
+		if (activeGameId) {
+			if (currentPath !== `/${activeGameId}`) {
+				throw redirect({ to: "/$gameId", params: { gameId: activeGameId } });
+			}
+		} else if (currentPath !== "/") {
+			throw redirect({ to: "/" });
 		}
 	},
 	head: () => ({

@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import type { Difficulty } from "#/server/features/hurricane/types";
-import { setupGame } from "#/server/game.functions";
+import { joinGame, setupGame } from "#/server/game.functions";
 
 export const Route = createFileRoute("/")({ component: Home });
 
@@ -11,6 +11,7 @@ function Home() {
 	const [loading, setLoading] = useState(false);
 	const [createError, setCreateError] = useState<string | null>(null);
 	const [gameId, setGameId] = useState("");
+	const [playerName, setPlayerName] = useState("");
 	const [joinError, setJoinError] = useState<string | null>(null);
 	const navigate = useNavigate();
 
@@ -30,7 +31,7 @@ function Home() {
 
 						try {
 							const newGame = await setupGame({
-								data: { playerCount, difficulty },
+								data: { playerCount, difficulty, playerName },
 							});
 
 							// Navigate to the dynamic route
@@ -95,6 +96,23 @@ function Home() {
 						</label>
 					</div>
 
+					<div className="mt-1">
+						<label>
+							Host Name
+							<input
+								id="hostName"
+								type="text"
+								value={playerName}
+								onChange={(e) => setPlayerName(e.target.value)}
+								min={1}
+								max={10}
+								required
+								className="mt-2 w-full rounded-lg border px-3 py-2"
+								placeholder="1 - 10 characters"
+							/>
+						</label>
+					</div>
+
 					<p className={`${!createError && "invisible"} text-red-500`}>
 						{createError ?? "Error placeholder"}
 					</p>
@@ -117,6 +135,8 @@ function Home() {
 						setJoinError(null);
 
 						try {
+							await joinGame({ data: { gameId, playerName } });
+
 							navigate({ to: "/$gameId", params: { gameId } });
 						} catch (err) {
 							if (err instanceof Error) {
@@ -153,6 +173,23 @@ function Home() {
 							placeholder="8 characters"
 							minLength={8}
 							maxLength={8}
+							required
+						/>
+					</div>
+
+					<div className="mt-1">
+						<label htmlFor="playerName" className="block">
+							Player Name
+						</label>
+						<input
+							id="playerName"
+							className="mt-2 w-full rounded-lg border px-3 py-2"
+							type="text"
+							value={playerName}
+							onChange={(e) => setPlayerName(e.target.value)}
+							placeholder="1 - 10 characters"
+							minLength={1}
+							maxLength={10}
 							required
 						/>
 					</div>

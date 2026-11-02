@@ -30,9 +30,13 @@ export const getUserSessionStatus = createServerFn({
 
 export const joinGame = createServerFn({ method: "POST", strict: false })
 	.middleware([authMiddleware])
-	.validator((gameId: string) => {
-		const schema = z.string().length(8);
-		const result = schema.safeParse(gameId);
+	.validator((data: { gameId: string; playerName: string }) => {
+		const result = z
+			.object({
+				gameId: z.string().length(8),
+				playerName: z.string().min(1).max(10),
+			})
+			.safeParse(data);
 
 		if (!result?.data) {
 			throw new Error("Invalid game ID.");
@@ -40,7 +44,7 @@ export const joinGame = createServerFn({ method: "POST", strict: false })
 
 		return result.data;
 	})
-	.handler(async ({ data: gameId, context: { token } }) => {
+	.handler(async ({ data: { gameId, playerName }, context: { token } }) => {
 		await db.transaction(async (tx) => {
 			// 1. Check if game exists and is waiting
 			const [game] = await tx
@@ -59,15 +63,13 @@ export const joinGame = createServerFn({ method: "POST", strict: false })
 				throw new Error("Game has already started or ended");
 			}
 
-			// 2. Check if user is already in this game (re-entry)
-			const [existingUser] = await tx
-				.select({ gameId: usersTable.gameId })
+			const [playerWithName] = await tx
+				.select({ playerName: usersTable.playerName })
 				.from(usersTable)
-				.where(eq(usersTable.token, token));
+				.where(eq(usersTable.playerName, playerName));
 
-			if (existingUser) {
-				if (existingUser.gameId === gameId) return;
-				throw new Error("You are already in a different active game.");
+			if (playerWithName) {
+				throw new Error("Player name already exists");
 			}
 
 			// 3. Insert user into usersTable for this room
@@ -82,13 +84,14 @@ export const joinGame = createServerFn({ method: "POST", strict: false })
 					token,
 					gameId,
 					isAdmin: false,
+					playerName: playerName,
 					role: getRoleTitle(gameState.players[gamePlayers.count].roleKey),
 				});
 			} else {
 				throw new Error("This game room is full.");
 			}
 		});
-		return { success: true };
+		return {};
 	});
 
 /**
@@ -101,13 +104,14 @@ export const setupGame = createServerFn({ method: "POST", strict: false })
 		z.object({
 			playerCount: z.number().min(2).max(5),
 			difficulty: z.enum(difficulties),
+			playerName: z.string().min(1).max(10),
 			// 👇 Optional override for testing specific scenarios
 			debugInitialState: z.custom<GameState>().optional(),
 		}),
 	)
 	.handler(
 		async ({
-			data: { playerCount, difficulty, debugInitialState },
+			data: { playerCount, difficulty, playerName, debugInitialState },
 			context: { token },
 		}) => {
 			// If we passed a debug state (and we aren't in production), use it!
@@ -127,6 +131,7 @@ export const setupGame = createServerFn({ method: "POST", strict: false })
 					id: newGameId,
 					status: "waiting",
 					stateJSON: gameState,
+					playerCount,
 				})
 				.returning();
 
@@ -134,6 +139,7 @@ export const setupGame = createServerFn({ method: "POST", strict: false })
 				token,
 				gameId: newGameId,
 				isAdmin: true,
+				playerName,
 				role: getRoleTitle(gameState.players[0].roleKey),
 			});
 

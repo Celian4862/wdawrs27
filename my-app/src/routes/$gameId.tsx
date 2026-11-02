@@ -1,20 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { joinGame } from "#/server/game.functions";
+import { getGameState } from "#/server/game.functions";
 
 export const Route = createFileRoute("/$gameId")({ component: GameRoom });
 
 function GameRoom() {
 	const { gameId } = Route.useParams();
-
-	const {
-		data: gameState,
-		isLoading,
-		error,
-	} = useQuery({
+	const { isLoading, error } = useQuery({
 		queryKey: ["game", gameId],
-		queryFn: () => joinGame({ data: gameId }),
+		queryFn: () => getGameState({ data: gameId }),
 		retry: 1,
+		refetchInterval: 3000,
 	});
 
 	if (isLoading)
@@ -43,9 +39,11 @@ function GameRoom() {
 	}
 
 	return (
-		<div>
-			<h1>Game Room: {gameId}</h1>
-			<pre>{JSON.stringify(gameState, null, 2)}</pre>
+		<div className="flex h-dvh justify-center">
+			<div className="flex flex-col justify-center">
+				<h1 className="text-3xl font-bold">Game Room: {gameId}</h1>
+				<div className="grid grid-cols-2">{}</div>
+			</div>
 		</div>
 	);
 }
