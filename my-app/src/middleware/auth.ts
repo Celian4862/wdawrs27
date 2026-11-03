@@ -1,5 +1,8 @@
 import { createMiddleware } from "@tanstack/react-start";
 import { getCookie, setCookie } from "@tanstack/react-start/server";
+import { eq } from "drizzle-orm";
+import { db } from "#/db";
+import { usersTable } from "#/db/schema";
 
 export const authMiddleware = createMiddleware({ type: "function" }).server(
 	async ({ next }) => {
@@ -18,6 +21,13 @@ export const authMiddleware = createMiddleware({ type: "function" }).server(
 		return next({
 			context: {
 				token,
+				isAdmin:
+					(
+						await db
+							.select({ isAdmin: usersTable.isAdmin })
+							.from(usersTable)
+							.where(eq(usersTable.token, token))
+					)[0]?.isAdmin ?? false,
 			},
 		});
 	},

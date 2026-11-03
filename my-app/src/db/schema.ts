@@ -10,7 +10,8 @@ import {
 export const gamesTable = sqliteTable("games", {
 	id: text("id").primaryKey(),
 	status: text("status").notNull().default("waiting"),
-	playerCount: integer("player_count", { mode: "number" }).notNull().default(2),
+	playerCount: integer("player_count", { mode: "number" }).notNull(),
+	difficulty: text("difficulty").notNull(),
 	createdAt: integer("created_at", { mode: "timestamp" })
 		.notNull()
 		.default(sql`(unixepoch())`),

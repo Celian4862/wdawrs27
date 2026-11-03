@@ -71,7 +71,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 				</p>
 				<a
 					href="/"
-					className="rounded bg-amber-600 px-4 py-2 text-white hover:bg-amber-700"
+					className="rounded bg-amber-600 px-4 py-2 text-black hover:bg-amber-700"
 				>
 					Return Home
 				</a>

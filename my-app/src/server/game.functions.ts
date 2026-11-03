@@ -135,8 +135,9 @@ export const setupGame = createServerFn({ method: "POST", strict: false })
 				.values({
 					id: newGameId,
 					status: "waiting",
-					stateJSON: gameState,
 					playerCount,
+					difficulty,
+					stateJSON: gameState,
 				})
 				.returning();
 
@@ -166,15 +167,60 @@ export const getGameSessionStatus = createServerFn({
 	.middleware([authMiddleware])
 	.validator(z.object({ gameId: z.string().min(8).max(8) }))
 	.handler(async ({ data: { gameId } }) => {
-		const [{ status }] = await db
+		const [game] = await db
 			.select({ status: gamesTable.status })
 			.from(gamesTable)
 			.where(eq(gamesTable.id, gameId));
-		if (!status) {
+		if (!game?.status) {
 			throw new Error("Game not found.");
 		}
 
-		return status as GameStatus;
+		return game.status as GameStatus;
+	});
+
+export const getWaitingRoomInfo = createServerFn({
+	method: "GET",
+	strict: false,
+})
+	.middleware([authMiddleware])
+	.validator(
+		z.object({
+			gameId: z.string().min(8).max(8),
+		}),
+	)
+	.handler(async ({ data: { gameId }, context: { isAdmin } }) => {
+		const users = await db
+			.select({
+				is_admin: usersTable.isAdmin,
+				playerName: usersTable.playerName,
+			})
+			.from(usersTable)
+			.where(eq(usersTable.gameId, gameId));
+
+		if (users.length === 0) {
+			throw new Error("This game has no players.");
+		}
+
+		const [gameRoomInfo] = await db
+			.select({
+				playerCount: gamesTable.playerCount,
+				difficulty: gamesTable.difficulty,
+			})
+			.from(gamesTable)
+			.where(eq(gamesTable.id, gameId));
+
+		if (!gameRoomInfo) {
+			throw new Error("Game not found.");
+		}
+
+		return { gameRoomInfo, users, userIsAdmin: isAdmin } as {
+			gameRoomInfo: {
+				playerCount: number;
+				difficulty: string;
+			};
+			users: { is_admin: boolean; playerName: string }[];
+			userIsAdmin: boolean;
+		};
 	});
 
 /**

@@ -1,2 +1,0 @@
-ALTER TABLE `users` RENAME COLUMN "gameId" TO "game_id";--> statement-breakpoint
-ALTER TABLE `users` ALTER COLUMN "game_id" TO "game_id" text NOT NULL REFERENCES games(id) ON DELETE cascade ON UPDATE no action;

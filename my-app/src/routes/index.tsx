@@ -123,7 +123,7 @@ function Home() {
 					<button
 						type="submit"
 						disabled={loading}
-						className="mt-3 rounded-lg border bg-amber-600 px-3 py-2 text-xl hover:bg-amber-500 active:bg-amber-700 motion-safe:transition"
+						className="mt-3 rounded-lg border bg-amber-600 px-3 py-2 text-xl text-black hover:bg-amber-500 active:bg-amber-700 motion-safe:transition"
 					>
 						{loading ? "Setting up..." : "Create Game"}
 					</button>
@@ -204,7 +204,7 @@ function Home() {
 					<button
 						type="submit"
 						disabled={loading}
-						className={`mt-3 rounded-lg border bg-amber-600 px-3 py-2 text-xl ${loading ? "cursor-not-allowed brightness-50" : "hover:bg-amber-500 active:bg-amber-700"} motion-safe:transition`}
+						className={`mt-3 rounded-lg border bg-amber-600 px-3 py-2 text-xl text-black ${loading ? "cursor-not-allowed brightness-50" : "hover:bg-amber-500 active:bg-amber-700"} motion-safe:transition`}
 					>
 						Join Game
 					</button>
