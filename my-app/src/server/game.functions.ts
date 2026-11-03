@@ -5,7 +5,7 @@ import { db } from "#/db";
 import { gamesTable, usersTable } from "#/db/schema";
 import { redis } from "#/lib/redis";
 import { authMiddleware } from "#/middleware/auth";
-import type { GameState } from "./features/game/types";
+import type { GameState, GameStatus } from "./features/game/types";
 import { difficulties } from "./features/hurricane/data";
 import { setHurricaneMeter } from "./features/hurricane/helpers";
 import { assignPlayers, getRoleTitle } from "./features/player/helpers";
@@ -18,13 +18,18 @@ export const getUserSessionStatus = createServerFn({
 })
 	.middleware([authMiddleware])
 	.handler(async ({ context: { token } }) => {
-		const [userRecord] = await db
-			.select({ gameId: usersTable.gameId })
+		const [userSession] = await db
+			.select({ gameId: usersTable.gameId, status: gamesTable.status })
 			.from(usersTable)
-			.where(eq(usersTable.token, token));
+			.where(eq(usersTable.token, token))
+			.innerJoin(gamesTable, eq(usersTable.gameId, gamesTable.id));
 
 		return {
-			activeGameId: userRecord?.gameId ?? null,
+			gameId: userSession?.gameId ?? "",
+			status: userSession?.status ?? "waiting",
+		} as {
+			gameId: string;
+			status: GameStatus;
 		};
 	});
 
@@ -153,6 +158,24 @@ export const setupGame = createServerFn({ method: "POST", strict: false })
 			return gameSession;
 		},
 	);
+
+export const getGameSessionStatus = createServerFn({
+	method: "GET",
+	strict: false,
+})
+	.middleware([authMiddleware])
+	.validator(z.object({ gameId: z.string().min(8).max(8) }))
+	.handler(async ({ data: { gameId } }) => {
+		const [{ status }] = await db
+			.select({ status: gamesTable.status })
+			.from(gamesTable)
+			.where(eq(gamesTable.id, gameId));
+		if (!status) {
+			throw new Error("Game not found.");
+		}
+
+		return status as GameStatus;
+	});
 
 /**
  * Get Game State Function

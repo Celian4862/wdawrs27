@@ -10,7 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as GameIdRouteImport } from './routes/$gameId'
+import { Route as GameIdStartedRouteImport } from './routes/$gameId.started'
+import { Route as GameIdWaitingRouteImport } from './routes/$gameId.waiting'
 import { Route as ApiCronRouteImport } from './routes/api/cron'
 
 const IndexRoute = IndexRouteImport.update({
@@ -18,9 +19,14 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GameIdRoute = GameIdRouteImport.update({
-  id: '/$gameId',
-  path: '/$gameId',
+const GameIdStartedRoute = GameIdStartedRouteImport.update({
+  id: '/$gameId/started',
+  path: '/$gameId/started',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GameIdWaitingRoute = GameIdWaitingRouteImport.update({
+  id: '/$gameId/waiting',
+  path: '/$gameId/waiting',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiCronRoute = ApiCronRouteImport.update({
@@ -31,31 +37,35 @@ const ApiCronRoute = ApiCronRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/$gameId': typeof GameIdRoute
+  '/$gameId/started': typeof GameIdStartedRoute
+  '/$gameId/waiting': typeof GameIdWaitingRoute
   '/api/cron': typeof ApiCronRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/$gameId': typeof GameIdRoute
+  '/$gameId/started': typeof GameIdStartedRoute
+  '/$gameId/waiting': typeof GameIdWaitingRoute
   '/api/cron': typeof ApiCronRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/$gameId': typeof GameIdRoute
+  '/$gameId/started': typeof GameIdStartedRoute
+  '/$gameId/waiting': typeof GameIdWaitingRoute
   '/api/cron': typeof ApiCronRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$gameId' | '/api/cron'
+  fullPaths: '/' | '/$gameId/started' | '/$gameId/waiting' | '/api/cron'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$gameId' | '/api/cron'
-  id: '__root__' | '/' | '/$gameId' | '/api/cron'
+  to: '/' | '/$gameId/started' | '/$gameId/waiting' | '/api/cron'
+  id: '__root__' | '/' | '/$gameId/started' | '/$gameId/waiting' | '/api/cron'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  GameIdRoute: typeof GameIdRoute
+  GameIdStartedRoute: typeof GameIdStartedRoute
+  GameIdWaitingRoute: typeof GameIdWaitingRoute
   ApiCronRoute: typeof ApiCronRoute
 }
 
@@ -68,11 +78,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/$gameId': {
-      id: '/$gameId'
-      path: '/$gameId'
-      fullPath: '/$gameId'
-      preLoaderRoute: typeof GameIdRouteImport
+    '/$gameId/started': {
+      id: '/$gameId/started'
+      path: '/$gameId/started'
+      fullPath: '/$gameId/started'
+      preLoaderRoute: typeof GameIdStartedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$gameId/waiting': {
+      id: '/$gameId/waiting'
+      path: '/$gameId/waiting'
+      fullPath: '/$gameId/waiting'
+      preLoaderRoute: typeof GameIdWaitingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/cron': {
@@ -87,7 +104,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  GameIdRoute: GameIdRoute,
+  GameIdStartedRoute: GameIdStartedRoute,
+  GameIdWaitingRoute: GameIdWaitingRoute,
   ApiCronRoute: ApiCronRoute,
 }
 export const routeTree = rootRouteImport

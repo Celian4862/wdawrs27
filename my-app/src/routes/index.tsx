@@ -16,8 +16,8 @@ function Home() {
 	const navigate = useNavigate();
 
 	return (
-		<div className="flex justify-center">
-			<div className="mt-10 text-lg">
+		<div className="flex justify-center p-10">
+			<div className="text-lg">
 				<h1 className="col-span-2 text-center text-4xl font-bold">
 					Desert Survival Board Game
 				</h1>
@@ -35,7 +35,10 @@ function Home() {
 							});
 
 							// Navigate to the dynamic route
-							navigate({ to: "/$gameId", params: { gameId: newGame.id } });
+							navigate({
+								to: "/$gameId/waiting",
+								params: { gameId: newGame.id },
+							});
 						} catch (err) {
 							if (err instanceof Error) {
 								console.error(err);
@@ -120,7 +123,7 @@ function Home() {
 					<button
 						type="submit"
 						disabled={loading}
-						className="mt-3 rounded-lg border bg-green-700 px-3 py-2 text-xl hover:bg-green-500 active:bg-green-300 motion-safe:transition"
+						className="mt-3 rounded-lg border bg-amber-600 px-3 py-2 text-xl hover:bg-amber-500 active:bg-amber-700 motion-safe:transition"
 					>
 						{loading ? "Setting up..." : "Create Game"}
 					</button>
@@ -137,7 +140,7 @@ function Home() {
 						try {
 							await joinGame({ data: { gameId, playerName } });
 
-							navigate({ to: "/$gameId", params: { gameId } });
+							navigate({ to: "/$gameId/waiting", params: { gameId } });
 						} catch (err) {
 							if (err instanceof Error) {
 								console.error(err);
@@ -200,7 +203,8 @@ function Home() {
 
 					<button
 						type="submit"
-						className="mt-3 rounded-lg border bg-green-700 px-3 py-2 text-xl hover:bg-green-500 active:bg-green-300 motion-safe:transition"
+						disabled={loading}
+						className={`mt-3 rounded-lg border bg-amber-600 px-3 py-2 text-xl ${loading ? "cursor-not-allowed brightness-50" : "hover:bg-amber-500 active:bg-amber-700"} motion-safe:transition`}
 					>
 						Join Game
 					</button>

@@ -16,16 +16,28 @@ interface MyRouterContext {
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
-	beforeLoad: async ({ location }) => {
-		const { activeGameId } = await getUserSessionStatus();
-		const currentPath = location.pathname;
+	beforeLoad: async ({ location: { pathname } }) => {
+		const { gameId: activeGameId, status } = await getUserSessionStatus();
 
 		// User has an active game, but isn't currently viewing it
 		if (activeGameId) {
-			if (currentPath !== `/${activeGameId}`) {
-				throw redirect({ to: "/$gameId", params: { gameId: activeGameId } });
+			if (status === "waiting" && pathname !== `/${activeGameId}/waiting`) {
+				throw redirect({
+					to: "/$gameId/waiting",
+					params: { gameId: activeGameId },
+				});
+			} else if (
+				status === "started" &&
+				pathname !== `/${activeGameId}/active`
+			) {
+				throw redirect({
+					to: "/$gameId/started",
+					params: { gameId: activeGameId },
+				});
+			} else if (status === "finished" && pathname !== "/") {
+				throw redirect({ to: "/" });
 			}
-		} else if (currentPath !== "/") {
+		} else if (pathname !== "/") {
 			throw redirect({ to: "/" });
 		}
 	},
@@ -55,7 +67,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 			<div className="flex min-h-screen flex-col items-center justify-center p-4 text-center">
 				<h1 className="mb-2 text-2xl font-bold">404 - Page Not Found</h1>
 				<p className="mb-4 text-gray-600">
-					Looks like this tile is buried under too much sand.
+					Looks like this page is buried under too much sand.
 				</p>
 				<a
 					href="/"

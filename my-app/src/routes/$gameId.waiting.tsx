@@ -2,7 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { getGameState } from "#/server/game.functions";
 
-export const Route = createFileRoute("/$gameId")({ component: GameRoom });
+export const Route = createFileRoute("/$gameId/waiting")({
+	component: GameRoom,
+});
 
 function GameRoom() {
 	const { gameId } = Route.useParams();
