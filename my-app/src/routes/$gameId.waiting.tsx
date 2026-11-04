@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { getWaitingRoomInfo } from "#/server/game.functions";
 
 export const Route = createFileRoute("/$gameId/waiting")({
@@ -8,6 +8,7 @@ export const Route = createFileRoute("/$gameId/waiting")({
 
 function GameRoom() {
 	const { gameId } = Route.useParams();
+	const navigate = useNavigate();
 	const {
 		data: waitingRoomInfo,
 		isLoading,
@@ -54,14 +55,17 @@ function GameRoom() {
 					Game Room:{" "}
 					<span className="rounded-lg bg-amber-700 p-1">{gameId}</span>
 				</h1>
-				<div className="mt-2 flex justify-between border-b-3 pb-1 text-xl">
+				<div className="mt-2 flex justify-between text-xl">
 					<h2>
 						Player Count: {waitingRoomInfo?.users.length} /{" "}
 						{waitingRoomInfo?.gameRoomInfo.playerCount}
 					</h2>
 					<h2>Difficulty: {waitingRoomInfo?.gameRoomInfo.difficulty}</h2>
 				</div>
-				<div className="mt-3 grid grid-cols-2 gap-3 text-center text-xl">
+
+				<hr className="my-3 border-2" />
+
+				<div className="grid grid-cols-2 gap-3 text-center text-xl">
 					{waitingRoomInfo?.users?.map((user) => (
 						<div
 							key={user.playerName}
@@ -72,14 +76,31 @@ function GameRoom() {
 					))}
 				</div>
 				{waitingRoomInfo?.userIsAdmin && (
-					<div className="flex w-full justify-center text-2xl">
+					<>
 						<button
 							type="button"
-							className="mt-3 rounded-lg border-7 border-amber-900 bg-amber-600 p-2 text-black hover:bg-amber-500 active:bg-amber-700 motion-safe:transition"
+							disabled={
+								waitingRoomInfo?.users.length <
+								waitingRoomInfo?.gameRoomInfo.playerCount
+							}
+							onClick={async () => {
+								navigate({ to: "/$gameId/started", params: { gameId } });
+							}}
+							className={`mt-3 w-full rounded-lg border-5 border-amber-600 bg-amber-900 p-2 text-2xl ${waitingRoomInfo?.users.length < waitingRoomInfo?.gameRoomInfo.playerCount ? "brightness-50" : "hover:brightness-130 active:brightness-85"} motion-safe:transition`}
 						>
 							Start Game
 						</button>
-					</div>
+
+						<hr className="my-4 border-2" />
+
+						<button
+							type="button"
+							onClick={async () => {}}
+							className="w-full rounded-lg border-4 border-red-300 bg-red-700 p-2 text-2xl hover:brightness-130 active:brightness-85 motion-safe:transition"
+						>
+							Delete Game
+						</button>
+					</>
 				)}
 			</div>
 		</div>
