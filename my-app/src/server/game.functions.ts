@@ -160,24 +160,6 @@ export const setupGame = createServerFn({ method: "POST", strict: false })
 		},
 	);
 
-export const getGameSessionStatus = createServerFn({
-	method: "GET",
-	strict: false,
-})
-	.middleware([authMiddleware])
-	.validator(z.object({ gameId: z.string().min(8).max(8) }))
-	.handler(async ({ data: { gameId } }) => {
-		const [game] = await db
-			.select({ status: gamesTable.status })
-			.from(gamesTable)
-			.where(eq(gamesTable.id, gameId));
-		if (!game?.status) {
-			throw new Error("Game not found.");
-		}
-
-		return game.status as GameStatus;
-	});
-
 export const getWaitingRoomInfo = createServerFn({
 	method: "GET",
 	strict: false,
