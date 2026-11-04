@@ -12,10 +12,7 @@ import { assignPlayers, getRoleTitle } from "./features/player/helpers";
 import { oneDayInSeconds } from "./features/shared/data";
 import { generateGameId } from "./features/shared/helpers";
 
-export const getUserSessionStatus = createServerFn({
-	method: "GET",
-	strict: false,
-})
+export const getUserSessionStatus = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
 	.handler(async ({ context: { token } }) => {
 		const [userSession] = await db
@@ -33,7 +30,7 @@ export const getUserSessionStatus = createServerFn({
 		};
 	});
 
-export const joinGame = createServerFn({ method: "POST", strict: false })
+export const joinGame = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
 	.validator((data: { gameId: string; playerName: string }) => {
 		const result = z
@@ -103,7 +100,7 @@ export const joinGame = createServerFn({ method: "POST", strict: false })
  * Setup Game Session Function
  * Replaces: POST /game/setup
  */
-export const setupGame = createServerFn({ method: "POST", strict: false })
+export const setupGame = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
 	.validator(
 		z.object({
@@ -156,14 +153,18 @@ export const setupGame = createServerFn({ method: "POST", strict: false })
 				JSON.stringify(gameState),
 			);
 
-			return gameSession;
+			return gameSession as {
+				id: string;
+				status: string;
+				playerCount: number;
+				difficulty: string;
+				createdAt: Date;
+				stateJSON: GameState;
+			};
 		},
 	);
 
-export const getWaitingRoomInfo = createServerFn({
-	method: "GET",
-	strict: false,
-})
+export const getWaitingRoomInfo = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
 	.validator(
 		z.object({
@@ -205,11 +206,13 @@ export const getWaitingRoomInfo = createServerFn({
 		};
 	});
 
+export const deleteGame = createServerFn({ method: "POST" });
+
 /**
  * Get Game State Function
  * Replaces: GET /game/:gameId
  */
-export const getGameState = createServerFn({ method: "GET", strict: false })
+export const getGameState = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
 	.validator((gameId: string) => {
 		if (!gameId || gameId.length < 8 || gameId.length > 8) {
