@@ -206,7 +206,17 @@ export const getWaitingRoomInfo = createServerFn({ method: "GET" })
 		};
 	});
 
-export const deleteGame = createServerFn({ method: "POST" });
+export const deleteGame = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
+	.validator(z.object({ gameId: z.string().min(8).max(8) }))
+	.handler(async ({ data: { gameId }, context: { isAdmin } }) => {
+		if (!isAdmin) {
+			throw new Error("Only admins may perform this action.");
+		}
+
+		await db.delete(gamesTable).where(eq(gamesTable.id, gameId));
+		return true;
+	});
 
 /**
  * Get Game State Function
