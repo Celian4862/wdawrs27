@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { difficulties } from "#/server/features/hurricane/data";
 import type { Difficulty } from "#/server/features/hurricane/types";
 import { joinGame, setupGame } from "#/server/game.functions";
 
@@ -7,7 +8,7 @@ export const Route = createFileRoute("/")({ component: Home });
 
 function Home() {
 	const [playerCount, setPlayerCount] = useState(2);
-	const [difficulty, setDifficulty] = useState<Difficulty>("easy");
+	const [difficulty, setDifficulty] = useState<Difficulty>("Easy");
 	const [loading, setLoading] = useState(false);
 	const [createError, setCreateError] = useState<string | null>(null);
 	const [gameId, setGameId] = useState("");
@@ -91,10 +92,11 @@ function Home() {
 								required
 								className="mt-2 w-full rounded-lg border px-3 py-2 *:bg-black"
 							>
-								<option value="easy">Easy</option>
-								<option value="normal">Normal</option>
-								<option value="hard">Hard</option>
-								<option value="expert">Expert</option>
+								{difficulties.map((difficulty) => (
+									<option key={difficulty} value={difficulty}>
+										{difficulty}
+									</option>
+								))}
 							</select>
 						</label>
 					</div>
