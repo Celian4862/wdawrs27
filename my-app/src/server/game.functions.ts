@@ -172,18 +172,6 @@ export const getWaitingRoomInfo = createServerFn({ method: "GET" })
 		}),
 	)
 	.handler(async ({ data: { gameId }, context: { isAdmin } }) => {
-		const users = await db
-			.select({
-				is_admin: usersTable.isAdmin,
-				playerName: usersTable.playerName,
-			})
-			.from(usersTable)
-			.where(eq(usersTable.gameId, gameId));
-
-		if (users.length === 0) {
-			throw new Error("This game has no players.");
-		}
-
 		const [gameRoomInfo] = await db
 			.select({
 				playerCount: gamesTable.playerCount,
@@ -194,6 +182,18 @@ export const getWaitingRoomInfo = createServerFn({ method: "GET" })
 
 		if (!gameRoomInfo) {
 			throw new Error("Game not found.");
+		}
+
+		const users = await db
+			.select({
+				is_admin: usersTable.isAdmin,
+				playerName: usersTable.playerName,
+			})
+			.from(usersTable)
+			.where(eq(usersTable.gameId, gameId));
+
+		if (users.length === 0) {
+			throw new Error("This game has no players.");
 		}
 
 		return { gameRoomInfo, users, userIsAdmin: isAdmin } as {
@@ -215,7 +215,7 @@ export const deleteGame = createServerFn({ method: "POST" })
 		}
 
 		await db.delete(gamesTable).where(eq(gamesTable.id, gameId));
-		return true;
+		return;
 	});
 
 /**

@@ -1,6 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { getWaitingRoomInfo } from "#/server/game.functions";
+import { useEffect } from "react";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from "#/components/ui/alert-dialog";
+import { Button } from "#/components/ui/button";
+import { deleteGame, getWaitingRoomInfo } from "#/server/game.functions";
 
 export const Route = createFileRoute("/$gameId/waiting")({
 	component: GameRoom,
@@ -23,6 +36,12 @@ function GameRoom() {
 		refetchInterval: 3000,
 	});
 
+	useEffect(() => {
+		if (error) {
+			navigate({ to: "/" });
+		}
+	}, [error, navigate]);
+
 	if (isLoading)
 		return (
 			<div className="flex h-dvh justify-center">
@@ -32,20 +51,7 @@ function GameRoom() {
 			</div>
 		);
 	if (error) {
-		return (
-			<div className="flex h-dvh justify-center">
-				<div className="flex flex-col justify-center text-center text-3xl">
-					{error.message}
-					<br />
-					<a
-						href="/"
-						className="mt-3 text-blue-400 underline underline-offset-5"
-					>
-						Return Home
-					</a>
-				</div>
-			</div>
-		);
+		return;
 	}
 
 	return (
@@ -93,13 +99,44 @@ function GameRoom() {
 
 						<hr className="my-4 border-2" />
 
-						<button
-							type="button"
-							onClick={async () => {}}
-							className="w-full rounded-lg border-4 border-red-300 bg-red-700 p-2 text-2xl hover:brightness-130 active:brightness-85 motion-safe:transition"
-						>
-							Delete Game
-						</button>
+						<AlertDialog>
+							<AlertDialogTrigger asChild>
+								<Button
+									variant="outline"
+									className="w-full rounded-lg border-4 border-red-300 bg-red-700 p-6 text-2xl hover:brightness-130 active:brightness-85 motion-safe:transition"
+								>
+									Delete Game
+								</Button>
+							</AlertDialogTrigger>
+
+							<AlertDialogContent className="w-fit backdrop-blur-xl">
+								<AlertDialogHeader>
+									<AlertDialogTitle className="text-2xl">
+										Are you sure?
+									</AlertDialogTitle>
+									<AlertDialogDescription className="text-xl">
+										This will kick everyone out of the lobby and return them to
+										the home screen.
+									</AlertDialogDescription>
+								</AlertDialogHeader>
+								<AlertDialogFooter className="*:p-6 *:text-xl">
+									<AlertDialogCancel>Cancel</AlertDialogCancel>
+									<AlertDialogAction
+										onClick={async () => {
+											try {
+												await deleteGame({ data: { gameId } });
+												navigate({ to: "/" });
+											} catch (err) {
+												console.error(err);
+											}
+										}}
+										className="bg-red-700"
+									>
+										Continue
+									</AlertDialogAction>
+								</AlertDialogFooter>
+							</AlertDialogContent>
+						</AlertDialog>
 					</>
 				)}
 			</div>
