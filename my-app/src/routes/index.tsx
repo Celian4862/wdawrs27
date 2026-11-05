@@ -63,43 +63,51 @@ function Home() {
 						Create Game
 					</h2>
 
-					<div className="mt-1">
-						<label>
-							How many will play?
-							<input
-								id="playerCount"
-								type="number"
-								value={playerCount}
-								onChange={(e) =>
-									setPlayerCount(Number.parseInt(e.target.value, 10))
-								}
-								min="2"
-								max="5"
-								required
-								className="mt-2 w-full rounded-lg border px-3 py-2"
-								placeholder="2 - 5 players"
-							/>
-						</label>
-					</div>
+					<fieldset className="space-y-2">
+						<legend>How many players?</legend>
 
-					<div className="mt-3">
-						<label>
-							What difficulty?
-							<select
-								id="difficulty"
-								value={difficulty}
-								onChange={(e) => setDifficulty(e.target.value as Difficulty)}
-								required
-								className="mt-2 w-full rounded-lg border px-3 py-2 *:bg-black"
-							>
-								{difficulties.map((difficulty) => (
-									<option key={difficulty} value={difficulty}>
+						<div className="flex gap-2">
+							{[2, 3, 4, 5].map((n) => (
+								<label key={n} className="relative w-full cursor-pointer">
+									<input
+										type="radio"
+										value={n}
+										name="playerCount"
+										onChange={() => setPlayerCount(n)}
+										required
+										className="peer sr-only"
+									/>
+
+									<span className="flex w-full items-center justify-center rounded-lg border p-2 font-semibold shadow-sm peer-checked:bg-amber-600 peer-checked:text-black peer-focus-visible:ring-2 peer-focus-visible:ring-amber-500 peer-focus-visible:ring-offset-2 hover:border-amber-500 hover:text-amber-600 motion-safe:transition-all">
+										{n}
+									</span>
+								</label>
+							))}
+						</div>
+					</fieldset>
+
+					<fieldset className="mt-2 space-y-2">
+						<legend>What difficulty?</legend>
+
+						<div className="flex gap-2">
+							{difficulties.map((difficulty) => (
+								<label key={difficulty} className="relative w-full cursor-pointer">
+									<input
+										type="radio"
+										value={difficulty}
+										name="difficulty"
+										onChange={() => setDifficulty(difficulty)}
+										required
+										className="peer sr-only"
+									/>
+
+									<span className="flex w-full items-center justify-center rounded-lg border p-2 font-semibold shadow-sm peer-checked:bg-amber-600 peer-checked:text-black peer-focus-visible:ring-2 peer-focus-visible:ring-amber-500 peer-focus-visible:ring-offset-2 hover:border-amber-500 hover:text-amber-600 motion-safe:transition-all">
 										{difficulty}
-									</option>
-								))}
-							</select>
-						</label>
-					</div>
+									</span>
+								</label>
+							))}
+						</div>
+					</fieldset>
 
 					<div className="mt-1">
 						<label>
