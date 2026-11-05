@@ -12,6 +12,8 @@ import { assignPlayers, getRoleTitle } from "./features/player/helpers";
 import { oneDayInSeconds } from "./features/shared/data";
 import { generateGameId } from "./features/shared/helpers";
 
+const adminOnlyMessage = "Only admins may perform this action.";
+
 export const getUserSessionStatus = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
 	.handler(async ({ context: { token } }) => {
@@ -211,11 +213,24 @@ export const deleteGame = createServerFn({ method: "POST" })
 	.validator(z.object({ gameId: z.string().min(8).max(8) }))
 	.handler(async ({ data: { gameId }, context: { isAdmin } }) => {
 		if (!isAdmin) {
-			throw new Error("Only admins may perform this action.");
+			throw new Error(adminOnlyMessage);
 		}
 
 		await db.delete(gamesTable).where(eq(gamesTable.id, gameId));
-		return;
+	});
+
+export const startGame = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
+	.validator(z.object({ gameId: z.string().min(8).max(8) }))
+	.handler(async ({ data: { gameId }, context: { isAdmin } }) => {
+		if (!isAdmin) {
+			throw new Error(adminOnlyMessage);
+		}
+
+		await db
+			.update(gamesTable)
+			.set({ status: "started" satisfies GameStatus })
+			.where(eq(gamesTable.id, gameId));
 	});
 
 /**

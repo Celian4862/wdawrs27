@@ -28,7 +28,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 				});
 			} else if (
 				status === "started" &&
-				pathname !== `/${activeGameId}/active`
+				pathname !== `/${activeGameId}/started`
 			) {
 				throw redirect({
 					to: "/$gameId/started",
