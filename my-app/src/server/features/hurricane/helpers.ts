@@ -29,7 +29,7 @@ export function setHurricaneMeter(
 		meter: initialTierConfig.flatMap<HurricaneMeterTier>(({ tier, count }) =>
 			Array(count).fill(tier),
 		),
-		progress: { easy: 0, normal: 1, hard: 2, expert: 3 }[difficulty],
+		progress: { Easy: 0, Normal: 1, Hard: 2, Expert: 3 }[difficulty],
 	};
 }
 
