@@ -91,7 +91,10 @@ function Home() {
 
 						<div className="flex gap-2">
 							{difficulties.map((difficulty) => (
-								<label key={difficulty} className="relative w-full cursor-pointer">
+								<label
+									key={difficulty}
+									className="relative w-full cursor-pointer"
+								>
 									<input
 										type="radio"
 										value={difficulty}

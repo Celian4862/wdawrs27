@@ -33,7 +33,7 @@ function GameRoom() {
 				data: { gameId },
 			}),
 		retry: 1,
-		refetchInterval: 3000,
+		refetchInterval: 2000,
 	});
 
 	useEffect(() => {
@@ -66,6 +66,7 @@ function GameRoom() {
 						Player Count: {waitingRoomInfo?.users.length} /{" "}
 						{waitingRoomInfo?.gameRoomInfo.playerCount}
 					</h2>
+					<span>|</span>
 					<h2>Difficulty: {waitingRoomInfo?.gameRoomInfo.difficulty}</h2>
 				</div>
 
