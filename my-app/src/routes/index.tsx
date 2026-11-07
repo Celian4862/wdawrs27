@@ -104,7 +104,7 @@ function Home() {
 										className="peer sr-only"
 									/>
 
-									<span className="flex w-full items-center justify-center rounded-lg border p-2 font-semibold shadow-sm peer-checked:bg-amber-600 peer-checked:text-black peer-focus-visible:ring-2 peer-focus-visible:ring-amber-500 peer-focus-visible:ring-offset-2 hover:border-amber-500 hover:text-amber-600 motion-safe:transition-all">
+									<span className="flex w-full items-center justify-center rounded-lg border p-2 font-semibold shadow-sm peer-checked:bg-amber-600 peer-checked:text-black peer-focus-visible:ring-2 peer-focus-visible:ring-amber-500 peer-focus-visible:ring-offset-2 hover:border-amber-500 motion-safe:transition-all">
 										{difficulty}
 									</span>
 								</label>
