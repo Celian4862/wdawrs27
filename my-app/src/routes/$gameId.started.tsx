@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import Legend from "#/components/Legend";
 
 export const Route = createFileRoute("/$gameId/started")({
 	component: RouteComponent,
@@ -23,7 +24,7 @@ function RouteComponent() {
 							{/* <HurricaneDeck /> */}
 							{/* <ItemDeck /> */}
 							{/* <PartsSection /> */}
-							{/* <Legend /> */}
+							<Legend />
 							{/* <ResetButton /> */}
 						</div>
 					</section>
