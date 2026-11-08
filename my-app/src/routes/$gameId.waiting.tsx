@@ -28,8 +28,10 @@ function GameRoom() {
 	useEffect(() => {
 		if (error) {
 			navigate({ to: "/" });
+		} else if (waitingRoomInfo?.gameRoomInfo.status === "started") {
+			navigate({ to: "/$gameId/started", params: { gameId } });
 		}
-	}, [error, navigate]);
+	}, [error, gameId, waitingRoomInfo?.gameRoomInfo.status, navigate]);
 
 	if (isLoading)
 		return (

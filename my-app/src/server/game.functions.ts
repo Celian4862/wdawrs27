@@ -176,6 +176,7 @@ export const getWaitingRoomInfo = createServerFn({ method: "GET" })
 	.handler(async ({ data: { gameId }, context: { isAdmin } }) => {
 		const [gameRoomInfo] = await db
 			.select({
+				status: gamesTable.status,
 				playerCount: gamesTable.playerCount,
 				difficulty: gamesTable.difficulty,
 			})
@@ -200,6 +201,7 @@ export const getWaitingRoomInfo = createServerFn({ method: "GET" })
 
 		return { gameRoomInfo, users, userIsAdmin: isAdmin } as {
 			gameRoomInfo: {
+				status: GameStatus;
 				playerCount: number;
 				difficulty: string;
 			};
