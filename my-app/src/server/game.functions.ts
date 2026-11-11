@@ -219,6 +219,7 @@ export const deleteGame = createServerFn({ method: "POST" })
 		}
 
 		await db.delete(gamesTable).where(eq(gamesTable.id, gameId));
+		await redis.del(`url:${gameId}`);
 	});
 
 export const startGame = createServerFn({ method: "POST" })

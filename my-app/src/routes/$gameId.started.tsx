@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 import DeleteGameModal from "#/components/DeleteGameModal";
 import Legend from "#/components/Legend";
 import { getGameState } from "#/server/game.functions";
@@ -10,6 +11,7 @@ export const Route = createFileRoute("/$gameId/started")({
 
 function RouteComponent() {
 	const { gameId } = Route.useParams();
+	const navigate = useNavigate();
 	const {
 		data: gameState,
 		isLoading,
@@ -23,6 +25,12 @@ function RouteComponent() {
 		retry: 1,
 		refetchInterval: 2000,
 	});
+
+	useEffect(() => {
+		if (error) {
+			navigate({ to: "/" });
+		}
+	}, [error, navigate]);
 
 	if (isLoading)
 		return (
