@@ -38,7 +38,7 @@ type BoardTile = {
 	readonly id: (typeof tileIds)[number];
 	readonly sandPoints: number;
 	readonly revealed: boolean;
-	readonly parts: ReadonlySet<PartNames>;
+	readonly parts: PartNames[];
 } & (StartTile | GreenthTile | SandTile);
 
 export type Tile = HurricaneTile | BoardTile;

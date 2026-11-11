@@ -5,6 +5,7 @@ import { db } from "#/db";
 import { gamesTable, usersTable } from "#/db/schema";
 import { redis } from "#/lib/redis";
 import { authMiddleware } from "#/middleware/auth";
+import { shuffleBoard } from "./features/board/helpers";
 import type { GameState, GameStatus } from "./features/game/types";
 import { difficulties } from "./features/hurricane/data";
 import { setHurricaneMeter } from "./features/hurricane/helpers";
@@ -123,6 +124,7 @@ export const setupGame = createServerFn({ method: "POST" })
 				debugInitialState && process.env.NODE_ENV !== "production"
 					? debugInitialState
 					: {
+							board: shuffleBoard(),
 							players: assignPlayers(playerCount),
 							hurricaneMeter: setHurricaneMeter(playerCount, difficulty),
 						};
@@ -248,39 +250,45 @@ export const getGameState = createServerFn({ method: "GET" })
 			data: { gameId },
 			context: { isAdmin },
 		}): Promise<GameState & { isAdmin: boolean }> => {
+			let gameStateResult: GameState & { isAdmin: boolean };
 			// 1. Try reading from Redis Cache first
-			const cachedGameSession = await redis.getex(
+			const cachedGameState = await redis.getex(
 				`url:${gameId}`,
 				"EX",
 				oneDayInSeconds,
 			);
 
-			if (cachedGameSession) {
-				return { ...(JSON.parse(cachedGameSession) as GameState), isAdmin };
+			if (cachedGameState) {
+				gameStateResult = {
+					...(JSON.parse(cachedGameState) as GameState),
+					isAdmin,
+				};
+			} else {
+				// 2. Fallback to Turso DB
+				const [queriedGame] = await db
+					.select({ stateJSON: gamesTable.stateJSON })
+					.from(gamesTable)
+					.where(eq(gamesTable.id, gameId));
+
+				if (!queriedGame) {
+					throw new Error("Invalid game session");
+				}
+
+				const gameState = queriedGame.stateJSON as GameState;
+
+				// Cache back to Redis for subsequent reads
+				await redis.setex(
+					`url:${gameId}`,
+					oneDayInSeconds,
+					JSON.stringify(gameState),
+				);
+
+				gameStateResult = {
+					...gameState,
+					isAdmin,
+				};
 			}
 
-			// 2. Fallback to Turso DB
-			const [queriedGame] = await db
-				.select({ stateJSON: gamesTable.stateJSON })
-				.from(gamesTable)
-				.where(eq(gamesTable.id, gameId));
-
-			if (!queriedGame) {
-				throw new Error("Invalid game session");
-			}
-
-			const gameState = queriedGame.stateJSON as GameState;
-
-			// Cache back to Redis for subsequent reads
-			await redis.setex(
-				`url:${gameId}`,
-				oneDayInSeconds,
-				JSON.stringify(gameState),
-			);
-
-			return {
-				...gameState,
-				isAdmin,
-			};
+			return gameStateResult;
 		},
 	);

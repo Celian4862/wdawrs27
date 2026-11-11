@@ -1,14 +1,14 @@
 import { Fragment } from "react/jsx-runtime";
-import type { Tile } from "#/server/features/board/types";
-import type { ActivePlayer } from "#/server/features/player/types";
+import type { Board as BoardType } from "#/server/features/board/types";
+import type { PlayerState } from "#/server/features/player/types";
 
 export default function Board({
 	board,
 	className = "",
 }: {
-	board: Tile[];
+	board: BoardType;
 	selectedAction: string | null;
-	players: ActivePlayer[];
+	players: PlayerState;
 	className?: string;
 }) {
 	return (
@@ -50,7 +50,7 @@ export default function Board({
 							</div>
 
 							{/* Parts on Tile */}
-							{tile.parts.size > 0 && (
+							{tile.parts.length > 0 && (
 								<div className="ltr pointer-events-none absolute bottom-1 left-1 grid grid-flow-col grid-rows-2 items-start gap-0.5">
 									{[...tile.parts].map((part) => (
 										<span key={part} className="bg-black text-xs">

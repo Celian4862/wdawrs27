@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
+import Board from "#/components/Board";
 import DeleteGameModal from "#/components/DeleteGameModal";
 import Legend from "#/components/Legend";
 import { getGameState } from "#/server/game.functions";
@@ -49,7 +50,11 @@ function RouteComponent() {
 			<div className="flex h-full flex-col gap-4 lg:col-span-5 lg:min-h-0 lg:overflow-hidden lg:pb-10 xl:col-span-1">
 				{/* <HurricaneMeter hurricaneMeter={state.hurricaneMeter} /> */}
 				<div className="flex min-h-0 flex-1 items-center justify-center">
-					{/* <Board /> */}
+					<Board
+						board={gameState?.board ?? []}
+						selectedAction=""
+						players={gameState?.players ?? []}
+					/>
 				</div>
 			</div>
 

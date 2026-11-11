@@ -25,7 +25,7 @@ export function shuffleBoard(): Board {
 		revealed: false,
 		unrevealedType: "Start",
 		revealedType: "Item",
-		parts: new Set(),
+		parts: [],
 	};
 
 	// GREENTH TILES
@@ -37,7 +37,7 @@ export function shuffleBoard(): Board {
 			revealed: false,
 			unrevealedType: "Greenth",
 			revealedType: greenthTiles[index],
-			parts: new Set(),
+			parts: [],
 		};
 	});
 
@@ -68,7 +68,7 @@ export function shuffleBoard(): Board {
 						revealedType: sandTiles[index].revealedType,
 						partHint: sandTiles[index].partHint,
 						partOrientation: sandTiles[index].partOrientation,
-						parts: new Set(),
+						parts: [],
 					}
 				: {
 						id: position,
@@ -76,7 +76,7 @@ export function shuffleBoard(): Board {
 						revealed: false,
 						unrevealedType: "Sand",
 						revealedType: sandTiles[index].revealedType,
-						parts: new Set(),
+						parts: [],
 					};
 	});
 	return board;
