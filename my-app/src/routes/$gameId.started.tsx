@@ -1,11 +1,41 @@
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import DeleteGameModal from "#/components/DeleteGameModal";
 import Legend from "#/components/Legend";
+import { getGameState } from "#/server/game.functions";
 
 export const Route = createFileRoute("/$gameId/started")({
 	component: RouteComponent,
 });
 
 function RouteComponent() {
+	const { gameId } = Route.useParams();
+	const {
+		data: gameState,
+		isLoading,
+		error,
+	} = useQuery({
+		queryKey: ["game", gameId],
+		queryFn: () =>
+			getGameState({
+				data: { gameId },
+			}),
+		retry: 1,
+		refetchInterval: 2000,
+	});
+
+	if (isLoading)
+		return (
+			<div className="flex h-dvh justify-center">
+				<div className="flex flex-col justify-center text-3xl">
+					Loading Desert...
+				</div>
+			</div>
+		);
+	if (error) {
+		return;
+	}
+
 	return (
 		<div className="box-border grid w-screen grid-cols-1 gap-6 p-10 lg:h-dvh lg:grid-cols-11 lg:gap-10 lg:pb-0 xl:grid-cols-2">
 			<div className="flex h-full flex-col gap-4 lg:col-span-5 lg:min-h-0 lg:overflow-hidden lg:pb-10 xl:col-span-1">
@@ -25,7 +55,7 @@ function RouteComponent() {
 							{/* <ItemDeck /> */}
 							{/* <PartsSection /> */}
 							<Legend />
-							{/* <ResetButton /> */}
+							{gameState?.isAdmin && <DeleteGameModal gameId={gameId} />}
 						</div>
 					</section>
 				</div>

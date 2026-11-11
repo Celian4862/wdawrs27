@@ -241,42 +241,45 @@ export const startGame = createServerFn({ method: "POST" })
  */
 export const getGameState = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
-	.validator((gameId: string) => {
-		if (!gameId || gameId.length < 8 || gameId.length > 8) {
-			throw new Error("Invalid game ID format");
-		}
-		return gameId;
-	})
-	.handler(async ({ data: gameId }) => {
-		// 1. Try reading from Redis Cache first
-		const cachedGameSession = await redis.getex(
-			`url:${gameId}`,
-			"EX",
-			oneDayInSeconds,
-		);
+	.validator(z.object({ gameId: z.string().min(8).max(8) }))
+	.handler(
+		async ({
+			data: { gameId },
+			context: { isAdmin },
+		}): Promise<GameState & { isAdmin: boolean }> => {
+			// 1. Try reading from Redis Cache first
+			const cachedGameSession = await redis.getex(
+				`url:${gameId}`,
+				"EX",
+				oneDayInSeconds,
+			);
 
-		if (cachedGameSession) {
-			return JSON.parse(cachedGameSession) as GameState;
-		}
+			if (cachedGameSession) {
+				return { ...(JSON.parse(cachedGameSession) as GameState), isAdmin };
+			}
 
-		// 2. Fallback to Turso DB
-		const [queriedGame] = await db
-			.select({ stateJSON: gamesTable.stateJSON })
-			.from(gamesTable)
-			.where(eq(gamesTable.id, gameId));
+			// 2. Fallback to Turso DB
+			const [queriedGame] = await db
+				.select({ stateJSON: gamesTable.stateJSON })
+				.from(gamesTable)
+				.where(eq(gamesTable.id, gameId));
 
-		if (!queriedGame) {
-			throw new Error("Invalid game session");
-		}
+			if (!queriedGame) {
+				throw new Error("Invalid game session");
+			}
 
-		const gameState = queriedGame.stateJSON as GameState;
+			const gameState = queriedGame.stateJSON as GameState;
 
-		// Cache back to Redis for subsequent reads
-		await redis.setex(
-			`url:${gameId}`,
-			oneDayInSeconds,
-			JSON.stringify(gameState),
-		);
+			// Cache back to Redis for subsequent reads
+			await redis.setex(
+				`url:${gameId}`,
+				oneDayInSeconds,
+				JSON.stringify(gameState),
+			);
 
-		return gameState;
-	});
+			return {
+				...gameState,
+				isAdmin,
+			};
+		},
+	);
