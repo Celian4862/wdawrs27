@@ -1,9 +1,29 @@
 import { Fragment } from "react/jsx-runtime";
-import type { Board as BoardType } from "#/server/features/board/types";
+import type {
+	Board as BoardType,
+	TileStatus,
+} from "#/server/features/board/types";
 import type { PlayerState } from "#/server/features/player/types";
+import PawnCircle from "./PawnCircle";
+
+export const tileColors: Record<TileStatus, string> = {
+	Start: "bg-red-700",
+	Exit: "bg-white/80",
+	Item: "bg-slate-700",
+	Greenth: "bg-lime-600",
+	Water: "bg-blue-700",
+	Fake: "bg-amber-700",
+	Sand: "bg-yellow-300/80",
+	Shade: "bg-black",
+	Pointer: "bg-red-950",
+	Motor: "bg-gray-400",
+	Core: "bg-orange-500",
+	Fan: "bg-yellow-600",
+};
 
 export default function Board({
 	board,
+	players,
 	className = "",
 }: {
 	board: BoardType;
@@ -22,7 +42,7 @@ export default function Board({
 					) : (
 						<button
 							type="button"
-							className="relative aspect-square rounded-lg border ease-in-out hover:duration-250 active:duration-100 motion-safe:transition-all"
+							className={`relative aspect-square rounded-lg border ease-in-out hover:duration-250 active:duration-100 motion-safe:transition-all ${tile.revealed ? tileColors[tile.revealedType] : tileColors[tile.unrevealedType]}`}
 						>
 							{/* Sand Counter Badge */}
 							{tile.sandPoints > 0 && (
@@ -35,21 +55,21 @@ export default function Board({
 
 							{/* Players on Tile */}
 							<div className="rtl pointer-events-none absolute top-1 left-1 grid grid-flow-col grid-rows-2 items-start gap-0.5">
-								{/* {players
-									.filter((player) => player.currentTileId === tile.id)
+								{players
+									.filter((player) => player.tileId === tile.id)
 									.map((player) => {
 										const isCurrentPlayer = false;
 										return (
 											<PawnCircle
 												key={player.roleKey}
-												color={player.roleKey}
+												roleKey={player.roleKey}
 												isCurrentPlayer={isCurrentPlayer}
 												className={
 													isCurrentPlayer ? "motion-safe:animate-bounce" : ""
 												}
 											/>
 										);
-									})} */}
+									})}
 							</div>
 
 							{/* Parts on Tile */}

@@ -8,8 +8,7 @@ interface GreenthTile {
 export type PartNames = (typeof partNames)[number];
 
 export interface HintTile {
-	readonly revealedType: "Hint";
-	readonly partHint: PartNames;
+	readonly revealedType: PartNames;
 	readonly partOrientation: (typeof partOrientations)[number];
 }
 
@@ -41,5 +40,8 @@ type BoardTile = {
 	readonly parts: PartNames[];
 } & (StartTile | GreenthTile | SandTile);
 
+export type TileStatus =
+	| BoardTile["unrevealedType"]
+	| BoardTile["revealedType"];
 export type Tile = HurricaneTile | BoardTile;
 export type Board = readonly Tile[];

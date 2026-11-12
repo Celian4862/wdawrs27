@@ -1,3 +1,5 @@
+import { tileColors } from "./Board";
+
 export default function Legend() {
 	return (
 		<section className="rounded-xl border p-6">
@@ -12,16 +14,14 @@ export default function Legend() {
 					</tr>
 				</thead>
 				<tbody>
-					{colorLegend.map((sym) => {
-						return (
-							<tr key={sym[1]}>
-								<td
-									className={`w-full ${sym[0]} ${sym[1] === "Shade" ? "border" : ""}`}
-								/>
-								<td>{sym[1]}</td>
-							</tr>
-						);
-					})}
+					{Object.entries(tileColors).map((sym) => (
+						<tr key={sym[0]}>
+							<td
+								className={`w-full ${sym[1]} ${sym[0] === "Shade" ? "border" : ""}`}
+							/>
+							<td>{sym[0]}</td>
+						</tr>
+					))}
 				</tbody>
 			</table>
 			<br />
@@ -45,21 +45,6 @@ export default function Legend() {
 		</section>
 	);
 }
-
-const colorLegend = [
-	["bg-red-700", "Start"],
-	["bg-white/80", "Exit"],
-	["bg-slate-700", "Item"],
-	["bg-lime-600", "Greenth"],
-	["bg-blue-700", "Water"],
-	["bg-amber-700", "Fake"],
-	["bg-yellow-300/80", "Sand"],
-	["bg-black", "Shade"],
-	["bg-red-950", "Pointer"],
-	["bg-gray-400", "Motor"],
-	["bg-orange-500", "Core"],
-	["bg-yellow-600", "Fan"],
-];
 
 const iconLegend = [
 	{
