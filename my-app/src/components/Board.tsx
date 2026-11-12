@@ -20,7 +20,10 @@ export default function Board({
 					{tile.id === 12 ? (
 						<div />
 					) : (
-						<button type="button">
+						<button
+							type="button"
+							className="relative aspect-square rounded-lg border ease-in-out hover:duration-250 active:duration-100 motion-safe:transition-all"
+						>
 							{/* Sand Counter Badge */}
 							{tile.sandPoints > 0 && (
 								<span

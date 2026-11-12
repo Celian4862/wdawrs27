@@ -2,7 +2,7 @@ export default function Legend() {
 	return (
 		<section className="rounded-xl border p-6">
 			<div className={`flex flex-wrap items-center justify-between`}>
-				<h1 className="text-2xl">Board Game</h1>
+				<h1 className="text-2xl">Board Guide</h1>
 			</div>
 			<table className="w-full border-separate border-spacing-2 text-center text-lg">
 				<thead>
