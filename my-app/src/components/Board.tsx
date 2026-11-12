@@ -1,6 +1,8 @@
 import { Fragment } from "react/jsx-runtime";
 import type {
 	Board as BoardType,
+	PartNames,
+	PartOrientation,
 	TileStatus,
 } from "#/server/features/board/types";
 import type { PlayerState } from "#/server/features/player/types";
@@ -23,6 +25,7 @@ export const tileColors: Record<TileStatus, string> = {
 
 export default function Board({
 	board,
+	selectedAction,
 	players,
 	className = "",
 }: {
@@ -42,6 +45,7 @@ export default function Board({
 					) : (
 						<button
 							type="button"
+							disabled={!selectedAction}
 							className={`relative aspect-square rounded-lg border ease-in-out hover:duration-250 active:duration-100 motion-safe:transition-all ${tile.revealed ? tileColors[tile.revealedType] : tileColors[tile.unrevealedType]}`}
 						>
 							{/* Sand Counter Badge */}
@@ -78,11 +82,38 @@ export default function Board({
 								<div className="ltr pointer-events-none absolute bottom-1 left-1 grid grid-flow-col grid-rows-2 items-start gap-0.5">
 									{tile.parts.map((part) => (
 										<span key={part} className="bg-black text-xs">
-											{part}
+											{
+												(
+													{
+														Pointer: "🧭",
+														Motor: "⚡",
+														Core: "💎",
+														Fan: "🌀",
+													} satisfies Record<PartNames, string>
+												)[part]
+											}
 										</span>
 									))}
 								</div>
 							)}
+
+							{/* Orientation Emoji */}
+							{tile.revealed &&
+								(tile.revealedType === "Core" ||
+									tile.revealedType === "Fan" ||
+									tile.revealedType === "Motor" ||
+									tile.revealedType === "Pointer") && (
+									<span className="absolute -right-1 -bottom-0.5 text-sm leading-none md:text-lg lg:right-1 lg:bottom-1">
+										{
+											(
+												{
+													Row: "↔️",
+													Col: "↕️",
+												} satisfies Record<PartOrientation, string>
+											)[tile.partOrientation]
+										}
+									</span>
+								)}
 						</button>
 					)}
 				</Fragment>

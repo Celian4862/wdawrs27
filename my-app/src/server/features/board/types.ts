@@ -7,9 +7,11 @@ interface GreenthTile {
 
 export type PartNames = (typeof partNames)[number];
 
+export type PartOrientation = (typeof partOrientations)[number];
+
 export interface HintTile {
 	readonly revealedType: PartNames;
-	readonly partOrientation: (typeof partOrientations)[number];
+	readonly partOrientation: PartOrientation;
 }
 
 type OtherRevNames = "Exit" | "Item" | "Shade";
