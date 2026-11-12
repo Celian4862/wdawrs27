@@ -58,7 +58,8 @@ export default function Board({
 								{players
 									.filter((player) => player.tileId === tile.id)
 									.map((player) => {
-										const isCurrentPlayer = false;
+										const isCurrentPlayer =
+											players[0].roleKey === player.roleKey;
 										return (
 											<PawnCircle
 												key={player.roleKey}
