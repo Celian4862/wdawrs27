@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Board from "#/components/Board";
 import DeleteGameModal from "#/components/DeleteGameModal";
 import Legend from "#/components/Legend";
+import Parts from "#/components/Parts";
 import { getGameState } from "#/server/game.functions";
 
 export const Route = createFileRoute("/$gameId/started")({
@@ -66,7 +67,7 @@ function RouteComponent() {
 							{/* <PlayerCards /> */}
 							{/* <HurricaneDeck /> */}
 							{/* <ItemDeck /> */}
-							{/* <PartsSection /> */}
+							<Parts partsCollected={[]} />
 							<Legend />
 							{gameState?.isAdmin && <DeleteGameModal gameId={gameId} />}
 						</div>

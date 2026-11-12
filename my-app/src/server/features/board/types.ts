@@ -5,7 +5,7 @@ interface GreenthTile {
 	readonly revealedType: "Water" | "Fake";
 }
 
-type PartNames = (typeof partNames)[number];
+export type PartNames = (typeof partNames)[number];
 
 export interface HintTile {
 	readonly revealedType: "Hint";
