@@ -52,7 +52,7 @@ export default function Board({
 							{/* Parts on Tile */}
 							{tile.parts.length > 0 && (
 								<div className="ltr pointer-events-none absolute bottom-1 left-1 grid grid-flow-col grid-rows-2 items-start gap-0.5">
-									{[...tile.parts].map((part) => (
+									{tile.parts.map((part) => (
 										<span key={part} className="bg-black text-xs">
 											{part}
 										</span>
