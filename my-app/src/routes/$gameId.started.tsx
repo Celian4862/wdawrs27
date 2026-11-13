@@ -26,6 +26,22 @@ function RouteComponent() {
 			}),
 		retry: 1,
 		refetchInterval: 2000,
+		initialData: {
+			isAdmin: false,
+			board: [],
+			players: [],
+			hurricaneMeter: {
+				meter: [],
+				progress: 0,
+			},
+			partsCollected: [],
+		},
+		select: (data) => ({
+			...data,
+			board: data?.board ?? [],
+			players: data?.players ?? [],
+			partsCollected: data?.partsCollected ?? [],
+		}),
 	});
 
 	useEffect(() => {
@@ -52,9 +68,9 @@ function RouteComponent() {
 				{/* <HurricaneMeter hurricaneMeter={state.hurricaneMeter} /> */}
 				<div className="flex min-h-0 flex-1 items-center justify-center">
 					<Board
-						board={gameState?.board ?? []}
+						board={gameState.board}
 						selectedAction=""
-						players={gameState?.players ?? []}
+						players={gameState.players}
 					/>
 				</div>
 			</div>
@@ -67,9 +83,9 @@ function RouteComponent() {
 							{/* <PlayerCards /> */}
 							{/* <HurricaneDeck /> */}
 							{/* <ItemDeck /> */}
-							<Parts partsCollected={[]} />
+							<Parts partsCollected={gameState.partsCollected} />
 							<Legend />
-							{gameState?.isAdmin && <DeleteGameModal gameId={gameId} />}
+							{gameState.isAdmin && <DeleteGameModal gameId={gameId} />}
 						</div>
 					</section>
 				</div>

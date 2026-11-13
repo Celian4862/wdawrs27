@@ -127,6 +127,7 @@ export const setupGame = createServerFn({ method: "POST" })
 							board: shuffleBoard(),
 							players: assignPlayers(playerCount),
 							hurricaneMeter: setHurricaneMeter(playerCount, difficulty),
+							partsCollected: [],
 						};
 
 			const newGameId = generateGameId();

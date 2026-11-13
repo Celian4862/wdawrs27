@@ -50,8 +50,7 @@ export function shuffleBoard(): Board {
 		}),
 		...partOrientations.flatMap((partOrientation) => {
 			return partNames.map<HintTile>((partName) => ({
-				revealedType: "Hint",
-				partHint: partName,
+				revealedType: partName,
 				partOrientation: partOrientation,
 			}));
 		}),
@@ -59,14 +58,16 @@ export function shuffleBoard(): Board {
 	// DISTRIBUTING SAND TILES
 	sandTileIds.forEach((position, index) => {
 		board[position] =
-			sandTiles[index].revealedType === "Hint"
+			sandTiles[index].revealedType === "Core" ||
+			sandTiles[index].revealedType === "Fan" ||
+			sandTiles[index].revealedType === "Motor" ||
+			sandTiles[index].revealedType === "Pointer"
 				? {
 						id: position,
 						sandPoints: sandPointIds.has(position) ? 1 : 0,
 						revealed: false,
 						unrevealedType: "Sand",
 						revealedType: sandTiles[index].revealedType,
-						partHint: sandTiles[index].partHint,
 						partOrientation: sandTiles[index].partOrientation,
 						parts: [],
 					}
