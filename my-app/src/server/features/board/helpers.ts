@@ -10,6 +10,24 @@ import {
 } from "./data";
 import type { Board, HintTile, OtherRevTile, RevSandTile, Tile } from "./types";
 
+export function sumSandPoints(board: Board) {
+	return board.reduce(
+		(sum, tile) => sum + (tile.id === 12 ? 0 : tile.sandPoints),
+		0,
+	);
+}
+
+export function toCoordinates(index: number) {
+	return [Math.floor(index / 5), index % 5];
+}
+
+export function toIndex(row: number, col: number) {
+	if (row < 0 || row > 4 || col < 0 || col > 4) {
+		return -1;
+	}
+	return row * 5 + col;
+}
+
 export function shuffleBoard(): Board {
 	const board = Array<Tile>(25);
 

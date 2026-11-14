@@ -3,9 +3,11 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import Board from "#/components/Board";
 import DeleteGameModal from "#/components/DeleteGameModal";
+import HurricaneDeck from "#/components/HurricaneDeck";
 import HurricaneMeter from "#/components/HurricaneMeter";
 import Legend from "#/components/Legend";
 import Parts from "#/components/Parts";
+import { sumSandPoints } from "#/server/features/board/helpers";
 import { getGameState } from "#/server/game.functions";
 
 export const Route = createFileRoute("/$gameId/started")({
@@ -85,7 +87,11 @@ function RouteComponent() {
 						{/* <ActionPanel /> */}
 						<div className="flex flex-col gap-5">
 							{/* <PlayerCards /> */}
-							{/* <HurricaneDeck /> */}
+							<HurricaneDeck
+								hurricaneDeck={[]}
+								recentlyDrawnHurricaneCard={{ type: "Thirst" }}
+								sandPoints={48 - sumSandPoints(gameState.board)}
+							/>
 							{/* <ItemDeck /> */}
 							<Parts partsCollected={gameState.partsCollected} />
 							<Legend />

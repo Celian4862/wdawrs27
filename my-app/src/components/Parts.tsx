@@ -11,7 +11,7 @@ export default function Parts({
 				<h1 className="text-2xl">Parts Collected</h1>
 				<h2 className="text-xl">{partsCollected.length} / 4</h2>
 			</div>
-			<div className="flex flex-wrap gap-2 mt-3">
+			<div className="mt-3 flex flex-wrap gap-2">
 				{partsCollected.map((part) => (
 					<div key={part} className="rounded-lg border p-3">
 						{part}

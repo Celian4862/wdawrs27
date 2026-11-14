@@ -12,7 +12,7 @@
 		"preview": "vite preview",
 		"format": "biome format --write .",
 		"lint": "biome lint --write .",
-		"check": "prettier --write \"src/routes/*.tsx\" && biome check --write .",
+		"check": "prettier --write \"src/routes/*.tsx\" \"src/components/*\" \"!src/components/ui/**\" && biome check --write .",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
 		"db:push": "drizzle-kit push",
