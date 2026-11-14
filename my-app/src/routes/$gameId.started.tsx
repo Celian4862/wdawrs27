@@ -3,6 +3,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import Board from "#/components/Board";
 import DeleteGameModal from "#/components/DeleteGameModal";
+import HurricaneMeter from "#/components/HurricaneMeter";
 import Legend from "#/components/Legend";
 import Parts from "#/components/Parts";
 import { getGameState } from "#/server/game.functions";
@@ -65,7 +66,10 @@ function RouteComponent() {
 	return (
 		<div className="box-border grid w-screen grid-cols-1 gap-6 p-10 lg:h-dvh lg:grid-cols-11 lg:gap-10 lg:pb-0 xl:grid-cols-2">
 			<div className="flex h-full flex-col gap-4 lg:col-span-5 lg:min-h-0 lg:overflow-hidden lg:pb-10 xl:col-span-1">
-				{/* <HurricaneMeter hurricaneMeter={state.hurricaneMeter} /> */}
+				<HurricaneMeter
+					hurricaneMeter={gameState.hurricaneMeter}
+					playersLength={gameState.players.length}
+				/>
 				<div className="flex min-h-0 flex-1 items-center justify-center">
 					<Board
 						board={gameState.board}
