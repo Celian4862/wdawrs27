@@ -1,4 +1,7 @@
-import { getItemDescription } from "#/server/features/item/helpers";
+import {
+	getItemDescription,
+	getItemName,
+} from "#/server/features/item/helpers";
 import type { ItemKey } from "#/server/features/item/types";
 import {
 	getMaxWater,
@@ -70,34 +73,36 @@ function PlayerDetails({
 			<p className="my-1 text-lg font-semibold text-cyan-200 tabular-nums">
 				Water: {player.currentWater}/{getMaxWater(player.roleKey)}
 			</p>
-			<details open={itemCount > 0}>
+			<details open={itemCount > 0 && isCurrent}>
 				<summary className="cursor-pointer">Items</summary>
 				<div className="text-md mt-3 grid gap-3 text-white/80 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
 					{itemCount === 0
 						? "No items."
-						: (Object.keys(player.inventory) as ItemKey[]).map((item) => {
-								if (!item) {
-									throw new Error("Item is undefined");
-								}
-								return (
-									<button
-										key={`${item}`}
-										type="button"
-										className={`col-span-1 space-y-2 rounded-lg border bg-black p-3 hover:scale-110 active:bg-gray-800 motion-safe:transition-all`}
-										onClick={() => {
-											switch (item) {
-												case "sandRemover":
-													break;
-											}
-										}}
-									>
-										<h4 className="font-bold">
-											{item} ({player.inventory[item]})
-										</h4>
-										<p>{getItemDescription(item)}</p>
-									</button>
-								);
-							})}
+						: (Object.keys(player.inventory) as ItemKey[])
+								.filter((itemKey) => player.inventory[itemKey] > 0)
+								.map((item) => {
+									if (!item) {
+										throw new Error("Item is undefined");
+									}
+									return (
+										<button
+											key={`${item}`}
+											type="button"
+											className={`col-span-1 space-y-2 rounded-lg border bg-black p-3 hover:scale-110 active:bg-gray-800 motion-safe:transition-all`}
+											onClick={() => {
+												switch (item) {
+													case "sandRemover":
+														break;
+												}
+											}}
+										>
+											<h4 className="text-center font-bold">
+												{getItemName(item)} [{player.inventory[item]}]
+											</h4>
+											<p className="text-justify">{getItemDescription(item)}</p>
+										</button>
+									);
+								})}
 				</div>
 			</details>
 		</article>

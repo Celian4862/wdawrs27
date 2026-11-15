@@ -35,14 +35,7 @@ export function assignPlayers(playerCount: number): PlayerState {
 		roleKey: role,
 		currentWater: playerRoles[role].maxWater,
 		tileId: 19,
-		inventory: {
-			sandRemover: 0,
-			flyingTool: 0,
-			thirstShield: 0,
-			xRayGoggles: 0,
-			addTwoWater: 0,
-			speedBoost: 0,
-		},
+		inventory: createPlayerInventory(),
 	}));
 }
 
@@ -89,21 +82,31 @@ export function adjustWater(
 	});
 }
 
-export function createPlayerInventory({
-	sandRemover = 0,
-	flyingTool = 0,
-	thirstShield = 0,
-	xRayGoggles = 0,
-	addTwoWater = 0,
-	speedBoost = 0,
-}): PlayerInventory {
+/**
+ * Initializes a PlayerInventory object.
+ *
+ * The parameter is an object so that choosing which object values to set is easier.
+ * @param param0 Object with items to initialize the inventory with.
+ * @returns Initialized PlayerInventory object.
+ */
+export function createPlayerInventory(
+	initialInventory: Partial<PlayerInventory> = {
+		sandRemover: 0,
+		flyingTool: 0,
+		thirstShield: 0,
+		xRayGoggles: 0,
+		addTwoWater: 0,
+		speedBoost: 0,
+	},
+): PlayerInventory {
 	return {
-		sandRemover,
-		flyingTool,
-		thirstShield,
-		xRayGoggles,
-		addTwoWater,
-		speedBoost,
+		sandRemover: 0,
+		flyingTool: 0,
+		thirstShield: 0,
+		xRayGoggles: 0,
+		addTwoWater: 0,
+		speedBoost: 0,
+		...initialInventory,
 	};
 }
 

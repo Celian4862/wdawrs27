@@ -98,7 +98,9 @@ function RouteComponent() {
 					<section className="flex flex-col-reverse gap-5 py-5 lg:flex-col">
 						{/* <ActionPanel /> */}
 						<div className="flex flex-col gap-5">
-							<PlayerCards turnCount={0} players={gameState.players} />
+							{gameState.players.length > 0 && (
+								<PlayerCards turnCount={0} players={gameState.players} />
+							)}
 							<HurricaneDeck
 								hurricaneDeck={gameState.hurricaneDeck}
 								recentlyDrawnHurricaneCard={{ type: "Thirst" }}
