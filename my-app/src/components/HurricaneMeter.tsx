@@ -2,34 +2,31 @@ import type { HurricaneMeter as HurricaneMeterType } from "#/server/features/hur
 
 export default function HurricaneMeter({
 	hurricaneMeter,
-	playersLength,
 }: {
 	hurricaneMeter: HurricaneMeterType;
-	playersLength: number;
 }) {
+	const meterTickCounts = {
+		2: 0,
+		3: 0,
+		4: 0,
+		5: 0,
+		6: 0,
+		7: 0,
+	};
+	hurricaneMeter.meter.forEach((tier) => {
+		meterTickCounts[tier]++;
+	});
 	let accumulatedTicksCount = 0;
 
 	return (
 		<div
-			className={`grid ${
-				{
-					2: "grid-cols-14",
-					3: "grid-cols-15",
-					4: "grid-cols-15",
-					5: "grid-cols-16",
-				}[playersLength]
-			} md:min-w-0`}
+			className="grid md:min-w-0"
+			style={{
+				gridTemplateColumns: `repeat(${hurricaneMeter.meter.length}, minmax(0, 1fr))`,
+			}}
 		>
 			{Array.from(new Set(hurricaneMeter.meter)).map((hurricaneMeterTier) => {
-				const span =
-					{
-						2: 1,
-						3: { 2: 3, 3: 4, 4: 4, 5: 5 }[playersLength],
-						4: 4,
-						5: 3,
-						6: 2,
-						7: 1,
-					}[hurricaneMeterTier] ?? 0;
+				const span = meterTickCounts[hurricaneMeterTier] ?? 0;
 				const startIndex = accumulatedTicksCount;
 				accumulatedTicksCount += span;
 				const edgeRoundingStyle = (() => {
