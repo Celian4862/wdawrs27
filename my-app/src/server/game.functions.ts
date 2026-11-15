@@ -8,7 +8,11 @@ import { authMiddleware } from "#/middleware/auth";
 import { shuffleBoard } from "./features/board/helpers";
 import type { GameState, GameStatus } from "./features/game/types";
 import { difficulties } from "./features/hurricane/data";
-import { setHurricaneMeter } from "./features/hurricane/helpers";
+import {
+	setHurricaneMeter,
+	shuffleHurricaneDeck,
+} from "./features/hurricane/helpers";
+import { shuffleItemCards } from "./features/item/helpers";
 import { assignPlayers, getRoleTitle } from "./features/player/helpers";
 import { oneDayInSeconds } from "./features/shared/data";
 import { generateGameId } from "./features/shared/helpers";
@@ -126,7 +130,9 @@ export const setupGame = createServerFn({ method: "POST" })
 					: {
 							board: shuffleBoard(),
 							players: assignPlayers(playerCount),
+							hurricaneDeck: shuffleHurricaneDeck(),
 							hurricaneMeter: setHurricaneMeter(playerCount, difficulty),
+							itemDeck: shuffleItemCards(),
 							partsCollected: [],
 						};
 

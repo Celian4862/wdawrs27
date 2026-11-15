@@ -9,6 +9,7 @@ import ItemDeck from "#/components/ItemDeck";
 import Legend from "#/components/Legend";
 import Parts from "#/components/Parts";
 import { sumSandPoints } from "#/server/features/board/helpers";
+import type { GameState } from "#/server/features/game/types";
 import { getGameState } from "#/server/game.functions";
 
 export const Route = createFileRoute("/$gameId/started")({
@@ -34,18 +35,27 @@ function RouteComponent() {
 			isAdmin: false,
 			board: [],
 			players: [],
+			hurricaneDeck: [],
 			hurricaneMeter: {
 				meter: [],
 				progress: 0,
 			},
+			itemDeck: [],
 			partsCollected: [],
 		},
-		select: (data) => ({
-			...data,
-			board: data?.board ?? [],
-			players: data?.players ?? [],
-			partsCollected: data?.partsCollected ?? [],
-		}),
+		select: (data) =>
+			({
+				isAdmin: data?.isAdmin ?? false,
+				board: data?.board ?? [],
+				players: data?.players ?? [],
+				hurricaneDeck: data?.hurricaneDeck ?? [],
+				hurricaneMeter: {
+					meter: data?.hurricaneMeter.meter ?? [],
+					progress: data?.hurricaneMeter.progress ?? 0,
+				},
+				itemDeck: data?.itemDeck ?? [],
+				partsCollected: data?.partsCollected ?? [],
+			}) satisfies GameState & { isAdmin: boolean },
 	});
 
 	useEffect(() => {
@@ -89,11 +99,14 @@ function RouteComponent() {
 						<div className="flex flex-col gap-5">
 							{/* <PlayerCards /> */}
 							<HurricaneDeck
-								hurricaneDeck={[]}
+								hurricaneDeck={gameState.hurricaneDeck}
 								recentlyDrawnHurricaneCard={{ type: "Thirst" }}
 								sandPoints={48 - sumSandPoints(gameState.board)}
 							/>
-							<ItemDeck itemDeck={[]} recentlyDrawnItemCard="sandRemover" />
+							<ItemDeck
+								itemDeck={gameState.itemDeck}
+								recentlyDrawnItemCard="sandRemover"
+							/>
 							<Parts partsCollected={gameState.partsCollected} />
 							<Legend />
 							{gameState.isAdmin && <DeleteGameModal gameId={gameId} />}
