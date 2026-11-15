@@ -91,7 +91,9 @@ function PlayerDetails({
 											}
 										}}
 									>
-										<h4 className="font-bold">{item}</h4>
+										<h4 className="font-bold">
+											{item} ({player.inventory[item]})
+										</h4>
 										<p>{getItemDescription(item)}</p>
 									</button>
 								);
