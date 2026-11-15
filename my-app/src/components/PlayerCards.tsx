@@ -1,0 +1,103 @@
+import { getItemDescription } from "#/server/features/item/helpers";
+import type { ItemKey } from "#/server/features/item/types";
+import {
+	getMaxWater,
+	getRoleTitle,
+	sumPlayerInventory,
+} from "#/server/features/player/helpers";
+import type { ActivePlayer, PlayerState } from "#/server/features/player/types";
+import PawnCircle from "./PawnCircle";
+
+export default function PlayerCards({
+	turnCount,
+	players,
+}: {
+	turnCount: number;
+	players: PlayerState;
+}) {
+	return (
+		<section className="rounded-xl border p-6">
+			<div className="flex flex-wrap items-center justify-between pb-6">
+				<h1 className="text-2xl">Player Cards</h1>
+				<h2 className="text-xl">Turn {turnCount}</h2>
+			</div>
+			<div className="flex flex-col gap-3">
+				<h3 className="text-lg">Current player:</h3>
+				<PlayerDetails player={players[0]} isCurrent={true} />
+				<details>
+					<summary className="mb-3 cursor-pointer">Other players</summary>
+					<div className="flex flex-col gap-3">
+						{players.map((player, idx) => {
+							if (idx > 0) {
+								return (
+									<PlayerDetails
+										key={getRoleTitle(player.roleKey)}
+										player={players[idx]}
+										isCurrent={false}
+									/>
+								);
+							}
+							return null;
+						})}
+					</div>
+				</details>
+			</div>
+		</section>
+	);
+}
+
+function PlayerDetails({
+	player,
+	isCurrent,
+}: {
+	player: ActivePlayer;
+	isCurrent: boolean;
+}) {
+	const itemCount = sumPlayerInventory(player.inventory);
+
+	return (
+		<article className="rounded-xl border border-white/15 bg-white/5 p-4">
+			<div className="flex justify-between">
+				<h2 className="text-xl font-bold text-white">
+					{getRoleTitle(player.roleKey)}
+				</h2>
+				<PawnCircle roleKey={player.roleKey} isCurrentPlayer={isCurrent} />
+			</div>
+			<details open={isCurrent}>
+				<summary className="mt-1 cursor-pointer">Abilities</summary>
+				<h3 className="text-md mt-1 font-medium text-white/65">{}</h3>
+			</details>
+			<p className="my-1 text-lg font-semibold text-cyan-200 tabular-nums">
+				Water: {player.currentWater}/{getMaxWater(player.roleKey)}
+			</p>
+			<details open={itemCount > 0}>
+				<summary className="cursor-pointer">Items</summary>
+				<div className="text-md mt-3 grid gap-3 text-white/80 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
+					{itemCount === 0
+						? "No items."
+						: (Object.keys(player.inventory) as ItemKey[]).map((item) => {
+								if (!item) {
+									throw new Error("Item is undefined");
+								}
+								return (
+									<button
+										key={`${item}`}
+										type="button"
+										className={`col-span-1 space-y-2 rounded-lg border bg-black p-3 hover:scale-110 active:bg-gray-800 motion-safe:transition-all`}
+										onClick={() => {
+											switch (item) {
+												case "sandRemover":
+													break;
+											}
+										}}
+									>
+										<h4 className="font-bold">{item}</h4>
+										<p>{getItemDescription(item)}</p>
+									</button>
+								);
+							})}
+				</div>
+			</details>
+		</article>
+	);
+}

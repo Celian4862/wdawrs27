@@ -24,3 +24,11 @@ export function countItemCards(itemDeck: ItemDeck) {
 	});
 	return itemCounts;
 }
+
+export function getItemName(itemKey: ItemKey) {
+	return itemTypes[itemKey].info.type;
+}
+
+export function getItemDescription(itemKey: ItemKey) {
+	return itemTypes[itemKey].info.description;
+}

@@ -8,6 +8,7 @@ import HurricaneMeter from "#/components/HurricaneMeter";
 import ItemDeck from "#/components/ItemDeck";
 import Legend from "#/components/Legend";
 import Parts from "#/components/Parts";
+import PlayerCards from "#/components/PlayerCards";
 import { sumSandPoints } from "#/server/features/board/helpers";
 import type { GameState } from "#/server/features/game/types";
 import { getGameState } from "#/server/game.functions";
@@ -97,7 +98,7 @@ function RouteComponent() {
 					<section className="flex flex-col-reverse gap-5 py-5 lg:flex-col">
 						{/* <ActionPanel /> */}
 						<div className="flex flex-col gap-5">
-							{/* <PlayerCards /> */}
+							<PlayerCards turnCount={0} players={gameState.players} />
 							<HurricaneDeck
 								hurricaneDeck={gameState.hurricaneDeck}
 								recentlyDrawnHurricaneCard={{ type: "Thirst" }}

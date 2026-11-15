@@ -107,6 +107,13 @@ export function createPlayerInventory({
 	};
 }
 
+export function sumPlayerInventory(playerInventory: PlayerInventory) {
+	return Object.values(playerInventory).reduce(
+		(sum, current) => sum + current,
+		0,
+	);
+}
+
 export function addItems(
 	players: PlayerState,
 	targetRoleKey: RoleKey,
