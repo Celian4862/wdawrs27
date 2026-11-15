@@ -5,11 +5,11 @@ import Board from "#/components/Board";
 import DeleteGameModal from "#/components/DeleteGameModal";
 import HurricaneDeck from "#/components/HurricaneDeck";
 import HurricaneMeter from "#/components/HurricaneMeter";
+import ItemDeck from "#/components/ItemDeck";
 import Legend from "#/components/Legend";
 import Parts from "#/components/Parts";
 import { sumSandPoints } from "#/server/features/board/helpers";
 import { getGameState } from "#/server/game.functions";
-import ItemDeck from "#/components/ItemDeck";
 
 export const Route = createFileRoute("/$gameId/started")({
 	component: RouteComponent,
@@ -93,7 +93,7 @@ function RouteComponent() {
 								recentlyDrawnHurricaneCard={{ type: "Thirst" }}
 								sandPoints={48 - sumSandPoints(gameState.board)}
 							/>
-							<ItemDeck itemDeck={[]} recentlyDrawnItemCard='sandRemover' />
+							<ItemDeck itemDeck={[]} recentlyDrawnItemCard="sandRemover" />
 							<Parts partsCollected={gameState.partsCollected} />
 							<Legend />
 							{gameState.isAdmin && <DeleteGameModal gameId={gameId} />}
