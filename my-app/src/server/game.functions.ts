@@ -18,7 +18,12 @@ import { adminOnlyMessage, validActions } from "./game.data";
 import type { GameState, GameStatus } from "./game.types";
 
 export const getUserSessionStatus = createServerFn({ method: "GET" }).handler(
-	async ({ context: { token } }) => {
+	async ({
+		context: { token },
+	}): Promise<{
+		gameId: string;
+		status: GameStatus;
+	}> => {
 		const [userSession] = await db
 			.select({ gameId: usersTable.gameId, status: gamesTable.status })
 			.from(usersTable)
@@ -27,10 +32,7 @@ export const getUserSessionStatus = createServerFn({ method: "GET" }).handler(
 
 		return {
 			gameId: userSession?.gameId ?? "",
-			status: userSession?.status ?? "waiting",
-		} as {
-			gameId: string;
-			status: GameStatus;
+			status: (userSession?.status as GameStatus) ?? "waiting",
 		};
 	},
 );
@@ -65,8 +67,8 @@ export const joinGame = createServerFn({ method: "POST" })
 				throw new Error("Game not found.");
 			}
 
-			if (game.status !== "waiting") {
-				throw new Error("Game has already started or ended");
+			if ((game.status as GameStatus) === "finished") {
+				throw new Error("Game has already ended");
 			}
 
 			const [playerWithName] = await tx
