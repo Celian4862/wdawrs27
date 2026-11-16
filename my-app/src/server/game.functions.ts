@@ -103,10 +103,6 @@ export const joinGame = createServerFn({ method: "POST" })
 		return {};
 	});
 
-/**
- * Setup Game Session Function
- * Replaces: POST /game/setup
- */
 export const setupGame = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
 	.validator(
@@ -241,10 +237,6 @@ export const startGame = createServerFn({ method: "POST" })
 			.where(eq(gamesTable.id, gameId));
 	});
 
-/**
- * Get Game State Function
- * Replaces: GET /game/:gameId
- */
 export const getGameState = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
 	.validator(z.object({ gameId: z.string().min(8).max(8) }))
