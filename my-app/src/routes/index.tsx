@@ -7,6 +7,8 @@ import { joinGame, setupGame } from "#/server/game.functions";
 
 export const Route = createFileRoute("/")({ component: Home });
 
+const namePlaceholder = "Max 10 characters";
+
 function Home() {
 	const [playerCount, setPlayerCount] = useState(2);
 	const [difficulty, setDifficulty] = useState<Difficulty>("Easy");
@@ -127,11 +129,10 @@ function Home() {
 								type="text"
 								value={playerName}
 								onChange={(e) => setPlayerName(e.target.value)}
-								minLength={1}
 								maxLength={10}
 								required
 								className="mt-2 w-full rounded-lg border px-3 py-2"
-								placeholder="1 - 10 characters"
+								placeholder={namePlaceholder}
 							/>
 						</label>
 					</div>
@@ -186,8 +187,7 @@ function Home() {
 							type="text"
 							value={playerName}
 							onChange={(e) => setPlayerName(e.target.value)}
-							placeholder="1 - 10 characters"
-							minLength={1}
+							placeholder={namePlaceholder}
 							maxLength={10}
 							required
 						/>
