@@ -5,6 +5,7 @@ import {
 import type { ItemKey } from "#/server/features/item/types";
 import {
 	getMaxWater,
+	getRoleAbility,
 	getRoleTitle,
 	sumPlayerInventory,
 } from "#/server/features/player/helpers";
@@ -68,7 +69,9 @@ function PlayerDetails({
 			</div>
 			<details open={isCurrent}>
 				<summary className="mt-1 cursor-pointer">Abilities</summary>
-				<h3 className="text-md mt-1 font-medium text-white/65">{}</h3>
+				<h3 className="text-md mt-1 font-medium text-white/65">
+					{getRoleAbility(player.roleKey)}
+				</h3>
 			</details>
 			<p className="my-1 text-lg font-semibold text-cyan-200 tabular-nums">
 				Water: {player.currentWater}/{getMaxWater(player.roleKey)}

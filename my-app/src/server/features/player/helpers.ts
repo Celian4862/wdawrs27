@@ -6,7 +6,6 @@ import type {
 	ActivePlayer,
 	PlayerInventory,
 	PlayerState,
-	PlayerTitle,
 	RoleKey,
 } from "./types";
 
@@ -47,12 +46,16 @@ export function passTurn(players: PlayerState): PlayerState {
 	return [...remaining, current];
 }
 
-export function getRoleTitle(roleKey: RoleKey): PlayerTitle {
+export function getRoleTitle(roleKey: RoleKey) {
 	return playerRoles[roleKey].title;
 }
 
-export function getMaxWater(roleKey: RoleKey): number {
+export function getMaxWater(roleKey: RoleKey) {
 	return playerRoles[roleKey].maxWater;
+}
+
+export function getRoleAbility(roleKey: RoleKey) {
+	return playerRoles[roleKey].ability;
 }
 
 /**
