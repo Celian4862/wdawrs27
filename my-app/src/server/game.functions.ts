@@ -15,9 +15,8 @@ import { shuffleItemCards } from "./features/item/helpers";
 import { assignPlayers, getRoleTitle } from "./features/player/helpers";
 import { oneDayInSeconds } from "./features/shared/data";
 import { generateGameId } from "./features/shared/helpers";
+import { adminOnlyMessage, validActions } from "./game.data";
 import type { GameState, GameStatus } from "./game.types";
-
-const adminOnlyMessage = "Only admins may perform this action.";
 
 export const getUserSessionStatus = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
@@ -287,3 +286,8 @@ export const getGameState = createServerFn({ method: "GET" })
 			return gameStateResult;
 		},
 	);
+
+export const setSelectedAction = createServerFn({ method: "POST" })
+	.middleware([authMiddleware])
+	.validator(z.object({ actionName: z.enum(validActions) }))
+	.handler(async ({ data: { actionName }, context: { token } }) => {});
