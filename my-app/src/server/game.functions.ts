@@ -6,7 +6,7 @@ import { gamesTable, usersTable } from "#/db/schema";
 import { redis } from "#/lib/redis";
 import { authMiddleware } from "#/middleware/auth";
 import { shuffleBoard } from "./features/board/helpers";
-import type { GameState, GameStatus } from "./features/game/types";
+import type { GameState, GameStatus } from "./game.types";
 import { difficulties } from "./features/hurricane/data";
 import {
 	setHurricaneMeter,

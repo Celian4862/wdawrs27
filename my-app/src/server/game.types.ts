@@ -1,7 +1,7 @@
-import type { Board, PartNames } from "../board/types";
-import type { HurricaneDeck, HurricaneMeter } from "../hurricane/types";
-import type { ItemDeck } from "../item/types";
-import type { PlayerState } from "../player/types";
+import type { Board, PartNames } from "./features/board/types";
+import type { HurricaneDeck, HurricaneMeter } from "./features/hurricane/types";
+import type { ItemDeck } from "./features/item/types";
+import type { PlayerState } from "./features/player/types";
 
 export type GameStatus = "waiting" | "started" | "finished";
 
