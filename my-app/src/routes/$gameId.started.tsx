@@ -10,8 +10,8 @@ import Legend from "#/components/Legend";
 import Parts from "#/components/Parts";
 import PlayerCards from "#/components/PlayerCards";
 import { sumSandPoints } from "#/server/features/board/helpers";
-import type { GameState } from "#/server/game.types";
 import { getGameState } from "#/server/game.functions";
+import type { GameState } from "#/server/game.types";
 
 export const Route = createFileRoute("/$gameId/started")({
 	component: RouteComponent,

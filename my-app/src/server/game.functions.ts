@@ -6,7 +6,6 @@ import { gamesTable, usersTable } from "#/db/schema";
 import { redis } from "#/lib/redis";
 import { authMiddleware } from "#/middleware/auth";
 import { shuffleBoard } from "./features/board/helpers";
-import type { GameState, GameStatus } from "./game.types";
 import { difficulties } from "./features/hurricane/data";
 import {
 	setHurricaneMeter,
@@ -16,6 +15,7 @@ import { shuffleItemCards } from "./features/item/helpers";
 import { assignPlayers, getRoleTitle } from "./features/player/helpers";
 import { oneDayInSeconds } from "./features/shared/data";
 import { generateGameId } from "./features/shared/helpers";
+import type { GameState, GameStatus } from "./game.types";
 
 const adminOnlyMessage = "Only admins may perform this action.";
 
