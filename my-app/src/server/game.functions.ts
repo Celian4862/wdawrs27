@@ -4,7 +4,6 @@ import { z } from "zod";
 import { db } from "#/db";
 import { gamesTable, usersTable } from "#/db/schema";
 import { redis } from "#/lib/redis";
-import { authMiddleware } from "#/middleware/auth";
 import { shuffleBoard } from "./features/board/helpers";
 import { difficulties } from "./features/hurricane/data";
 import {
@@ -18,9 +17,8 @@ import { generateGameId } from "./features/shared/helpers";
 import { adminOnlyMessage, validActions } from "./game.data";
 import type { GameState, GameStatus } from "./game.types";
 
-export const getUserSessionStatus = createServerFn({ method: "GET" })
-	.middleware([authMiddleware])
-	.handler(async ({ context: { token } }) => {
+export const getUserSessionStatus = createServerFn({ method: "GET" }).handler(
+	async ({ context: { token } }) => {
 		const [userSession] = await db
 			.select({ gameId: usersTable.gameId, status: gamesTable.status })
 			.from(usersTable)
@@ -34,10 +32,10 @@ export const getUserSessionStatus = createServerFn({ method: "GET" })
 			gameId: string;
 			status: GameStatus;
 		};
-	});
+	},
+);
 
 export const joinGame = createServerFn({ method: "POST" })
-	.middleware([authMiddleware])
 	.validator((data: { gameId: string; playerName: string }) => {
 		const result = z
 			.object({
@@ -103,7 +101,6 @@ export const joinGame = createServerFn({ method: "POST" })
 	});
 
 export const setupGame = createServerFn({ method: "POST" })
-	.middleware([authMiddleware])
 	.validator(
 		z.object({
 			playerCount: z.number().min(2).max(5),
@@ -171,7 +168,6 @@ export const setupGame = createServerFn({ method: "POST" })
 	);
 
 export const getWaitingRoomInfo = createServerFn({ method: "GET" })
-	.middleware([authMiddleware])
 	.validator(z.object({ gameId: z.string().min(8).max(8) }))
 	.handler(async ({ data: { gameId }, context: { isAdmin } }) => {
 		const [gameRoomInfo] = await db
@@ -211,7 +207,6 @@ export const getWaitingRoomInfo = createServerFn({ method: "GET" })
 	});
 
 export const deleteGame = createServerFn({ method: "POST" })
-	.middleware([authMiddleware])
 	.validator(z.object({ gameId: z.string().min(8).max(8) }))
 	.handler(async ({ data: { gameId }, context: { isAdmin } }) => {
 		if (!isAdmin) {
@@ -223,7 +218,6 @@ export const deleteGame = createServerFn({ method: "POST" })
 	});
 
 export const startGame = createServerFn({ method: "POST" })
-	.middleware([authMiddleware])
 	.validator(z.object({ gameId: z.string().min(8).max(8) }))
 	.handler(async ({ data: { gameId }, context: { isAdmin } }) => {
 		if (!isAdmin) {
@@ -237,7 +231,6 @@ export const startGame = createServerFn({ method: "POST" })
 	});
 
 export const getGameState = createServerFn({ method: "GET" })
-	.middleware([authMiddleware])
 	.validator(z.object({ gameId: z.string().min(8).max(8) }))
 	.handler(
 		async ({
@@ -288,6 +281,5 @@ export const getGameState = createServerFn({ method: "GET" })
 	);
 
 export const setSelectedAction = createServerFn({ method: "POST" })
-	.middleware([authMiddleware])
 	.validator(z.object({ actionName: z.enum(validActions) }))
 	.handler(async ({ data: { actionName }, context: { token } }) => {});
