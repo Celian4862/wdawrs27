@@ -177,11 +177,7 @@ export const setupGame = createServerFn({ method: "POST" })
 
 export const getWaitingRoomInfo = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
-	.validator(
-		z.object({
-			gameId: z.string().min(8).max(8),
-		}),
-	)
+	.validator(z.object({ gameId: z.string().min(8).max(8) }))
 	.handler(async ({ data: { gameId }, context: { isAdmin } }) => {
 		const [gameRoomInfo] = await db
 			.select({
