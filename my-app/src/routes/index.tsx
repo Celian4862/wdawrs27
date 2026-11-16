@@ -1,3 +1,4 @@
+import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { difficulties } from "#/server/features/hurricane/data";
@@ -9,12 +10,48 @@ export const Route = createFileRoute("/")({ component: Home });
 function Home() {
 	const [playerCount, setPlayerCount] = useState(2);
 	const [difficulty, setDifficulty] = useState<Difficulty>("Easy");
-	const [loading, setLoading] = useState(false);
-	const [createError, setCreateError] = useState<string | null>(null);
 	const [gameId, setGameId] = useState("");
 	const [playerName, setPlayerName] = useState("");
-	const [joinError, setJoinError] = useState<string | null>(null);
 	const navigate = useNavigate();
+
+	const createMutation = useMutation({
+		mutationFn: setupGame,
+		onSuccess: (newGame) => {
+			navigate({
+				to: "/$gameId/waiting",
+				params: { gameId: newGame.id },
+			});
+		},
+	});
+
+	const joinMutation = useMutation({
+		mutationFn: joinGame,
+		onSuccess: () => {
+			navigate({ to: "/$gameId/waiting", params: { gameId } });
+		},
+	});
+
+	// Helper function to extract friendly error messages from Zod / Server errors
+	const getErrorMessage = (err: unknown) => {
+		if (err instanceof Error) {
+			try {
+				const parsed = JSON.parse(err.message);
+				if (Array.isArray(parsed)) {
+					return parsed[0].message;
+				}
+			} catch {
+				return err.message;
+			}
+		}
+		return "An unexpected error occurred.";
+	};
+
+	const createErrorMsg = createMutation.error
+		? getErrorMessage(createMutation.error)
+		: null;
+	const joinErrorMsg = joinMutation.error
+		? getErrorMessage(joinMutation.error)
+		: null;
 
 	return (
 		<div className="flex justify-center p-10">
@@ -24,39 +61,11 @@ function Home() {
 				</h1>
 				<form
 					className="mt-3 w-full rounded-lg border p-3 *:w-full"
-					onSubmit={async (e) => {
+					onSubmit={(e) => {
 						e.preventDefault();
-						setLoading(true);
-						setCreateError(null);
-						setJoinError(null);
-
-						try {
-							const newGame = await setupGame({
-								data: { playerCount, difficulty, playerName },
-							});
-
-							// Navigate to the dynamic route
-							navigate({
-								to: "/$gameId/waiting",
-								params: { gameId: newGame.id },
-							});
-						} catch (err) {
-							if (err instanceof Error) {
-								console.error(err);
-								try {
-									const error = JSON.parse(err.message);
-									if (Array.isArray(error)) {
-										setCreateError(error[0].message);
-									}
-								} catch {
-									setCreateError(err.message);
-								}
-							} else {
-								setCreateError("An unexpected error occurred.");
-							}
-						} finally {
-							setLoading(false);
-						}
+						createMutation.mutate({
+							data: { playerCount, difficulty, playerName },
+						});
 					}}
 				>
 					<h2 className="text-center text-2xl font-bold underline underline-offset-5">
@@ -65,7 +74,6 @@ function Home() {
 
 					<fieldset className="space-y-2">
 						<legend>How many players?</legend>
-
 						<div className="flex gap-2">
 							{[2, 3, 4, 5].map((n) => (
 								<label key={n} className="relative w-full cursor-pointer">
@@ -73,6 +81,7 @@ function Home() {
 										type="radio"
 										value={n}
 										name="playerCount"
+										checked={playerCount === n}
 										onChange={() => setPlayerCount(n)}
 										required
 										className="peer sr-only"
@@ -90,22 +99,20 @@ function Home() {
 						<legend>What difficulty?</legend>
 
 						<div className="flex gap-2">
-							{difficulties.map((difficulty) => (
-								<label
-									key={difficulty}
-									className="relative w-full cursor-pointer"
-								>
+							{difficulties.map((diff) => (
+								<label key={diff} className="relative w-full cursor-pointer">
 									<input
 										type="radio"
-										value={difficulty}
+										value={diff}
 										name="difficulty"
-										onChange={() => setDifficulty(difficulty)}
+										checked={difficulty === diff}
+										onChange={() => setDifficulty(diff)}
 										required
 										className="peer sr-only"
 									/>
 
 									<span className="flex w-full items-center justify-center rounded-lg border p-2 font-semibold shadow-sm peer-checked:bg-amber-600 peer-checked:text-black peer-focus-visible:ring-2 peer-focus-visible:ring-amber-500 peer-focus-visible:ring-offset-2 hover:border-amber-500 hover:shadow-lg hover:shadow-amber-700 motion-safe:transition-all">
-										{difficulty}
+										{diff}
 									</span>
 								</label>
 							))}
@@ -120,8 +127,8 @@ function Home() {
 								type="text"
 								value={playerName}
 								onChange={(e) => setPlayerName(e.target.value)}
-								min={1}
-								max={10}
+								minLength={1}
+								maxLength={10}
 								required
 								className="mt-2 w-full rounded-lg border px-3 py-2"
 								placeholder="1 - 10 characters"
@@ -129,48 +136,24 @@ function Home() {
 						</label>
 					</div>
 
-					<p className={`${!createError && "invisible"} text-red-500`}>
-						{createError ?? "Error placeholder"}
+					<p className={`${!createErrorMsg && "invisible"} text-red-500`}>
+						{createErrorMsg ?? "Error placeholder"}
 					</p>
 
 					<button
 						type="submit"
-						disabled={loading}
+						disabled={createMutation.isPending}
 						className="mt-3 rounded-lg border bg-amber-600 px-3 py-2 text-xl text-black hover:bg-amber-500 active:bg-amber-700 motion-safe:transition"
 					>
-						{loading ? "Setting up..." : "Create Game"}
+						{createMutation.isPending ? "Setting up..." : "Create Game"}
 					</button>
 				</form>
 
 				<form
 					className="mt-10 w-full justify-between rounded-lg border p-3 *:w-full"
-					onSubmit={async (e) => {
+					onSubmit={(e) => {
 						e.preventDefault();
-						setLoading(true);
-						setCreateError(null);
-						setJoinError(null);
-
-						try {
-							await joinGame({ data: { gameId, playerName } });
-
-							navigate({ to: "/$gameId/waiting", params: { gameId } });
-						} catch (err) {
-							if (err instanceof Error) {
-								console.error(err);
-								try {
-									const error = JSON.parse(err.message);
-									if (Array.isArray(error)) {
-										setJoinError(error[0].message);
-									}
-								} catch {
-									setJoinError(err.message);
-								}
-							} else {
-								setCreateError("An unexpected error occurred.");
-							}
-						} finally {
-							setLoading(false);
-						}
+						joinMutation.mutate({ data: { gameId, playerName } });
 					}}
 				>
 					<h2 className="text-center text-2xl font-bold underline underline-offset-5">
@@ -210,16 +193,20 @@ function Home() {
 						/>
 					</div>
 
-					<p className={`${!joinError && "invisible"} text-red-500`}>
-						{joinError ?? "Error placeholder"}
+					<p className={`${!joinErrorMsg && "invisible"} text-red-500`}>
+						{joinErrorMsg ?? "Error placeholder"}
 					</p>
 
 					<button
 						type="submit"
-						disabled={loading}
-						className={`mt-3 rounded-lg border bg-amber-600 px-3 py-2 text-xl text-black ${loading ? "cursor-not-allowed brightness-50" : "hover:bg-amber-500 active:bg-amber-700"} motion-safe:transition`}
+						disabled={joinMutation.isPending}
+						className={`mt-3 rounded-lg border bg-amber-600 px-3 py-2 text-xl text-black ${
+							joinMutation.isPending
+								? "cursor-not-allowed brightness-50"
+								: "hover:bg-amber-500 active:bg-amber-700"
+						} motion-safe:transition`}
 					>
-						Join Game
+						{joinMutation.isPending ? "Joining..." : "Join Game"}
 					</button>
 				</form>
 			</div>
