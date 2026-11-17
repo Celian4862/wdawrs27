@@ -1,3 +1,4 @@
+import type { GameAction } from "#/server/features/game/types";
 import {
 	getItemDescription,
 	getItemName,
@@ -10,7 +11,6 @@ import {
 	sumPlayerInventory,
 } from "#/server/features/player/helpers";
 import type { ActivePlayer, PlayerState } from "#/server/features/player/types";
-import type { GameAction } from "#/server/game.types";
 import PawnCircle from "./PawnCircle";
 
 export default function PlayerCards({

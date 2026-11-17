@@ -11,7 +11,7 @@ import {
 	AlertDialogTrigger,
 } from "#/components/ui/alert-dialog";
 import { Button } from "#/components/ui/button";
-import { deleteGame } from "#/server/game.functions";
+import { deleteGame } from "#/server/features/game/helpers";
 
 export default function DeleteGameModal({ gameId }: { gameId: string }) {
 	const navigate = useNavigate();

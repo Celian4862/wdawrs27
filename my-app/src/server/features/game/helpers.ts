@@ -5,18 +5,15 @@ import { db } from "#/db";
 import { gamesTable, usersTable } from "#/db/schema";
 import { redis } from "#/lib/redis";
 import { cookieMiddleware, isAdminMiddleware } from "#/middleware/auth";
-import { shuffleBoard } from "./features/board/helpers";
-import { difficulties } from "./features/hurricane/data";
-import {
-	setHurricaneMeter,
-	shuffleHurricaneDeck,
-} from "./features/hurricane/helpers";
-import { shuffleItemCards } from "./features/item/helpers";
-import { assignPlayers } from "./features/player/helpers";
-import { oneDayInSeconds } from "./features/shared/data";
-import { generateGameId } from "./features/shared/helpers";
-import { adminOnlyMessage } from "./game.data";
-import type { GameState, GameStatus } from "./game.types";
+import { shuffleBoard } from "../board/helpers";
+import { difficulties } from "../hurricane/data";
+import { setHurricaneMeter, shuffleHurricaneDeck } from "../hurricane/helpers";
+import { shuffleItemCards } from "../item/helpers";
+import { assignPlayers } from "../player/helpers";
+import { oneDayInSeconds } from "../shared/data";
+import { generateGameId } from "../shared/helpers";
+import { adminOnlyMessage } from "./data";
+import type { GameState, GameStatus } from "./types";
 
 export const getUserSessionStatus = createServerFn({ method: "GET" })
 	.middleware([cookieMiddleware])
