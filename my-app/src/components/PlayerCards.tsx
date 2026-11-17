@@ -10,14 +10,20 @@ import {
 	sumPlayerInventory,
 } from "#/server/features/player/helpers";
 import type { ActivePlayer, PlayerState } from "#/server/features/player/types";
+import type { GameAction } from "#/server/game.types";
 import PawnCircle from "./PawnCircle";
 
 export default function PlayerCards({
 	turnCount,
 	players,
+	selectedActionState,
 }: {
 	turnCount: number;
 	players: PlayerState;
+	selectedActionState: [
+		GameAction | null,
+		React.Dispatch<React.SetStateAction<GameAction | null>>,
+	];
 }) {
 	return (
 		<section className="rounded-xl border p-6">
@@ -27,7 +33,11 @@ export default function PlayerCards({
 			</div>
 			<div className="flex flex-col gap-3">
 				<h3 className="text-lg">Current player:</h3>
-				<PlayerDetails player={players[0]} isCurrent={true} />
+				<PlayerDetails
+					player={players[0]}
+					isCurrent={true}
+					selectedActionState={selectedActionState}
+				/>
 				<details>
 					<summary className="mb-3 cursor-pointer">Other players</summary>
 					<div className="flex flex-col gap-3">
@@ -38,6 +48,7 @@ export default function PlayerCards({
 										key={getRoleTitle(player.roleKey)}
 										player={players[idx]}
 										isCurrent={false}
+										selectedActionState={selectedActionState}
 									/>
 								);
 							}
@@ -53,9 +64,14 @@ export default function PlayerCards({
 function PlayerDetails({
 	player,
 	isCurrent,
+	selectedActionState,
 }: {
 	player: ActivePlayer;
 	isCurrent: boolean;
+	selectedActionState: [
+		GameAction | null,
+		React.Dispatch<React.SetStateAction<GameAction | null>>,
+	];
 }) {
 	const itemCount = sumPlayerInventory(player.inventory);
 
@@ -93,10 +109,7 @@ function PlayerDetails({
 											type="button"
 											className={`col-span-1 space-y-2 rounded-lg border bg-black p-3 hover:scale-110 active:bg-gray-800 motion-safe:transition-all`}
 											onClick={() => {
-												switch (item) {
-													case "sandRemover":
-														break;
-												}
+												selectedActionState[1](item);
 											}}
 										>
 											<h4 className="text-center font-bold">

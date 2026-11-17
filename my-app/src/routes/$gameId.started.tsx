@@ -20,9 +20,7 @@ export const Route = createFileRoute("/$gameId/started")({
 function RouteComponent() {
 	const { gameId } = Route.useParams();
 	const navigate = useNavigate();
-	const [_selecteAction, _setSelectedAction] = useState<GameAction | null>(
-		null,
-	);
+	const selectedActionState = useState<GameAction | null>(null);
 	const {
 		data: gameState,
 		isLoading,
@@ -99,7 +97,11 @@ function RouteComponent() {
 						{/* <ActionPanel /> */}
 						<div className="flex flex-col gap-5">
 							{gameState.players.length > 0 && (
-								<PlayerCards turnCount={0} players={gameState.players} />
+								<PlayerCards
+									turnCount={0}
+									players={gameState.players}
+									selectedActionState={selectedActionState}
+								/>
 							)}
 							<HurricaneDeck
 								hurricaneDeck={gameState.hurricaneDeck}
