@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import { db } from "#/db";
 import { usersTable } from "#/db/schema";
 
-export const authMiddleware = createMiddleware({ type: "function" }).server(
+export const cookieMiddleware = createMiddleware({ type: "function" }).server(
 	async ({ next }) => {
 		let token = getCookie("session_id");
 
@@ -21,6 +21,16 @@ export const authMiddleware = createMiddleware({ type: "function" }).server(
 		return next({
 			context: {
 				token,
+			},
+		});
+	},
+);
+
+export const isAdminMiddleware = createMiddleware({ type: "function" })
+	.middleware([cookieMiddleware])
+	.server(async ({ next, context: { token } }) => {
+		return next({
+			context: {
 				isAdmin:
 					(
 						await db
@@ -30,5 +40,4 @@ export const authMiddleware = createMiddleware({ type: "function" }).server(
 					)[0]?.isAdmin ?? false,
 			},
 		});
-	},
-);
+	});
