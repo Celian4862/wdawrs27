@@ -130,8 +130,10 @@ export const setupGame = createServerFn({ method: "POST" })
 							board: shuffleBoard(),
 							players: assignPlayers(playerCount),
 							hurricaneDeck: shuffleHurricaneDeck(),
+							drawnHurricaneCard: null,
 							hurricaneMeter: setHurricaneMeter(playerCount, difficulty),
 							itemDeck: shuffleItemCards(),
+							drawnItemCard: "",
 							partsCollected: [],
 						};
 

@@ -10,7 +10,7 @@ export default function ItemDeck({
 	recentlyDrawnItemCard,
 }: {
 	itemDeck: ItemDeckType;
-	recentlyDrawnItemCard: ItemKey;
+	recentlyDrawnItemCard: ItemKey | "";
 }) {
 	const drawnItems = countItemCards(itemDeck);
 

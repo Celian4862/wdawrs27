@@ -11,11 +11,11 @@ import type {
 
 export default function HurricaneDeck({
 	hurricaneDeck,
-	recentlyDrawnHurricaneCard,
+	drawnHurricaneCard,
 	sandPoints,
 }: {
 	hurricaneDeck: HurricaneDeckType;
-	recentlyDrawnHurricaneCard: HurricaneCard;
+	drawnHurricaneCard: HurricaneCard | null;
 	sandPoints: number;
 }) {
 	const hurricaneCount = countHurricaneCards(hurricaneDeck);
@@ -27,13 +27,13 @@ export default function HurricaneDeck({
 			</div>
 			<div className="grid gap-3 *:rounded-lg *:border *:py-1 *:text-lg md:grid-cols-2">
 				<div
-					className={`${recentlyDrawnHurricaneCard.type === "Thirst" ? "bg-blue-700" : "bg-none"} flex items-center justify-around`}
+					className={`${drawnHurricaneCard?.type === "Thirst" ? "bg-blue-700" : "bg-none"} flex items-center justify-around`}
 				>
 					<h3 className="font-bold">Thirst</h3>
 					<span>{hurricaneCount.Thirst ?? 0}</span>
 				</div>
 				<div
-					className={`${recentlyDrawnHurricaneCard.type === "Hurricane Up" ? "bg-red-700/80" : "bg-none"} flex flex-wrap items-center justify-around`}
+					className={`${drawnHurricaneCard?.type === "Hurricane Up" ? "bg-red-700/80" : "bg-none"} flex flex-wrap items-center justify-around`}
 				>
 					<h3 className="font-bold">Hurricane Up</h3>
 					<span>{hurricaneCount["Hurricane Up"] ?? 0}</span>
@@ -61,9 +61,9 @@ export default function HurricaneDeck({
 											<td
 												key={moveString}
 												className={
-													recentlyDrawnHurricaneCard.type === "Move" &&
-													recentlyDrawnHurricaneCard.distance === distance &&
-													recentlyDrawnHurricaneCard.direction === direction
+													drawnHurricaneCard?.type === "Move" &&
+													drawnHurricaneCard?.distance === distance &&
+													drawnHurricaneCard?.direction === direction
 														? "bg-amber-500"
 														: "bg-black"
 												}

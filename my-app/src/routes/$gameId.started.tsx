@@ -38,11 +38,13 @@ function RouteComponent() {
 			board: [],
 			players: [],
 			hurricaneDeck: [],
+			drawnHurricaneCard: null,
 			hurricaneMeter: {
 				meter: [],
 				progress: 0,
 			},
 			itemDeck: [],
+			drawnItemCard: "",
 			partsCollected: [],
 		},
 		select: (data) =>
@@ -55,7 +57,9 @@ function RouteComponent() {
 					meter: data?.hurricaneMeter.meter ?? [],
 					progress: data?.hurricaneMeter.progress ?? 0,
 				},
+				drawnHurricaneCard: data?.drawnHurricaneCard ?? null,
 				itemDeck: data?.itemDeck ?? [],
+				drawnItemCard: data?.drawnItemCard ?? null,
 				partsCollected: data?.partsCollected ?? [],
 			}) satisfies GameState & { isAdmin: boolean },
 	});
@@ -105,12 +109,12 @@ function RouteComponent() {
 							)}
 							<HurricaneDeck
 								hurricaneDeck={gameState.hurricaneDeck}
-								recentlyDrawnHurricaneCard={{ type: "Thirst" }}
+								drawnHurricaneCard={gameState.drawnHurricaneCard}
 								sandPoints={48 - sumSandPoints(gameState.board)}
 							/>
 							<ItemDeck
 								itemDeck={gameState.itemDeck}
-								recentlyDrawnItemCard="sandRemover"
+								recentlyDrawnItemCard={gameState.drawnItemCard}
 							/>
 							<Parts partsCollected={gameState.partsCollected} />
 							<Legend />
