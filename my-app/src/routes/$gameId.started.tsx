@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Board from "#/components/Board";
 import DeleteGameModal from "#/components/DeleteGameModal";
 import HurricaneDeck from "#/components/HurricaneDeck";
@@ -11,7 +11,7 @@ import Parts from "#/components/Parts";
 import PlayerCards from "#/components/PlayerCards";
 import { sumSandPoints } from "#/server/features/board/helpers";
 import { getGameState } from "#/server/game.functions";
-import type { GameState } from "#/server/game.types";
+import type { GameAction, GameState } from "#/server/game.types";
 
 export const Route = createFileRoute("/$gameId/started")({
 	component: RouteComponent,
@@ -20,6 +20,9 @@ export const Route = createFileRoute("/$gameId/started")({
 function RouteComponent() {
 	const { gameId } = Route.useParams();
 	const navigate = useNavigate();
+	const [_selecteAction, _setSelectedAction] = useState<GameAction | null>(
+		null,
+	);
 	const {
 		data: gameState,
 		isLoading,

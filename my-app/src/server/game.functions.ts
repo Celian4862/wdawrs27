@@ -12,10 +12,10 @@ import {
 	shuffleHurricaneDeck,
 } from "./features/hurricane/helpers";
 import { shuffleItemCards } from "./features/item/helpers";
-import { assignPlayers, getRoleTitle } from "./features/player/helpers";
+import { assignPlayers } from "./features/player/helpers";
 import { oneDayInSeconds } from "./features/shared/data";
 import { generateGameId } from "./features/shared/helpers";
-import { adminOnlyMessage, validActions } from "./game.data";
+import { adminOnlyMessage } from "./game.data";
 import type { GameState, GameStatus } from "./game.types";
 
 export const getUserSessionStatus = createServerFn({ method: "GET" })
@@ -97,7 +97,7 @@ export const joinGame = createServerFn({ method: "POST" })
 					gameId,
 					isAdmin: false,
 					playerName: playerName,
-					role: getRoleTitle(gameState.players[gamePlayers.count].roleKey),
+					role: gameState.players[gamePlayers.count].roleKey,
 				});
 			} else {
 				throw new Error("This game room is full.");
@@ -153,7 +153,7 @@ export const setupGame = createServerFn({ method: "POST" })
 				gameId: newGameId,
 				isAdmin: true,
 				playerName,
-				role: getRoleTitle(gameState.players[0].roleKey),
+				role: gameState.players[0].roleKey,
 			});
 
 			// Cache initial state to Redis as well for fast reads
@@ -290,8 +290,3 @@ export const getGameState = createServerFn({ method: "GET" })
 			return gameStateResult;
 		},
 	);
-
-export const setSelectedAction = createServerFn({ method: "POST" })
-	.middleware([cookieMiddleware])
-	.validator(z.object({ actionName: z.enum(validActions) }))
-	.handler(async ({ data: { actionName }, context: { token } }) => {});
