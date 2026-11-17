@@ -6,14 +6,10 @@ import type {
 } from "../hurricane/types";
 import type { ItemDeck, ItemKey } from "../item/types";
 import type { PlayerState } from "../player/types";
+import type { generalActions } from "./data";
 
 export type GameStatus = "waiting" | "started" | "finished";
-export type GameAction =
-	| "move"
-	| "removeSand"
-	| "collectPart"
-	| "revealTile"
-	| ItemKey;
+export type GameAction = (typeof generalActions)[number] | ItemKey;
 
 export interface GameState {
 	readonly board: Board;
