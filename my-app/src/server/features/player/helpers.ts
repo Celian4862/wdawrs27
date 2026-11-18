@@ -93,14 +93,7 @@ export function adjustWater(
  * @returns Initialized PlayerInventory object.
  */
 export function createPlayerInventory(
-	initialInventory: Partial<PlayerInventory> = {
-		sandRemover: 0,
-		flyingTool: 0,
-		thirstShield: 0,
-		xRayGoggles: 0,
-		addTwoWater: 0,
-		speedBoost: 0,
-	},
+	initialInventory: Partial<PlayerInventory> = {},
 ): PlayerInventory {
 	return {
 		sandRemover: 0,
