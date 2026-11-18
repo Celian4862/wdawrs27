@@ -5,11 +5,19 @@ import type {
 	HurricaneMeter,
 } from "../hurricane/types";
 import type { ItemDeck, ItemKey } from "../item/types";
-import type { PlayerState } from "../player/types";
+import type { PlayerState, RoleKey } from "../player/types";
 import type { generalActions } from "./data";
+
+export type UserInfo = Partial<
+	Record<RoleKey, { isYou: boolean; playerName: string }>
+>;
 
 export type GameStatus = "waiting" | "started" | "finished";
 export type GameAction = (typeof generalActions)[number] | ItemKey;
+export type GameInfo = GameState & {
+	isAdmin: boolean;
+	userInfo: UserInfo;
+};
 
 export interface GameState {
 	readonly board: Board;

@@ -1,4 +1,4 @@
-import type { GameAction } from "#/server/features/game/types";
+import type { GameAction, UserInfo } from "#/server/features/game/types";
 import {
 	getItemDescription,
 	getItemName,
@@ -16,10 +16,12 @@ import PawnCircle from "./PawnCircle";
 export default function PlayerCards({
 	turnCount,
 	players,
+	playerNames,
 	selectedActionState,
 }: {
 	turnCount: number;
 	players: PlayerState;
+	playerNames: UserInfo;
 	selectedActionState: [
 		GameAction | null,
 		React.Dispatch<React.SetStateAction<GameAction | null>>,
@@ -35,6 +37,11 @@ export default function PlayerCards({
 				<h3 className="text-lg">Current player:</h3>
 				<PlayerDetails
 					player={players[0]}
+					playerName={
+						playerNames[players[0].roleKey]?.isYou
+							? "You"
+							: (playerNames[players[0].roleKey]?.playerName ?? "")
+					}
 					isCurrent={true}
 					selectedActionState={selectedActionState}
 				/>
@@ -45,8 +52,13 @@ export default function PlayerCards({
 							if (idx > 0) {
 								return (
 									<PlayerDetails
-										key={getRoleTitle(player.roleKey)}
+										key={player.roleKey}
 										player={players[idx]}
+										playerName={
+											playerNames[players[idx].roleKey]?.isYou
+												? "You"
+												: (playerNames[players[idx].roleKey]?.playerName ?? "")
+										}
 										isCurrent={false}
 										selectedActionState={selectedActionState}
 									/>
@@ -63,10 +75,12 @@ export default function PlayerCards({
 
 function PlayerDetails({
 	player,
+	playerName,
 	isCurrent,
 	selectedActionState,
 }: {
 	player: ActivePlayer;
+	playerName: string;
 	isCurrent: boolean;
 	selectedActionState: [
 		GameAction | null,
@@ -79,7 +93,8 @@ function PlayerDetails({
 		<article className="rounded-xl border border-white/15 bg-white/5 p-4">
 			<div className="flex justify-between">
 				<h2 className="text-xl font-bold text-white">
-					{getRoleTitle(player.roleKey)}
+					{getRoleTitle(player.roleKey)} (
+					{playerName === "You" ? <em>You</em> : playerName})
 				</h2>
 				<PawnCircle roleKey={player.roleKey} isCurrentPlayer={isCurrent} />
 			</div>

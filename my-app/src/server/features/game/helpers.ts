@@ -13,7 +13,7 @@ import { assignPlayers } from "../player/helpers";
 import { oneDayInSeconds } from "../shared/data";
 import { generateGameId } from "../shared/helpers";
 import { adminOnlyMessage } from "./data";
-import type { GameState, GameStatus } from "./types";
+import type { GameInfo, GameState, GameStatus } from "./types";
 
 export const getUserSessionStatus = createServerFn({ method: "GET" })
 	.middleware([cookieMiddleware])
@@ -239,14 +239,14 @@ export const startGame = createServerFn({ method: "POST" })
 			.where(eq(gamesTable.id, gameId));
 	});
 
-export const getGameState = createServerFn({ method: "GET" })
+export const getGameInfo = createServerFn({ method: "GET" })
 	.middleware([isAdminMiddleware])
 	.validator(z.object({ gameId: z.string().min(8).max(8) }))
 	.handler(
 		async ({
 			data: { gameId },
-			context: { isAdmin },
-		}): Promise<GameState & { isAdmin: boolean }> => {
+			context: { token, isAdmin },
+		}): Promise<GameInfo> => {
 			let gameStateResult: GameState & { isAdmin: boolean };
 			// 1. Try reading from Redis Cache first
 			const cachedGameState = await redis.getex(
@@ -286,6 +286,52 @@ export const getGameState = createServerFn({ method: "GET" })
 				};
 			}
 
-			return gameStateResult;
+			const userInfo = await db
+				.select({
+					token: usersTable.token,
+					playerName: usersTable.playerName,
+					role: usersTable.role,
+				})
+				.from(usersTable)
+				.where(eq(usersTable.gameId, gameId));
+
+			if (userInfo.length === 0) {
+				throw new Error("Game not found");
+			}
+
+			return {
+				...gameStateResult,
+				userInfo: Object.fromEntries(
+					userInfo.map((user) => [
+						user.role,
+						{ isYou: user.token === token, playerName: user.playerName },
+					]),
+				),
+			};
 		},
 	);
+
+export const getUserInfo = createServerFn({ method: "GET" })
+	.middleware([cookieMiddleware])
+	.validator(z.object({ gameId: z.string().min(8).max(8) }))
+	.handler(async ({ data: { gameId }, context: { token } }) => {
+		const userInfo = await db
+			.select({
+				token: usersTable.token,
+				playerName: usersTable.playerName,
+				role: usersTable.role,
+			})
+			.from(usersTable)
+			.where(eq(usersTable.gameId, gameId));
+
+		if (userInfo.length === 0) {
+			throw new Error("Game not found");
+		}
+
+		return Object.fromEntries(
+			userInfo.map((user) => [
+				user.role,
+				{ isYou: user.token === token, playerName: user.playerName },
+			]),
+		);
+	});
