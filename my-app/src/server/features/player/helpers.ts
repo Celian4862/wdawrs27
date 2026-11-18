@@ -89,7 +89,7 @@ export function adjustWater(
  * Initializes a PlayerInventory object.
  *
  * The parameter is an object so that choosing which object values to set is easier.
- * @param param0 Object with items to initialize the inventory with.
+ * @param initialInventory Object with items to initialize the inventory with.
  * @returns Initialized PlayerInventory object.
  */
 export function createPlayerInventory(
