@@ -12,6 +12,7 @@ export const cookieMiddleware = createMiddleware({ type: "function" }).server(
 			token = crypto.randomUUID();
 			setCookie("session_id", token, {
 				httpOnly: true,
+				secure: process.env.NODE_ENV === "production",
 				path: "/",
 				maxAge: 2592000, // 30 days
 				sameSite: "lax",
