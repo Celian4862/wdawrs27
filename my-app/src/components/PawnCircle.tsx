@@ -1,4 +1,4 @@
-import type { RoleKey } from "#/server/features/player/types";
+import type { RoleKey } from "#/server/player/types";
 
 const roleColors: Record<RoleKey, string> = {
 	digger: "bg-[#ef4444]",

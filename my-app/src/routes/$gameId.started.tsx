@@ -9,9 +9,9 @@ import ItemDeck from "#/components/ItemDeck";
 import Legend from "#/components/Legend";
 import Parts from "#/components/Parts";
 import PlayerCards from "#/components/PlayerCards";
-import { sumSandPoints } from "#/server/features/board/helpers";
-import { getGameState, getUserInfo } from "#/server/features/game/helpers";
-import type { GameAction, GameInfo } from "#/server/features/game/types";
+import { sumSandPoints } from "#/server/board/helpers";
+import { getGameState, getUserInfo } from "#/server/game/helpers";
+import type { GameAction, GameInfo } from "#/server/game/types";
 
 export const Route = createFileRoute("/$gameId/started")({
 	loader: async ({ params: { gameId } }) => {

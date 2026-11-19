@@ -1,13 +1,13 @@
 import {
 	hurricaneDirections,
 	hurricaneDistances,
-} from "#/server/features/hurricane/data";
-import { countHurricaneCards } from "#/server/features/hurricane/helpers";
+} from "#/server/hurricane/data";
+import { countHurricaneCards } from "#/server/hurricane/helpers";
 import type {
 	CardName,
 	HurricaneCard,
 	HurricaneDeck as HurricaneDeckType,
-} from "#/server/features/hurricane/types";
+} from "#/server/hurricane/types";
 
 export default function HurricaneDeck({
 	hurricaneDeck,

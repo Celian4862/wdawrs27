@@ -1,9 +1,6 @@
-import { itemTypes } from "#/server/features/item/data";
-import { countItemCards } from "#/server/features/item/helpers";
-import type {
-	ItemDeck as ItemDeckType,
-	ItemKey,
-} from "#/server/features/item/types";
+import { itemTypes } from "#/server/item/data";
+import { countItemCards } from "#/server/item/helpers";
+import type { ItemDeck as ItemDeckType, ItemKey } from "#/server/item/types";
 
 export default function ItemDeck({
 	itemDeck,

@@ -6,9 +6,9 @@ import {
 	text,
 	unique,
 } from "drizzle-orm/sqlite-core";
-import type { GameState, GameStatus } from "#/server/features/game/types";
-import type { Difficulty } from "#/server/features/hurricane/types";
-import type { RoleKey } from "#/server/features/player/types";
+import type { GameState, GameStatus } from "#/server/game/types";
+import type { Difficulty } from "#/server/hurricane/types";
+import type { RoleKey } from "#/server/player/types";
 
 export const gamesTable = sqliteTable("games", {
 	id: text("id").primaryKey(),

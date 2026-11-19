@@ -4,8 +4,8 @@ import type {
 	PartNames,
 	PartOrientation,
 	TileStatus,
-} from "#/server/features/board/types";
-import type { PlayerState } from "#/server/features/player/types";
+} from "#/server/board/types";
+import type { PlayerState } from "#/server/player/types";
 import PawnCircle from "./PawnCircle";
 
 export const tileColors: Record<TileStatus, string> = {

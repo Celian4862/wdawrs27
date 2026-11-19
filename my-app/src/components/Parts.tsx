@@ -1,4 +1,4 @@
-import type { PartNames } from "#/server/features/board/types";
+import type { PartNames } from "#/server/board/types";
 
 export default function Parts({
 	partsCollected,

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import DeleteGameModal from "#/components/DeleteGameModal";
-import { getWaitingRoomInfo, startGame } from "#/server/features/game/helpers";
+import { getWaitingRoomInfo, startGame } from "#/server/game/helpers";
 
 export const Route = createFileRoute("/$gameId/waiting")({
 	component: GameRoom,

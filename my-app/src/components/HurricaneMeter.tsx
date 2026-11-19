@@ -1,4 +1,4 @@
-import type { HurricaneMeter as HurricaneMeterType } from "#/server/features/hurricane/types";
+import type { HurricaneMeter as HurricaneMeterType } from "#/server/hurricane/types";
 
 export default function HurricaneMeter({
 	hurricaneMeter,

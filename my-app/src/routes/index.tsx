@@ -1,9 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { joinGame, setupGame } from "#/server/features/game/helpers";
-import { difficulties } from "#/server/features/hurricane/data";
-import type { Difficulty } from "#/server/features/hurricane/types";
+import { joinGame, setupGame } from "#/server/game/helpers";
+import { difficulties } from "#/server/hurricane/data";
+import type { Difficulty } from "#/server/hurricane/types";
 
 export const Route = createFileRoute("/")({ component: Home });
 
