@@ -9,7 +9,7 @@ import { shuffleBoard } from "../board/helpers";
 import { difficulties } from "../hurricane/data";
 import { setHurricaneMeter, shuffleHurricaneDeck } from "../hurricane/helpers";
 import { shuffleItemCards } from "../item/helpers";
-import { assignPlayers } from "../player/helpers";
+import { assignPlayers, shufflePlayers } from "../player/helpers";
 import { oneDayInSeconds } from "../shared/data";
 import { generateGameId } from "../shared/helpers";
 import { adminOnlyMessage } from "./data";
@@ -32,7 +32,7 @@ export const getUserSessionStatus = createServerFn({ method: "GET" })
 
 			return {
 				gameId: userSession?.gameId ?? "",
-				status: (userSession?.status as GameStatus) ?? "waiting",
+				status: userSession?.status ?? "waiting",
 			};
 		},
 	);
@@ -59,6 +59,8 @@ export const joinGame = createServerFn({ method: "POST" })
 			const [game] = await tx
 				.select({
 					status: gamesTable.status,
+					playerCount: gamesTable.playerCount,
+					roles: gamesTable.roles,
 					stateJSON: gamesTable.stateJSON,
 				})
 				.from(gamesTable)
@@ -68,7 +70,7 @@ export const joinGame = createServerFn({ method: "POST" })
 				throw new Error("Game not found.");
 			}
 
-			if ((game.status as GameStatus) === "finished") {
+			if (game.status === "finished") {
 				throw new Error("Game has already ended");
 			}
 
@@ -82,19 +84,18 @@ export const joinGame = createServerFn({ method: "POST" })
 			}
 
 			// 3. Insert user into usersTable for this room
-			const gameState = game.stateJSON as GameState;
 			const [gamePlayers] = await tx
 				.select({ count: count() })
 				.from(usersTable)
 				.where(eq(usersTable.gameId, gameId));
 
-			if (gamePlayers.count < gameState.players.length) {
+			if (gamePlayers.count < game.playerCount) {
 				await tx.insert(usersTable).values({
 					token,
 					gameId,
 					isAdmin: false,
 					playerName: playerName,
-					role: gameState.players[gamePlayers.count].roleKey,
+					role: game.roles.roles[gamePlayers.count],
 				});
 			} else {
 				throw new Error("This game room is full.");
@@ -119,13 +120,14 @@ export const setupGame = createServerFn({ method: "POST" })
 			data: { playerCount, difficulty, playerName, debugInitialState },
 			context: { token },
 		}) => {
+			const roles = shufflePlayers(playerCount);
 			// If we passed a debug state (and we aren't in production), use it!
 			const gameState: GameState =
 				debugInitialState && process.env.NODE_ENV !== "production"
 					? debugInitialState
 					: {
 							board: shuffleBoard(),
-							players: assignPlayers(playerCount),
+							players: assignPlayers(roles),
 							hurricaneDeck: shuffleHurricaneDeck(),
 							drawnHurricaneCard: null,
 							hurricaneMeter: setHurricaneMeter(playerCount, difficulty),
@@ -143,6 +145,7 @@ export const setupGame = createServerFn({ method: "POST" })
 					status: "waiting",
 					playerCount,
 					difficulty,
+					roles: { roles },
 					stateJSON: gameState,
 				})
 				.returning();
@@ -152,7 +155,7 @@ export const setupGame = createServerFn({ method: "POST" })
 				gameId: newGameId,
 				isAdmin: true,
 				playerName,
-				role: gameState.players[0].roleKey,
+				role: roles[0],
 			});
 
 			// Cache initial state to Redis as well for fast reads
@@ -162,14 +165,7 @@ export const setupGame = createServerFn({ method: "POST" })
 				JSON.stringify(gameState),
 			);
 
-			return gameSession as {
-				id: string;
-				status: string;
-				playerCount: number;
-				difficulty: string;
-				createdAt: Date;
-				stateJSON: GameState;
-			};
+			return gameSession;
 		},
 	);
 
@@ -254,7 +250,7 @@ export const getGameState = createServerFn({ method: "GET" })
 
 			if (cachedGameState) {
 				gameStateResult = {
-					...(JSON.parse(cachedGameState) as GameState),
+					...JSON.parse(cachedGameState),
 					isAdmin,
 				};
 			} else {
@@ -268,7 +264,7 @@ export const getGameState = createServerFn({ method: "GET" })
 					throw new Error("Invalid game session");
 				}
 
-				const gameState = queriedGame.stateJSON as GameState;
+				const gameState = queriedGame.stateJSON;
 
 				// Cache back to Redis for subsequent reads
 				await redis.setex(

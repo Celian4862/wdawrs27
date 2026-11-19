@@ -9,6 +9,7 @@ import {
 	startTileId,
 } from "./data";
 import { shuffleBoard } from "./helpers";
+import type { HintTile } from "./types";
 
 describe("shuffleBoard", () => {
 	it("builds a complete 25-tile board with the fixed start and hurricane tiles", () => {
@@ -69,17 +70,29 @@ describe("shuffleBoard", () => {
 
 	it("uses every hint tile combination exactly once", () => {
 		const board = shuffleBoard();
-		const hintTiles = board.filter(
-			(tile) => tile.id !== 12 && tile.revealedType === "Hint",
-		);
+		const hintTiles = board.flatMap<HintTile>((tile) => {
+			if (
+				tile.id !== 12 &&
+				(tile.revealedType === "Core" ||
+					tile.revealedType === "Fan" ||
+					tile.revealedType === "Motor" ||
+					tile.revealedType === "Pointer")
+			) {
+				return {
+					revealedType: tile.revealedType,
+					partOrientation: tile.partOrientation,
+				} satisfies HintTile;
+			}
+			return [];
+		});
 		const combinations = new Set<string>();
 
 		expect(hintTiles).toHaveLength(partNames.length * partOrientations.length);
 
 		for (const tile of hintTiles) {
-			expect(partNames).toContain(tile.partHint);
+			expect(partNames).toContain(tile.revealedType);
 			expect(partOrientations).toContain(tile.partOrientation);
-			combinations.add(`${tile.partHint}:${tile.partOrientation}`);
+			combinations.add(`${tile.revealedType}:${tile.partOrientation}`);
 		}
 
 		expect(combinations.size).toBe(partNames.length * partOrientations.length);

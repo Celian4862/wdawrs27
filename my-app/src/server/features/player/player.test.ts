@@ -8,12 +8,19 @@ import {
 	getMaxWater,
 	getRoleTitle,
 	passTurn,
+	shufflePlayers,
 	transferItems,
 } from "./helpers";
 
 describe("player unit tests", () => {
 	const playerCount = 3;
-	const players = assignPlayers(playerCount);
+	const roles = shufflePlayers(playerCount);
+	const players = assignPlayers(roles);
+
+	it("gives a randomized array of players", () => {
+		expect(roles).not.toEqual(shufflePlayers(playerCount));
+	});
+
 	it("correctly initializes players", () => {
 		expect(players).toHaveLength(playerCount);
 

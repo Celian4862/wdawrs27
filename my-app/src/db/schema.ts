@@ -6,16 +6,23 @@ import {
 	text,
 	unique,
 } from "drizzle-orm/sqlite-core";
+import type { GameState, GameStatus } from "#/server/features/game/types";
+import type { Difficulty } from "#/server/features/hurricane/types";
+import type { RoleKey } from "#/server/features/player/types";
 
 export const gamesTable = sqliteTable("games", {
 	id: text("id").primaryKey(),
-	status: text("status").notNull().default("waiting"),
+	status: text("status").$type<GameStatus>().notNull().default("waiting"),
 	playerCount: integer("player_count", { mode: "number" }).notNull(),
-	difficulty: text("difficulty").notNull(),
+	difficulty: text("difficulty").$type<Difficulty>().notNull(),
 	createdAt: integer("created_at", { mode: "timestamp" })
 		.notNull()
 		.default(sql`(unixepoch())`),
-	stateJSON: text("state_json", { mode: "json" }).notNull(),
+	// For randomizing role assignments
+	roles: text("roles", { mode: "json" })
+		.$type<{ roles: RoleKey[] }>()
+		.notNull(),
+	stateJSON: text("state_json", { mode: "json" }).$type<GameState>().notNull(),
 });
 
 export type GameRecord = typeof gamesTable.$inferSelect;
@@ -30,7 +37,7 @@ export const usersTable = sqliteTable(
 			.references(() => gamesTable.id, { onDelete: "cascade" }),
 		isAdmin: integer("is_admin", { mode: "boolean" }).notNull().default(false),
 		playerName: text("player_name", { mode: "text" }).notNull(),
-		role: text("role", { mode: "text" }).notNull(),
+		role: text("role", { mode: "text" }).$type<RoleKey>().notNull(),
 	},
 	(table) => [
 		index("users_game_id_idx").on(table.gameId),

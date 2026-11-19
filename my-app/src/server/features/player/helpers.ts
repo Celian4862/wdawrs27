@@ -14,11 +14,14 @@ import type {
  * @param playerCount Number of players (must be between 2 and 5)
  * @returns Next state of players array
  */
-export function assignPlayers(playerCount: number): PlayerState {
+export function shufflePlayers(playerCount: number): RoleKey[] {
 	if (playerCount < 2 || playerCount > 5) {
-		throw new Error("Must call assignPlayers() with 2-5 players");
+		throw new Error("Must be 2 - 5 players");
 	}
-	const roles = shuffle(roleKeys).slice(0, playerCount);
+	return shuffle(roleKeys).slice(0, playerCount);
+}
+
+export function assignPlayers(roles: RoleKey[]): PlayerState {
 	const minWaterIdx = roles.reduce(
 		(minIdx, current, idx) =>
 			playerRoles[current].maxWater < playerRoles[roles[minIdx]].maxWater
