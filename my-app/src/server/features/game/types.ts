@@ -16,7 +16,6 @@ export type GameStatus = "waiting" | "started" | "finished";
 export type GameAction = (typeof generalActions)[number] | ItemKey;
 export type GameInfo = GameState & {
 	isAdmin: boolean;
-	userInfo: UserInfo;
 };
 
 export interface GameState {

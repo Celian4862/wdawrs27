@@ -239,14 +239,11 @@ export const startGame = createServerFn({ method: "POST" })
 			.where(eq(gamesTable.id, gameId));
 	});
 
-export const getGameInfo = createServerFn({ method: "GET" })
+export const getGameState = createServerFn({ method: "GET" })
 	.middleware([isAdminMiddleware])
 	.validator(z.object({ gameId: z.string().min(8).max(8) }))
 	.handler(
-		async ({
-			data: { gameId },
-			context: { token, isAdmin },
-		}): Promise<GameInfo> => {
+		async ({ data: { gameId }, context: { isAdmin } }): Promise<GameInfo> => {
 			let gameStateResult: GameState & { isAdmin: boolean };
 			// 1. Try reading from Redis Cache first
 			const cachedGameState = await redis.getex(
@@ -286,28 +283,7 @@ export const getGameInfo = createServerFn({ method: "GET" })
 				};
 			}
 
-			const userInfo = await db
-				.select({
-					token: usersTable.token,
-					playerName: usersTable.playerName,
-					role: usersTable.role,
-				})
-				.from(usersTable)
-				.where(eq(usersTable.gameId, gameId));
-
-			if (userInfo.length === 0) {
-				throw new Error("Game not found");
-			}
-
-			return {
-				...gameStateResult,
-				userInfo: Object.fromEntries(
-					userInfo.map((user) => [
-						user.role,
-						{ isYou: user.token === token, playerName: user.playerName },
-					]),
-				),
-			};
+			return gameStateResult;
 		},
 	);
 

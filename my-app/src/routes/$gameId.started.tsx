@@ -10,25 +10,29 @@ import Legend from "#/components/Legend";
 import Parts from "#/components/Parts";
 import PlayerCards from "#/components/PlayerCards";
 import { sumSandPoints } from "#/server/features/board/helpers";
-import { getGameInfo } from "#/server/features/game/helpers";
+import { getGameState, getUserInfo } from "#/server/features/game/helpers";
 import type { GameAction, GameInfo } from "#/server/features/game/types";
 
 export const Route = createFileRoute("/$gameId/started")({
+	loader: async ({ params: { gameId } }) => {
+		return await getUserInfo({ data: { gameId } });
+	},
 	component: RouteComponent,
 });
 
 function RouteComponent() {
 	const { gameId } = Route.useParams();
+	const userInfo = Route.useLoaderData();
 	const navigate = useNavigate();
 	const selectedActionState = useState<GameAction | null>(null);
 	const {
-		data: gameInfo,
+		data: gameState,
 		isLoading,
 		error,
 	} = useQuery({
 		queryKey: ["game", gameId],
 		queryFn: () =>
-			getGameInfo({
+			getGameState({
 				data: { gameId },
 			}),
 		retry: 1,
@@ -46,7 +50,6 @@ function RouteComponent() {
 			itemDeck: [],
 			drawnItemCard: "",
 			partsCollected: [],
-			userInfo: {},
 		},
 		select: (data) =>
 			({
@@ -62,7 +65,6 @@ function RouteComponent() {
 				itemDeck: data?.itemDeck ?? [],
 				drawnItemCard: data?.drawnItemCard ?? null,
 				partsCollected: data?.partsCollected ?? [],
-				userInfo: data?.userInfo ?? {},
 			}) satisfies GameInfo,
 	});
 
@@ -87,12 +89,12 @@ function RouteComponent() {
 	return (
 		<div className="box-border grid w-screen grid-cols-1 gap-6 p-10 lg:h-dvh lg:grid-cols-11 lg:gap-10 lg:pb-0 xl:grid-cols-2">
 			<div className="flex h-full flex-col gap-4 lg:col-span-5 lg:min-h-0 lg:overflow-hidden lg:pb-10 xl:col-span-1">
-				<HurricaneMeter hurricaneMeter={gameInfo.hurricaneMeter} />
+				<HurricaneMeter hurricaneMeter={gameState.hurricaneMeter} />
 				<div className="flex min-h-0 flex-1 items-center justify-center">
 					<Board
-						board={gameInfo.board}
+						board={gameState.board}
 						selectedAction=""
-						players={gameInfo.players}
+						players={gameState.players}
 					/>
 				</div>
 			</div>
@@ -102,26 +104,26 @@ function RouteComponent() {
 					<section className="flex flex-col-reverse gap-5 py-5 lg:flex-col">
 						{/* <ActionPanel /> */}
 						<div className="flex flex-col gap-5">
-							{gameInfo.players.length > 0 && (
+							{gameState.players.length > 0 && (
 								<PlayerCards
 									turnCount={0}
-									players={gameInfo.players}
-									playerNames={gameInfo.userInfo}
+									players={gameState.players}
+									playerNames={userInfo}
 									selectedActionState={selectedActionState}
 								/>
 							)}
 							<HurricaneDeck
-								hurricaneDeck={gameInfo.hurricaneDeck}
-								drawnHurricaneCard={gameInfo.drawnHurricaneCard}
-								sandPoints={48 - sumSandPoints(gameInfo.board)}
+								hurricaneDeck={gameState.hurricaneDeck}
+								drawnHurricaneCard={gameState.drawnHurricaneCard}
+								sandPoints={48 - sumSandPoints(gameState.board)}
 							/>
 							<ItemDeck
-								itemDeck={gameInfo.itemDeck}
-								recentlyDrawnItemCard={gameInfo.drawnItemCard}
+								itemDeck={gameState.itemDeck}
+								recentlyDrawnItemCard={gameState.drawnItemCard}
 							/>
-							<Parts partsCollected={gameInfo.partsCollected} />
+							<Parts partsCollected={gameState.partsCollected} />
 							<Legend />
-							{gameInfo.isAdmin && <DeleteGameModal gameId={gameId} />}
+							{gameState.isAdmin && <DeleteGameModal gameId={gameId} />}
 						</div>
 					</section>
 				</div>
