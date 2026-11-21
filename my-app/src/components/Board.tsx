@@ -5,6 +5,7 @@ import type {
 	PartOrientation,
 	TileStatus,
 } from "#/server/board/types";
+import { getCurrentPlayer } from "#/server/player/helpers";
 import type { PlayerState } from "#/server/player/types";
 import PawnCircle from "./PawnCircle";
 
@@ -63,7 +64,7 @@ export default function Board({
 									.filter((player) => player.tileId === tile.id)
 									.map((player) => {
 										const isCurrentPlayer =
-											players[0].roleKey === player.roleKey;
+											getCurrentPlayer(players).roleKey === player.roleKey;
 										return (
 											<PawnCircle
 												key={player.roleKey}

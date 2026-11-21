@@ -5,6 +5,7 @@ import {
 	adjustWater,
 	assignPlayers,
 	createPlayerInventory,
+	getCurrentPlayer,
 	getMaxWater,
 	getRoleTitle,
 	passTurn,
@@ -16,6 +17,7 @@ describe("player unit tests", () => {
 	const playerCount = 3;
 	const roles = shufflePlayers(playerCount);
 	const players = assignPlayers(roles);
+	const currentPlayer = getCurrentPlayer(players);
 
 	it("gives a randomized array of players", () => {
 		expect(roles).not.toEqual(shufflePlayers(playerCount));
@@ -24,7 +26,7 @@ describe("player unit tests", () => {
 	it("correctly initializes players", () => {
 		expect(players).toHaveLength(playerCount);
 
-		const firstPlayerWater = players[0].currentWater;
+		const firstPlayerWater = currentPlayer.currentWater;
 
 		players.forEach((player) => {
 			// Check water matches role's maxWater exactly
@@ -46,7 +48,7 @@ describe("player unit tests", () => {
 
 	describe("passing turns", () => {
 		it("rotates the player order correctly", () => {
-			const originalFirst = players[0];
+			const originalFirst = currentPlayer;
 			const originalSecond = players[1];
 
 			const rotatedPlayers = passTurn(players);
@@ -65,14 +67,14 @@ describe("player unit tests", () => {
 
 	describe("getters", () => {
 		it("returns the correct role title", () => {
-			expect(getRoleTitle(players[0].roleKey)).toBe(
-				playerRoles[players[0].roleKey].title,
+			expect(getRoleTitle(currentPlayer.roleKey)).toBe(
+				playerRoles[currentPlayer.roleKey].title,
 			);
 		});
 
 		it("returns the correct max water", () => {
-			expect(getMaxWater(players[0].roleKey)).toBe(
-				playerRoles[players[0].roleKey].maxWater,
+			expect(getMaxWater(currentPlayer.roleKey)).toBe(
+				playerRoles[currentPlayer.roleKey].maxWater,
 			);
 		});
 	});
@@ -110,7 +112,7 @@ describe("player unit tests", () => {
 	describe("transferring items", () => {
 		let tempPlayers = addItems(
 			players,
-			players[0].roleKey,
+			currentPlayer.roleKey,
 			createPlayerInventory({ flyingTool: 3 }),
 		);
 		it("accepts an item transfer", () => {

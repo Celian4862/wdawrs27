@@ -61,6 +61,10 @@ export function getRoleAbility(roleKey: RoleKey) {
 	return playerRoles[roleKey].ability;
 }
 
+export function getCurrentPlayer(players: PlayerState): ActivePlayer {
+	return players[0];
+}
+
 /**
  * Adjusts the water levels of all players with the given `roleKeys`
  * @param players Current state of players array

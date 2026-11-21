@@ -2,6 +2,7 @@ import type { GameAction, UserInfo } from "#/server/game/types";
 import { getItemDescription, getItemName } from "#/server/item/helpers";
 import type { ItemKey } from "#/server/item/types";
 import {
+	getCurrentPlayer,
 	getMaxWater,
 	getRoleAbility,
 	getRoleTitle,
@@ -24,6 +25,8 @@ export default function PlayerCards({
 		React.Dispatch<React.SetStateAction<GameAction | null>>,
 	];
 }) {
+	const currentPlayer = getCurrentPlayer(players);
+
 	return (
 		<section className="rounded-xl border p-6">
 			<div className="flex flex-wrap items-center justify-between pb-6">
@@ -33,11 +36,11 @@ export default function PlayerCards({
 			<div className="flex flex-col gap-3">
 				<h3 className="text-lg">Current player:</h3>
 				<PlayerDetails
-					player={players[0]}
+					player={currentPlayer}
 					playerName={
-						playerNames[players[0].roleKey]?.isYou
+						playerNames[currentPlayer.roleKey]?.isYou
 							? "You"
-							: (playerNames[players[0].roleKey]?.playerName ?? "")
+							: (playerNames[currentPlayer.roleKey]?.playerName ?? "")
 					}
 					isCurrent={true}
 					selectedActionState={selectedActionState}
