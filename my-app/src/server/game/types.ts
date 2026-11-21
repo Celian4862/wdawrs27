@@ -1,3 +1,4 @@
+import type { Dispatch, SetStateAction } from "react";
 import type { Board, PartNames } from "../board/types";
 import type {
 	HurricaneCard,
@@ -13,7 +14,11 @@ export type UserInfo = Partial<
 >;
 
 export type GameStatus = "waiting" | "started" | "finished";
-export type GameAction = (typeof generalActions)[number] | ItemKey;
+export type GameAction = (typeof generalActions)[number] | ItemKey | null;
+export type GameActionState = [
+	GameAction,
+	Dispatch<SetStateAction<GameAction>>,
+];
 export type GameInfo = GameState & {
 	isAdmin: boolean;
 };

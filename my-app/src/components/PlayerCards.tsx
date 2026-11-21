@@ -1,4 +1,4 @@
-import type { GameAction, UserInfo } from "#/server/game/types";
+import type { GameActionState, UserInfo } from "#/server/game/types";
 import { getItemDescription, getItemName } from "#/server/item/helpers";
 import type { ItemKey } from "#/server/item/types";
 import {
@@ -20,10 +20,7 @@ export default function PlayerCards({
 	turnCount: number;
 	players: PlayerState;
 	playerNames: UserInfo;
-	selectedActionState: [
-		GameAction | null,
-		React.Dispatch<React.SetStateAction<GameAction | null>>,
-	];
+	selectedActionState: GameActionState;
 }) {
 	const currentPlayer = getCurrentPlayer(players);
 
@@ -82,10 +79,7 @@ function PlayerDetails({
 	player: ActivePlayer;
 	playerName: string;
 	isCurrent: boolean;
-	selectedActionState: [
-		GameAction | null,
-		React.Dispatch<React.SetStateAction<GameAction | null>>,
-	];
+	selectedActionState: GameActionState;
 }) {
 	const itemCount = sumPlayerInventory(player.inventory);
 

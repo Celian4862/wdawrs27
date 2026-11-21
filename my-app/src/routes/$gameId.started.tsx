@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import ActionPanel from "#/components/ActionPanel";
 import Board from "#/components/Board";
 import DeleteGameModal from "#/components/DeleteGameModal";
 import HurricaneDeck from "#/components/HurricaneDeck";
@@ -24,7 +25,7 @@ function RouteComponent() {
 	const { gameId } = Route.useParams();
 	const userInfo = Route.useLoaderData();
 	const navigate = useNavigate();
-	const selectedActionState = useState<GameAction | null>(null);
+	const selectedActionState = useState<GameAction>(null);
 	const {
 		data: gameState,
 		isLoading,
@@ -102,7 +103,13 @@ function RouteComponent() {
 			<div className="h-full min-h-0 lg:col-span-6 lg:flex lg:flex-col xl:col-span-1">
 				<div className="pr-2 lg:h-full lg:overflow-y-auto">
 					<section className="flex flex-col-reverse gap-5 py-5 lg:flex-col">
-						{/* <ActionPanel /> */}
+						{gameState.board.length > 0 && gameState.players.length > 0 && (
+							<ActionPanel
+								board={gameState.board}
+								players={gameState.players}
+								selectedAction={selectedActionState[0]}
+							/>
+						)}
 						<div className="flex flex-col gap-5">
 							{gameState.players.length > 0 && (
 								<PlayerCards

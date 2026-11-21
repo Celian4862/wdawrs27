@@ -61,6 +61,10 @@ export function getRoleAbility(roleKey: RoleKey) {
 	return playerRoles[roleKey].ability;
 }
 
+export function findPlayer(players: PlayerState, targetRole: RoleKey) {
+	return players.find((player) => player.roleKey === targetRole);
+}
+
 export function getCurrentPlayer(players: PlayerState): ActivePlayer {
 	return players[0];
 }

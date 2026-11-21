@@ -1,3 +1,4 @@
+import type { ActivePlayer } from "../player/types";
 import { shuffle } from "../shared/helpers";
 import {
 	greenthTileIds,
@@ -9,6 +10,50 @@ import {
 	startTileId,
 } from "./data";
 import type { Board, HintTile, OtherRevTile, RevSandTile, Tile } from "./types";
+
+export function findNeighboring(board: Board, player: ActivePlayer) {
+	const [mainRow, mainCol] = toCoordinates(getCurrentTileIndex(board, player));
+	const isTraveler = player.roleKey === "traveler";
+
+	const neighboring = [
+		toIndex(mainRow - 1, mainCol),
+		toIndex(mainRow + 1, mainCol),
+		toIndex(mainRow, mainCol - 1),
+		toIndex(mainRow, mainCol + 1),
+	];
+	if (isTraveler) {
+		neighboring.push(
+			toIndex(mainRow - 1, mainCol - 1),
+			toIndex(mainRow - 1, mainCol + 1),
+			toIndex(mainRow + 1, mainCol - 1),
+			toIndex(mainRow + 1, mainCol + 1),
+		);
+	}
+	return neighboring.filter(
+		(tilePosition) => tilePosition >= 0 && board[tilePosition].id !== 12,
+	);
+}
+
+export function getCurrentTileIndex(board: Board, currentPlayer: ActivePlayer) {
+	return board.findIndex((tile) => tile.id === currentPlayer.tileId);
+}
+
+export function findSandPoints(
+	board: Board,
+	currentPosition: number,
+	neighboringTilePositions: number[],
+) {
+	const currentAndNeighboringPositions = [
+		...neighboringTilePositions,
+		currentPosition,
+	];
+	return currentAndNeighboringPositions.filter((position) => {
+		if (board[position].id === 12) {
+			throw new Error("Tile is not valid");
+		}
+		return board[position].sandPoints > 0;
+	});
+}
 
 export function sumSandPoints(board: Board) {
 	return board.reduce(
