@@ -43,7 +43,7 @@ function RouteComponent() {
 			board: [],
 			players: [],
 			hurricaneDeck: [],
-			drawnHurricaneCard: null,
+			drawnHurricaneCard: { type: "None" },
 			hurricaneMeter: {
 				meter: [],
 				progress: 0,
@@ -52,21 +52,17 @@ function RouteComponent() {
 			drawnItemCard: "",
 			partsCollected: [],
 		},
-		select: (data) =>
-			({
-				isAdmin: data?.isAdmin ?? false,
-				board: data?.board ?? [],
-				players: data?.players ?? [],
-				hurricaneDeck: data?.hurricaneDeck ?? [],
-				hurricaneMeter: {
-					meter: data?.hurricaneMeter.meter ?? [],
-					progress: data?.hurricaneMeter.progress ?? 0,
-				},
-				drawnHurricaneCard: data?.drawnHurricaneCard ?? null,
-				itemDeck: data?.itemDeck ?? [],
-				drawnItemCard: data?.drawnItemCard ?? null,
-				partsCollected: data?.partsCollected ?? [],
-			}) satisfies GameInfo,
+		select: (data: GameInfo | undefined): GameInfo => ({
+			isAdmin: data?.isAdmin ?? false,
+			board: data?.board ?? [],
+			players: data?.players ?? [],
+			hurricaneDeck: data?.hurricaneDeck ?? [],
+			hurricaneMeter: data?.hurricaneMeter ?? { meter: [], progress: -1 },
+			drawnHurricaneCard: data?.drawnHurricaneCard ?? { type: "None" },
+			itemDeck: data?.itemDeck ?? [],
+			drawnItemCard: data?.drawnItemCard ?? "",
+			partsCollected: data?.partsCollected ?? [],
+		}),
 	});
 
 	useEffect(() => {
@@ -108,6 +104,7 @@ function RouteComponent() {
 								board={gameState.board}
 								players={gameState.players}
 								selectedAction={selectedActionState[0]}
+								drawnHurricaneCard={gameState.drawnHurricaneCard}
 							/>
 						)}
 						<div className="flex flex-col gap-5">

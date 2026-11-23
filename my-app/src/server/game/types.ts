@@ -27,7 +27,7 @@ export interface GameState {
 	readonly board: Board;
 	readonly players: PlayerState;
 	readonly hurricaneDeck: HurricaneDeck;
-	readonly drawnHurricaneCard: HurricaneCard | null;
+	readonly drawnHurricaneCard: HurricaneCard;
 	readonly hurricaneMeter: HurricaneMeter;
 	readonly itemDeck: ItemDeck;
 	readonly drawnItemCard: ItemKey | "";

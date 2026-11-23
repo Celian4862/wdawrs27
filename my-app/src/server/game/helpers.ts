@@ -129,7 +129,7 @@ export const setupGame = createServerFn({ method: "POST" })
 							board: shuffleBoard(),
 							players: assignPlayers(roles),
 							hurricaneDeck: shuffleHurricaneDeck(),
-							drawnHurricaneCard: null,
+							drawnHurricaneCard: { type: "None" },
 							hurricaneMeter: setHurricaneMeter(playerCount, difficulty),
 							itemDeck: shuffleItemCards(),
 							drawnItemCard: "",
@@ -240,7 +240,7 @@ export const getGameState = createServerFn({ method: "GET" })
 	.validator(z.object({ gameId: z.string().min(8).max(8) }))
 	.handler(
 		async ({ data: { gameId }, context: { isAdmin } }): Promise<GameInfo> => {
-			let gameStateResult: GameState & { isAdmin: boolean };
+			let gameStateResult: GameInfo;
 			// 1. Try reading from Redis Cache first
 			const cachedGameState = await redis.getex(
 				`url:${gameId}`,

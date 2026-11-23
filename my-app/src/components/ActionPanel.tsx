@@ -5,6 +5,7 @@ import {
 } from "#/server/board/helpers";
 import type { Board } from "#/server/board/types";
 import type { GameAction } from "#/server/game/types";
+import type { HurricaneCard } from "#/server/hurricane/types";
 import {
 	findPlayer,
 	getCurrentPlayer,
@@ -21,10 +22,12 @@ export default function ActionPanel({
 	board,
 	players,
 	selectedAction,
+	drawnHurricaneCard,
 }: {
 	board: Board;
 	players: PlayerState;
 	selectedAction: GameAction;
+	drawnHurricaneCard: HurricaneCard;
 }) {
 	const currentPlayer = getCurrentPlayer(players);
 	const hikerPlayer = findPlayer(players, "hiker");
@@ -91,16 +94,16 @@ export default function ActionPanel({
 				{/* <h2 className="text-xl">{`${state.actionCount} actions left`}</h2> */}
 			</div>
 
-			{/* {state.recentlyDrawnHurricaneCard && (
+			{drawnHurricaneCard && (
 				<div className="mt-3 flex w-full items-center justify-between rounded-lg border border-slate-700 bg-slate-800/80 px-3 py-1 text-center text-sm lg:hidden">
 					<span className="font-medium text-slate-400">Last Card:</span>
 					<span className="font-bold text-amber-400">
-						{state.recentlyDrawnHurricaneCard.type !== "Move"
-							? state.recentlyDrawnHurricaneCard.type
-							: `Move ${state.recentlyDrawnHurricaneCard.distance} ${state.recentlyDrawnHurricaneCard.direction}`}
+						{drawnHurricaneCard.type !== "Move"
+							? drawnHurricaneCard.type
+							: `Move ${drawnHurricaneCard.distance} ${drawnHurricaneCard.direction}`}
 					</span>
 				</div>
-			)} */}
+			)}
 
 			<div className="flex w-full flex-col lg:flex-col-reverse">
 				{/* {state.turnStatus && (

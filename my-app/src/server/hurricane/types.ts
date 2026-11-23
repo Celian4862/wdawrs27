@@ -13,7 +13,7 @@ export type CardName = SpecialCards | MoveCards;
 
 export type HurricaneCard =
 	| {
-			readonly type: SpecialCards;
+			readonly type: SpecialCards | "None";
 	  }
 	| {
 			readonly type: "Move";
