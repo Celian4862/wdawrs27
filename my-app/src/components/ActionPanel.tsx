@@ -4,7 +4,7 @@ import {
 	getCurrentTileIndex,
 } from "#/server/board/helpers";
 import type { Board } from "#/server/board/types";
-import type { GameAction } from "#/server/game/types";
+import type { GameAction, HurricaneDrawStatus } from "#/server/game/types";
 import type { HurricaneCard } from "#/server/hurricane/types";
 import {
 	findPlayer,
@@ -23,11 +23,13 @@ export default function ActionPanel({
 	players,
 	selectedAction,
 	drawnHurricaneCard,
+	hurricaneDrawStatus,
 }: {
 	board: Board;
 	players: PlayerState;
 	selectedAction: GameAction;
 	drawnHurricaneCard: HurricaneCard;
+	hurricaneDrawStatus: HurricaneDrawStatus;
 }) {
 	const currentPlayer = getCurrentPlayer(players);
 	const hikerPlayer = findPlayer(players, "hiker");
@@ -106,11 +108,11 @@ export default function ActionPanel({
 			)}
 
 			<div className="flex w-full flex-col lg:flex-col-reverse">
-				{/* {state.turnStatus && (
+				{hurricaneDrawStatus && (
 					<p className="mt-3 animate-pulse text-center text-sm font-semibold text-amber-400 md:text-base">
-						{state.turnStatus}
+						{hurricaneDrawStatus}
 					</p>
-				)} */}
+				)}
 				<div className="relative">
 					<details open className="mt-3">
 						<summary className="mb-3 cursor-pointer">Main Actions</summary>

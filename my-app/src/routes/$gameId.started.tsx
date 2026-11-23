@@ -44,6 +44,7 @@ function RouteComponent() {
 			players: [],
 			hurricaneDeck: [],
 			drawnHurricaneCard: { type: "None" },
+			hurricaneDrawStatus: null,
 			hurricaneMeter: {
 				meter: [],
 				progress: 0,
@@ -57,6 +58,7 @@ function RouteComponent() {
 			board: data?.board ?? [],
 			players: data?.players ?? [],
 			hurricaneDeck: data?.hurricaneDeck ?? [],
+			hurricaneDrawStatus: data?.hurricaneDrawStatus ?? null,
 			hurricaneMeter: data?.hurricaneMeter ?? { meter: [], progress: -1 },
 			drawnHurricaneCard: data?.drawnHurricaneCard ?? { type: "None" },
 			itemDeck: data?.itemDeck ?? [],
@@ -105,6 +107,7 @@ function RouteComponent() {
 								players={gameState.players}
 								selectedAction={selectedActionState[0]}
 								drawnHurricaneCard={gameState.drawnHurricaneCard}
+								hurricaneDrawStatus={gameState.hurricaneDrawStatus}
 							/>
 						)}
 						<div className="flex flex-col gap-5">

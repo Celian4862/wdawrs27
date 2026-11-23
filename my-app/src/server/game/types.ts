@@ -7,11 +7,13 @@ import type {
 } from "../hurricane/types";
 import type { ItemDeck, ItemKey } from "../item/types";
 import type { PlayerState, RoleKey } from "../player/types";
-import type { generalActions } from "./data";
+import type { generalActions, hurricaneDrawStatuses } from "./data";
 
 export type UserInfo = Partial<
 	Record<RoleKey, { isYou: boolean; playerName: string }>
 >;
+
+export type HurricaneDrawStatus = (typeof hurricaneDrawStatuses)[number] | null;
 
 export type GameStatus = "waiting" | "started" | "finished";
 export type GameAction = (typeof generalActions)[number] | ItemKey | null;
@@ -28,6 +30,7 @@ export interface GameState {
 	readonly players: PlayerState;
 	readonly hurricaneDeck: HurricaneDeck;
 	readonly drawnHurricaneCard: HurricaneCard;
+	readonly hurricaneDrawStatus: HurricaneDrawStatus;
 	readonly hurricaneMeter: HurricaneMeter;
 	readonly itemDeck: ItemDeck;
 	readonly drawnItemCard: ItemKey | "";
