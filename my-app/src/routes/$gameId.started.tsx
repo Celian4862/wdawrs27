@@ -103,6 +103,7 @@ function RouteComponent() {
 					<section className="flex flex-col-reverse gap-5 py-5 lg:flex-col">
 						{gameState.board.length > 0 && gameState.players.length > 0 && (
 							<ActionPanel
+								actionCount={0}
 								board={gameState.board}
 								players={gameState.players}
 								selectedAction={selectedActionState[0]}

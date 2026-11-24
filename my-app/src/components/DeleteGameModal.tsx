@@ -19,7 +19,7 @@ export default function DeleteGameModal({ gameId }: { gameId: string }) {
 		<AlertDialog>
 			<AlertDialogTrigger asChild>
 				<Button
-					variant="outline"
+					variant="destructive"
 					className="w-full rounded-lg border-4 border-red-300 bg-red-700 p-6 text-2xl hover:brightness-130 active:brightness-85 motion-safe:transition"
 				>
 					Delete Game

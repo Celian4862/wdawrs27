@@ -12,6 +12,7 @@ import {
 	getRoleTitle,
 } from "#/server/player/helpers";
 import type { PlayerState } from "#/server/player/types";
+import EndTurnModal from "./EndTurnModal";
 
 interface ActionType {
 	name: string;
@@ -19,12 +20,14 @@ interface ActionType {
 }
 
 export default function ActionPanel({
+	actionCount,
 	board,
 	players,
 	selectedAction,
 	drawnHurricaneCard,
 	hurricaneDrawStatus,
 }: {
+	actionCount: number;
 	board: Board;
 	players: PlayerState;
 	selectedAction: GameAction;
@@ -174,25 +177,8 @@ export default function ActionPanel({
 								</div>
 							))}
 							<div className="relative inline-block">
-								{/* {state.actionCount === 0 && !state.isDrawingHurricaneCards && (
-									<PingCircle />
-								)} */}
-								<button
-									type="button"
-									// disabled={
-									// 	state.isDrawingHurricaneCards || state.showEndTurnModal
-									// }
-									// className={`rounded-lg border bg-red-600/70 p-3 font-semibold motion-safe:transition ${
-									// 	state.isDrawingHurricaneCards || state.showEndTurnModal
-									// 		? "cursor-not-allowed brightness-50"
-									// 		: "hover:bg-red-600 active:brightness-50"
-									// }`}
-									// onClick={() =>
-									// 	dispatch({ type: "SET_SHOW_END_TURN_MODAL", show: true })
-									// }
-								>
-									End Turn
-								</button>
+								{actionCount === 0 && !hurricaneDrawStatus && <PingCircle />}
+								<EndTurnModal hurricaneDrawStatus={hurricaneDrawStatus} />
 							</div>
 						</div>
 					</details>
