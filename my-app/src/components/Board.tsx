@@ -5,6 +5,7 @@ import type {
 	PartOrientation,
 	TileStatus,
 } from "#/server/board/types";
+import type { GameAction } from "#/server/game/types";
 import { getCurrentPlayer } from "#/server/player/helpers";
 import type { PlayerState } from "#/server/player/types";
 import PawnCircle from "./PawnCircle";
@@ -31,7 +32,7 @@ export default function Board({
 	className = "",
 }: {
 	board: BoardType;
-	selectedAction: string | null;
+	selectedAction: GameAction;
 	players: PlayerState;
 	className?: string;
 }) {

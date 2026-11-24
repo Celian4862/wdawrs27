@@ -12,7 +12,7 @@ import Parts from "#/components/Parts";
 import PlayerCards from "#/components/PlayerCards";
 import { sumSandPoints } from "#/server/board/helpers";
 import { getGameState, getUserInfo } from "#/server/game/helpers";
-import type { GameAction, GameInfo } from "#/server/game/types";
+import type { GameAction, GameInfo, SetGameAction } from "#/server/game/types";
 
 export const Route = createFileRoute("/$gameId/started")({
 	loader: async ({ params: { gameId } }) => {
@@ -25,7 +25,8 @@ function RouteComponent() {
 	const { gameId } = Route.useParams();
 	const userInfo = Route.useLoaderData();
 	const navigate = useNavigate();
-	const selectedActionState = useState<GameAction>(null);
+	const [selectedAction, setSelectedAction]: [GameAction, SetGameAction] =
+		useState<GameAction>(null);
 	const {
 		data: gameState,
 		isLoading,
@@ -92,7 +93,7 @@ function RouteComponent() {
 				<div className="flex min-h-0 flex-1 items-center justify-center">
 					<Board
 						board={gameState.board}
-						selectedAction=""
+						selectedAction={selectedAction}
 						players={gameState.players}
 					/>
 				</div>
@@ -106,7 +107,7 @@ function RouteComponent() {
 								actionCount={0}
 								board={gameState.board}
 								players={gameState.players}
-								selectedAction={selectedActionState[0]}
+								selectedAction={selectedAction}
 								drawnHurricaneCard={gameState.drawnHurricaneCard}
 								hurricaneDrawStatus={gameState.hurricaneDrawStatus}
 							/>
@@ -117,7 +118,7 @@ function RouteComponent() {
 									turnCount={0}
 									players={gameState.players}
 									playerNames={userInfo}
-									selectedActionState={selectedActionState}
+									setSelectedAction={setSelectedAction}
 								/>
 							)}
 							<HurricaneDeck

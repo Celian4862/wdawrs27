@@ -1,4 +1,4 @@
-import type { GameActionState, UserInfo } from "#/server/game/types";
+import type { SetGameAction, UserInfo } from "#/server/game/types";
 import { getItemDescription, getItemName } from "#/server/item/helpers";
 import type { ItemKey } from "#/server/item/types";
 import {
@@ -15,12 +15,12 @@ export default function PlayerCards({
 	turnCount,
 	players,
 	playerNames,
-	selectedActionState,
+	setSelectedAction,
 }: {
 	turnCount: number;
 	players: PlayerState;
 	playerNames: UserInfo;
-	selectedActionState: GameActionState;
+	setSelectedAction: SetGameAction;
 }) {
 	const currentPlayer = getCurrentPlayer(players);
 
@@ -40,7 +40,7 @@ export default function PlayerCards({
 							: (playerNames[currentPlayer.roleKey]?.playerName ?? "")
 					}
 					isCurrent={true}
-					selectedActionState={selectedActionState}
+					setSelectedAction={setSelectedAction}
 				/>
 				<details>
 					<summary className="mb-3 cursor-pointer">Other players</summary>
@@ -57,7 +57,7 @@ export default function PlayerCards({
 												: (playerNames[players[idx].roleKey]?.playerName ?? "")
 										}
 										isCurrent={false}
-										selectedActionState={selectedActionState}
+										setSelectedAction={setSelectedAction}
 									/>
 								);
 							}
@@ -74,12 +74,12 @@ function PlayerDetails({
 	player,
 	playerName,
 	isCurrent,
-	selectedActionState,
+	setSelectedAction,
 }: {
 	player: ActivePlayer;
 	playerName: string;
 	isCurrent: boolean;
-	selectedActionState: GameActionState;
+	setSelectedAction: SetGameAction;
 }) {
 	const itemCount = sumPlayerInventory(player.inventory);
 
@@ -118,7 +118,7 @@ function PlayerDetails({
 											type="button"
 											className={`col-span-1 space-y-2 rounded-lg border bg-black p-3 hover:scale-110 active:bg-gray-800 motion-safe:transition-all`}
 											onClick={() => {
-												selectedActionState[1](item);
+												setSelectedAction(item);
 											}}
 										>
 											<h4 className="text-center font-bold">

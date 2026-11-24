@@ -17,10 +17,7 @@ export type HurricaneDrawStatus = (typeof hurricaneDrawStatuses)[number] | null;
 
 export type GameStatus = "waiting" | "started" | "finished";
 export type GameAction = (typeof generalActions)[number] | ItemKey | null;
-export type GameActionState = [
-	GameAction,
-	Dispatch<SetStateAction<GameAction>>,
-];
+export type SetGameAction = Dispatch<SetStateAction<GameAction>>;
 export type GameInfo = GameState & {
 	isAdmin: boolean;
 };
