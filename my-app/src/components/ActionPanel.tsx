@@ -88,15 +88,15 @@ export default function ActionPanel({
 	}
 
 	const disabled = (action: (typeof actions)[number]) =>
-		action.disableCondition;
-	// || state.isDrawingHurricaneCards
-	// || state.actionCount === 0;
+		action.disableCondition ||
+		// || state.isDrawingHurricaneCards
+		actionCount === 0;
 
 	return (
 		<section className="sticky bottom-0 z-20 flex w-full flex-col items-center justify-center rounded-xl border border-slate-700/60 bg-slate-900/90 p-6 backdrop-blur-md lg:top-0 lg:block lg:flex">
 			<div className="flex flex-wrap items-center justify-between">
 				<h1 className="text-2xl">Action Panel</h1>
-				{/* <h2 className="text-xl">{`${state.actionCount} actions left`}</h2> */}
+				<h2 className="text-xl">{`${actionCount} actions left`}</h2>
 			</div>
 
 			{drawnHurricaneCard && (
