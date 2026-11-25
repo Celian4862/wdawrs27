@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { count, eq } from "drizzle-orm";
+import { and, count, eq } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "#/db";
 import { gamesTable, usersTable } from "#/db/schema";
@@ -77,7 +77,12 @@ export const joinGame = createServerFn({ method: "POST" })
 			const [playerWithName] = await tx
 				.select({ playerName: usersTable.playerName })
 				.from(usersTable)
-				.where(eq(usersTable.playerName, playerName));
+				.where(
+					and(
+						eq(usersTable.gameId, gameId),
+						eq(usersTable.playerName, playerName),
+					),
+				);
 
 			if (playerWithName) {
 				throw new Error("Player name already exists");
