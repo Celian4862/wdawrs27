@@ -23,6 +23,7 @@ export type GameInfo = GameState & {
 };
 
 export interface GameState {
+	readonly actionCount: number;
 	readonly board: Board;
 	readonly players: PlayerState;
 	readonly hurricaneDeck: HurricaneDeck;

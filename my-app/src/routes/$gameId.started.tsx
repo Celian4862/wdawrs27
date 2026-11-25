@@ -41,6 +41,7 @@ function RouteComponent() {
 		refetchInterval: 2000,
 		initialData: {
 			isAdmin: false,
+			actionCount: 0,
 			board: [],
 			players: [],
 			hurricaneDeck: [],
@@ -56,6 +57,7 @@ function RouteComponent() {
 		},
 		select: (data: GameInfo | undefined): GameInfo => ({
 			isAdmin: data?.isAdmin ?? false,
+			actionCount: data?.actionCount ?? 0,
 			board: data?.board ?? [],
 			players: data?.players ?? [],
 			hurricaneDeck: data?.hurricaneDeck ?? [],
@@ -104,7 +106,7 @@ function RouteComponent() {
 					<section className="flex flex-col-reverse gap-5 py-5 lg:flex-col">
 						{gameState.board.length > 0 && gameState.players.length > 0 && (
 							<ActionPanel
-								actionCount={0}
+								actionCount={gameState.actionCount}
 								board={gameState.board}
 								players={gameState.players}
 								selectedAction={selectedAction}

@@ -131,6 +131,7 @@ export const setupGame = createServerFn({ method: "POST" })
 				debugInitialState && process.env.NODE_ENV !== "production"
 					? debugInitialState
 					: {
+							actionCount: 4,
 							board: shuffleBoard(),
 							players: assignPlayers(roles),
 							hurricaneDeck: shuffleHurricaneDeck(),
