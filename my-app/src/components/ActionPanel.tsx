@@ -17,6 +17,7 @@ import {
 } from "#/server/player/helpers";
 import type { PlayerState } from "#/server/player/types";
 import EndTurnModal from "./EndTurnModal";
+import RevealTileModal from "./RevealTileModal";
 
 interface ActionType {
 	name: GameAction;
@@ -130,52 +131,52 @@ export default function ActionPanel({
 								<div key={action.name} className="relative inline-block">
 									{action.name === "Collect Part" &&
 										!action.disableCondition && <PingCircle />}
-									<button
-										type="button"
-										disabled={disabled(action)}
-										onClick={() => {
-											if (
-												// state.isDrawingHurricaneCards ||
-												action.disableCondition
-											) {
-												return;
-											}
-											if (action.name === "Collect Part") {
-												// const board = [...board];
-												// const partsCollected = [...state.partsCollected];
-												// const tileInfo = board[currentTileIndex].info;
-												// if (tileInfo) {
-												// 	const partToCollect = tileInfo.parts.pop();
-												// 	board[currentTileIndex] = {
-												// 		...board[currentTileIndex],
-												// 		info: {
-												// 			...tileInfo,
-												// 		},
-												// 	};
-												// 	if (partToCollect) {
-												// 		partsCollected.push(partToCollect);
-												// 	}
-												// }
-												// dispatch({
-												// 	type: "COLLECT_PART",
-												// 	board,
-												// 	partsCollected,
-												// });
-											} else if (action.name === "Reveal Tile") {
-												// dispatch({
-												// 	type: "SET_SHOW_REVEAL_MODAL",
-												// 	prevAction: selectedAction,
-												// 	show: true,
-												// });
-											}
-											setSelectedAction(
-												selectedAction === action.name ? null : action.name,
-											);
-										}}
-										className={`rounded-lg border p-3 motion-safe:transition ${disabled(action) ? "brightness-50" : action.name === "Reveal Tile" ? "bg-green-700 hover:bg-green-600" : "hover:bg-yellow-600"} ${action.name !== "Collect Part" && selectedAction === action.name ? `scale-115 ${action.name === "Reveal Tile" ? "bg-green-700" : "bg-yellow-600"}` : ""}`}
-									>
-										{action.name}
-									</button>
+									{action.name === "Reveal Tile" ? (
+										<RevealTileModal
+											hurricaneDrawStatus={hurricaneDrawStatus}
+										/>
+									) : (
+										<button
+											type="button"
+											disabled={disabled(action)}
+											onClick={() => {
+												if (
+													// state.isDrawingHurricaneCards ||
+													action.disableCondition
+												) {
+													return;
+												}
+												if (action.name === "Collect Part") {
+													// const board = [...board];
+													// const partsCollected = [...state.partsCollected];
+													// const tileInfo = board[currentTileIndex].info;
+													// if (tileInfo) {
+													// 	const partToCollect = tileInfo.parts.pop();
+													// 	board[currentTileIndex] = {
+													// 		...board[currentTileIndex],
+													// 		info: {
+													// 			...tileInfo,
+													// 		},
+													// 	};
+													// 	if (partToCollect) {
+													// 		partsCollected.push(partToCollect);
+													// 	}
+													// }
+													// dispatch({
+													// 	type: "COLLECT_PART",
+													// 	board,
+													// 	partsCollected,
+													// });
+												}
+												setSelectedAction(
+													selectedAction === action.name ? null : action.name,
+												);
+											}}
+											className={`rounded-lg border p-3 motion-safe:transition ${disabled(action) ? "brightness-50" : "hover:bg-yellow-600"} ${action.name !== "Collect Part" && selectedAction === action.name ? "scale-115 bg-yellow-600" : ""}`}
+										>
+											{action.name}
+										</button>
+									)}
 								</div>
 							))}
 							<div className="relative inline-block">
