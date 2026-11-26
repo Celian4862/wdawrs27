@@ -1,4 +1,5 @@
 import { Fragment } from "react/jsx-runtime";
+import { hurricaneId } from "#/server/board/data";
 import type {
 	Board as BoardType,
 	PartNames,
@@ -42,7 +43,7 @@ export default function Board({
 		>
 			{board.map((tile) => (
 				<Fragment key={tile.id}>
-					{tile.id === 12 ? (
+					{tile.id === hurricaneId ? (
 						<div />
 					) : (
 						<button

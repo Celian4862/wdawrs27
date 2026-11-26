@@ -10,6 +10,7 @@ import {
 	AlertDialogTrigger,
 } from "#/components/ui/alert-dialog";
 import { Button } from "#/components/ui/button";
+import { revealTile } from "#/server/game/helpers";
 import type { HurricaneDrawStatus } from "#/server/game/types";
 
 export default function RevealTileModal({
@@ -44,7 +45,13 @@ export default function RevealTileModal({
 				<AlertDialogFooter className="*:p-6 *:text-xl">
 					<AlertDialogCancel>Cancel</AlertDialogCancel>
 					<AlertDialogAction
-						onClick={() => {}}
+						onClick={async () => {
+							try {
+								await revealTile();
+							} catch (err) {
+								console.error(err);
+							}
+						}}
 						className="bg-green-700 hover:bg-green-600 active:brightness-50"
 					>
 						Continue

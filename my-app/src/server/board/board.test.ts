@@ -61,8 +61,8 @@ describe("shuffleBoard", () => {
 				unrevealedType: "Sand",
 				revealed: false,
 			});
-			expect(tile.id).not.toBe(12);
-			if (tile.id !== 12) {
+			expect(tile.id).not.toBe(hurricaneId);
+			if (tile.id !== hurricaneId) {
 				expect(tile.sandPoints).toBe(sandPointIds.has(sandTileId) ? 1 : 0);
 			}
 		}
@@ -72,7 +72,7 @@ describe("shuffleBoard", () => {
 		const board = shuffleBoard();
 		const hintTiles = board.flatMap<HintTile>((tile) => {
 			if (
-				tile.id !== 12 &&
+				tile.id !== hurricaneId &&
 				(tile.revealedType === "Core" ||
 					tile.revealedType === "Fan" ||
 					tile.revealedType === "Motor" ||

@@ -5,15 +5,32 @@ import { db } from "#/db";
 import { gamesTable, usersTable } from "#/db/schema";
 import { redis } from "#/lib/redis";
 import { cookieMiddleware, isAdminMiddleware } from "#/middleware/auth";
-import { shuffleBoard } from "../board/helpers";
+import { hurricaneId } from "../board/data";
+import {
+	getCurrentTileIndex,
+	revealTileHelper,
+	shuffleBoard,
+} from "../board/helpers";
 import { difficulties } from "../hurricane/data";
 import { setHurricaneMeter, shuffleHurricaneDeck } from "../hurricane/helpers";
 import { shuffleItemCards } from "../item/helpers";
-import { assignPlayers, shufflePlayers } from "../player/helpers";
+import {
+	assignPlayers,
+	getCurrentPlayer,
+	shufflePlayers,
+} from "../player/helpers";
 import { oneDayInSeconds } from "../shared/data";
 import { generateGameId } from "../shared/helpers";
 import { adminOnlyMessage } from "./data";
 import type { GameInfo, GameState, GameStatus } from "./types";
+
+async function setRedisCache(gameId: string, newGameState: GameState) {
+	await redis.setex(
+		`url:${gameId}`,
+		oneDayInSeconds,
+		JSON.stringify(newGameState),
+	);
+}
 
 export const getUserSessionStatus = createServerFn({ method: "GET" })
 	.middleware([cookieMiddleware])
@@ -166,11 +183,7 @@ export const setupGame = createServerFn({ method: "POST" })
 			});
 
 			// Cache initial state to Redis as well for fast reads
-			await redis.setex(
-				`url:${newGameId}`,
-				oneDayInSeconds,
-				JSON.stringify(gameState),
-			);
+			await setRedisCache(newGameId, gameState);
 
 			return gameSession;
 		},
@@ -274,11 +287,7 @@ export const getGameState = createServerFn({ method: "GET" })
 				const gameState = queriedGame.stateJSON;
 
 				// Cache back to Redis for subsequent reads
-				await redis.setex(
-					`url:${gameId}`,
-					oneDayInSeconds,
-					JSON.stringify(gameState),
-				);
+				await setRedisCache(gameId, gameState);
 
 				gameStateResult = {
 					...gameState,
@@ -313,4 +322,54 @@ export const getUserInfo = createServerFn({ method: "GET" })
 				{ isYou: user.token === token, playerName: user.playerName },
 			]),
 		);
+	});
+
+export const revealTile = createServerFn({ method: "POST" })
+	.middleware([cookieMiddleware])
+	.handler(async ({ context: { token } }) => {
+		const [userInfo] = await db
+			.select({
+				role: usersTable.role,
+				gameId: usersTable.gameId,
+			})
+			.from(usersTable)
+			.where(eq(usersTable.token, token));
+
+		if (!userInfo) {
+			throw new Error("You must join a game first");
+		}
+
+		const gameInfo = await getGameState({ data: { gameId: userInfo.gameId } });
+		const { isAdmin, ...gameState } = gameInfo;
+		const currentPlayer = getCurrentPlayer(gameState.players);
+
+		if (currentPlayer.roleKey !== userInfo.role) {
+			throw new Error("It is not yet your turn");
+		}
+
+		const currentTileIndex = getCurrentTileIndex(
+			gameState.board,
+			currentPlayer,
+		);
+
+		if (gameState.board[currentTileIndex].id === hurricaneId) {
+			throw new Error("Tile index is invalid");
+		}
+
+		// Need to check if tile is already revealed to prevent further action count deductions
+
+		const newGameState: GameState = {
+			...gameState,
+			actionCount: gameState.actionCount - 1,
+			board: revealTileHelper(gameState.board, currentPlayer),
+		};
+
+		await db.transaction(async (tx) => {
+			return await tx
+				.update(gamesTable)
+				.set({ stateJSON: newGameState })
+				.where(eq(gamesTable.id, userInfo.gameId));
+		});
+
+		await setRedisCache(userInfo.gameId, newGameState);
 	});

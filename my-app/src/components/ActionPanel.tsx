@@ -1,3 +1,4 @@
+import { hurricaneId } from "#/server/board/data";
 import {
 	findNeighboring,
 	findSandPoints,
@@ -46,7 +47,7 @@ export default function ActionPanel({
 
 	const currentTileIndex = getCurrentTileIndex(board, currentPlayer);
 
-	if (board[currentTileIndex].id === 12) {
+	if (board[currentTileIndex].id === hurricaneId) {
 		throw new Error("Current tile is invalid");
 	}
 

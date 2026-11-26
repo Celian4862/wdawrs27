@@ -1,3 +1,4 @@
+import { produce } from "immer";
 import type { ActivePlayer } from "../player/types";
 import { shuffle } from "../shared/helpers";
 import {
@@ -10,6 +11,16 @@ import {
 	startTileId,
 } from "./data";
 import type { Board, HintTile, OtherRevTile, RevSandTile, Tile } from "./types";
+
+export function revealTileHelper(board: Board, currentPlayer: ActivePlayer) {
+	const currentTileIndex = getCurrentTileIndex(board, currentPlayer);
+	return produce(board, (draft) => {
+		if (draft[currentTileIndex].id === hurricaneId) {
+			return;
+		}
+		draft[currentTileIndex].revealed = true;
+	});
+}
 
 export function findNeighboring(board: Board, player: ActivePlayer) {
 	const [mainRow, mainCol] = toCoordinates(getCurrentTileIndex(board, player));
@@ -30,7 +41,8 @@ export function findNeighboring(board: Board, player: ActivePlayer) {
 		);
 	}
 	return neighboring.filter(
-		(tilePosition) => tilePosition >= 0 && board[tilePosition].id !== 12,
+		(tilePosition) =>
+			tilePosition >= 0 && board[tilePosition].id !== hurricaneId,
 	);
 }
 
@@ -48,7 +60,7 @@ export function findSandPoints(
 		currentPosition,
 	];
 	return currentAndNeighboringPositions.filter((position) => {
-		if (board[position].id === 12) {
+		if (board[position].id === hurricaneId) {
 			throw new Error("Tile is not valid");
 		}
 		return board[position].sandPoints > 0;
@@ -57,7 +69,7 @@ export function findSandPoints(
 
 export function sumSandPoints(board: Board) {
 	return board.reduce(
-		(sum, tile) => sum + (tile.id === 12 ? 0 : tile.sandPoints),
+		(sum, tile) => sum + (tile.id === hurricaneId ? 0 : tile.sandPoints),
 		0,
 	);
 }
