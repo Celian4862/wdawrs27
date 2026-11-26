@@ -74,8 +74,8 @@ export default function ActionPanel({
 	];
 
 	let roleActions: ActionType[] | null = null;
-	switch (getRoleTitle(currentPlayer.roleKey)) {
-		case "Hiker":
+	switch (currentPlayer.roleKey) {
+		case "hiker":
 			roleActions = players.flatMap((player) => {
 				if (player.roleKey === currentPlayer.roleKey) return [];
 
