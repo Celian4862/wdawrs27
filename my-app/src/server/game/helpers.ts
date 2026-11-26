@@ -117,7 +117,7 @@ export const joinGame = createServerFn({ method: "POST" })
 					gameId,
 					isAdmin: false,
 					playerName: playerName,
-					role: game.roles.roles[gamePlayers.count],
+					role: game.roles[gamePlayers.count],
 				});
 			} else {
 				throw new Error("This game room is full.");
@@ -169,7 +169,7 @@ export const setupGame = createServerFn({ method: "POST" })
 					status: "waiting",
 					playerCount,
 					difficulty,
-					roles: { roles },
+					roles,
 					stateJSON: gameState,
 				})
 				.returning();

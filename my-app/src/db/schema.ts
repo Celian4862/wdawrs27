@@ -19,9 +19,7 @@ export const gamesTable = sqliteTable("games", {
 		.notNull()
 		.default(sql`(unixepoch())`),
 	// For randomizing role assignments
-	roles: text("roles", { mode: "json" })
-		.$type<{ roles: RoleKey[] }>()
-		.notNull(),
+	roles: text("roles", { mode: "json" }).$type<RoleKey[]>().notNull(),
 	stateJSON: text("state_json", { mode: "json" }).$type<GameState>().notNull(),
 });
 
