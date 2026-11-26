@@ -6,7 +6,7 @@ import type {
 	HurricaneMeter,
 } from "../hurricane/types";
 import type { ItemDeck, ItemKey } from "../item/types";
-import type { PlayerState, RoleKey } from "../player/types";
+import type { PlayerState, PlayerTitle, RoleKey } from "../player/types";
 import type { generalActions, hurricaneDrawStatuses } from "./data";
 
 export type UserInfo = Partial<
@@ -16,7 +16,11 @@ export type UserInfo = Partial<
 export type HurricaneDrawStatus = (typeof hurricaneDrawStatuses)[number] | null;
 
 export type GameStatus = "waiting" | "started" | "finished";
-export type GameAction = (typeof generalActions)[number] | ItemKey | null;
+export type GameAction =
+	| (typeof generalActions)[number]
+	| `Pick Up ${PlayerTitle}`
+	| ItemKey
+	| null;
 export type SetGameAction = Dispatch<SetStateAction<GameAction>>;
 export type GameInfo = GameState & {
 	isAdmin: boolean;

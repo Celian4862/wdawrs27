@@ -110,6 +110,7 @@ function RouteComponent() {
 								board={gameState.board}
 								players={gameState.players}
 								selectedAction={selectedAction}
+								setSelectedAction={setSelectedAction}
 								drawnHurricaneCard={gameState.drawnHurricaneCard}
 								hurricaneDrawStatus={gameState.hurricaneDrawStatus}
 							/>

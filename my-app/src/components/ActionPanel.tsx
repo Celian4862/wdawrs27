@@ -4,7 +4,11 @@ import {
 	getCurrentTileIndex,
 } from "#/server/board/helpers";
 import type { Board } from "#/server/board/types";
-import type { GameAction, HurricaneDrawStatus } from "#/server/game/types";
+import type {
+	GameAction,
+	HurricaneDrawStatus,
+	SetGameAction,
+} from "#/server/game/types";
 import type { HurricaneCard } from "#/server/hurricane/types";
 import {
 	findPlayer,
@@ -15,7 +19,7 @@ import type { PlayerState } from "#/server/player/types";
 import EndTurnModal from "./EndTurnModal";
 
 interface ActionType {
-	name: string;
+	name: GameAction;
 	disableCondition: boolean;
 }
 
@@ -24,6 +28,7 @@ export default function ActionPanel({
 	board,
 	players,
 	selectedAction,
+	setSelectedAction,
 	drawnHurricaneCard,
 	hurricaneDrawStatus,
 }: {
@@ -31,6 +36,7 @@ export default function ActionPanel({
 	board: Board;
 	players: PlayerState;
 	selectedAction: GameAction;
+	setSelectedAction: SetGameAction;
 	drawnHurricaneCard: HurricaneCard;
 	hurricaneDrawStatus: HurricaneDrawStatus;
 }) {
@@ -94,7 +100,7 @@ export default function ActionPanel({
 
 	return (
 		<section className="sticky bottom-0 z-20 flex w-full flex-col items-center justify-center rounded-xl border border-slate-700/60 bg-slate-900/90 p-6 backdrop-blur-md lg:top-0 lg:block lg:flex">
-			<div className="flex flex-wrap items-center justify-between">
+			<div className="flex w-full flex-wrap items-center justify-between">
 				<h1 className="text-2xl">Action Panel</h1>
 				<h2 className="text-xl">{`${actionCount} actions left`}</h2>
 			</div>
@@ -128,47 +134,43 @@ export default function ActionPanel({
 										type="button"
 										disabled={disabled(action)}
 										onClick={() => {
-											// if (
-											// 	state.isDrawingHurricaneCards ||
-											// 	action.disableCondition
-											// ) {
-											// 	return;
-											// }
-											// if (action.name === "Collect Part") {
-											// 	const board = [...board];
-											// 	const partsCollected = [...state.partsCollected];
-											// 	const tileInfo = board[currentTileIndex].info;
-											// 	if (tileInfo) {
-											// 		const partToCollect = tileInfo.parts.pop();
-											// 		board[currentTileIndex] = {
-											// 			...board[currentTileIndex],
-											// 			info: {
-											// 				...tileInfo,
-											// 			},
-											// 		};
-											// 		if (partToCollect) {
-											// 			partsCollected.push(partToCollect);
-											// 		}
-											// 	}
-											// 	dispatch({
-											// 		type: "COLLECT_PART",
-											// 		board,
-											// 		partsCollected,
-											// 	});
-											// } else if (action.name === "Reveal Tile") {
-											// 	dispatch({
-											// 		type: "SET_SHOW_REVEAL_MODAL",
-											// 		prevAction: selectedAction,
-											// 		show: true,
-											// 	});
-											// }
-											// dispatch({
-											// 	type: "SELECT_ACTION",
-											// 	action:
-											// 		selectedAction === action.name
-											// 			? null
-											// 			: action.name,
-											// });
+											if (
+												// state.isDrawingHurricaneCards ||
+												action.disableCondition
+											) {
+												return;
+											}
+											if (action.name === "Collect Part") {
+												// const board = [...board];
+												// const partsCollected = [...state.partsCollected];
+												// const tileInfo = board[currentTileIndex].info;
+												// if (tileInfo) {
+												// 	const partToCollect = tileInfo.parts.pop();
+												// 	board[currentTileIndex] = {
+												// 		...board[currentTileIndex],
+												// 		info: {
+												// 			...tileInfo,
+												// 		},
+												// 	};
+												// 	if (partToCollect) {
+												// 		partsCollected.push(partToCollect);
+												// 	}
+												// }
+												// dispatch({
+												// 	type: "COLLECT_PART",
+												// 	board,
+												// 	partsCollected,
+												// });
+											} else if (action.name === "Reveal Tile") {
+												// dispatch({
+												// 	type: "SET_SHOW_REVEAL_MODAL",
+												// 	prevAction: selectedAction,
+												// 	show: true,
+												// });
+											}
+											setSelectedAction(
+												selectedAction === action.name ? null : action.name,
+											);
 										}}
 										className={`rounded-lg border p-3 motion-safe:transition ${disabled(action) ? "brightness-50" : action.name === "Reveal Tile" ? "bg-green-700 hover:bg-green-600" : "hover:bg-yellow-600"} ${action.name !== "Collect Part" && selectedAction === action.name ? `scale-115 ${action.name === "Reveal Tile" ? "bg-green-700" : "bg-yellow-600"}` : ""}`}
 									>
