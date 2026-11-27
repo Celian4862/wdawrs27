@@ -41,6 +41,7 @@ export default function RevealTileModal({
 		},
 		onError: (err) => {
 			console.error(err.message);
+			queryClient.invalidateQueries({ queryKey: gameKey });
 		},
 	});
 	const isAnyGameActionPending = useIsMutating({ mutationKey: gameKey }) > 0;

@@ -374,4 +374,6 @@ export const revealTile = createServerFn({ method: "POST" })
 		});
 
 		await setRedisCache(userInfo.gameId, newGameState);
+
+		return newGameState;
 	});
