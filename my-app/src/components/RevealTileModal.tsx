@@ -1,4 +1,9 @@
 import {
+	useIsMutating,
+	useMutation,
+	useQueryClient,
+} from "@tanstack/react-query";
+import {
 	AlertDialog,
 	AlertDialogAction,
 	AlertDialogCancel,
@@ -14,19 +19,48 @@ import { revealTile } from "#/server/game/helpers";
 import type { HurricaneDrawStatus } from "#/server/game/types";
 
 export default function RevealTileModal({
+	gameId,
+	actionCount,
+	revealed,
 	hurricaneDrawStatus,
 }: {
+	gameId: string;
+	actionCount: number;
+	revealed: boolean;
 	hurricaneDrawStatus: HurricaneDrawStatus;
 }) {
+	const queryClient = useQueryClient();
+	const gameKey = ["game", gameId];
+	const mutation = useMutation({
+		mutationFn: revealTile,
+		onMutate: async () => {
+			await queryClient.cancelQueries({ queryKey: gameKey });
+		},
+		onSuccess: (updatedGameState) => {
+			queryClient.setQueryData(gameKey, updatedGameState);
+		},
+		onError: (err) => {
+			console.error(err.message);
+		},
+	});
+	const isAnyGameActionPending = useIsMutating({ mutationKey: gameKey }) > 0;
+	const disabled =
+		mutation.isPending ||
+		actionCount === 0 ||
+		revealed ||
+		!!hurricaneDrawStatus ||
+		isAnyGameActionPending;
+
 	return (
 		<AlertDialog>
 			<AlertDialogTrigger asChild>
 				<Button
 					variant="default"
-					className={`rounded-lg border bg-green-700 px-3 py-6 text-base motion-safe:transition ${
-						hurricaneDrawStatus
-							? "cursor-not-allowed brightness-50"
-							: "hover:bg-green-600 active:brightness-50"
+					disabled={disabled}
+					className={`rounded-lg border px-3 py-6 text-base motion-safe:transition ${
+						disabled
+							? ""
+							: "bg-green-700 hover:bg-green-600 active:brightness-50"
 					}`}
 				>
 					Reveal Tile
@@ -45,12 +79,9 @@ export default function RevealTileModal({
 				<AlertDialogFooter className="*:p-6 *:text-xl">
 					<AlertDialogCancel>Cancel</AlertDialogCancel>
 					<AlertDialogAction
-						onClick={async () => {
-							try {
-								await revealTile();
-							} catch (err) {
-								console.error(err);
-							}
+						disabled={disabled}
+						onClick={() => {
+							mutation.mutate();
 						}}
 						className="bg-green-700 hover:bg-green-600 active:brightness-50"
 					>

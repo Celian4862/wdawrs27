@@ -356,7 +356,9 @@ export const revealTile = createServerFn({ method: "POST" })
 			throw new Error("Tile index is invalid");
 		}
 
-		// Need to check if tile is already revealed to prevent further action count deductions
+		if (gameState.board[currentTileIndex].revealed) {
+			throw new Error("Tile is already revealed");
+		}
 
 		const newGameState: GameState = {
 			...gameState,

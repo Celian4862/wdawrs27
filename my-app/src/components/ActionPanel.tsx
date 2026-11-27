@@ -26,6 +26,7 @@ interface ActionType {
 }
 
 export default function ActionPanel({
+	gameId,
 	actionCount,
 	board,
 	players,
@@ -34,6 +35,7 @@ export default function ActionPanel({
 	drawnHurricaneCard,
 	hurricaneDrawStatus,
 }: {
+	gameId: string;
 	actionCount: number;
 	board: Board;
 	players: PlayerState;
@@ -134,6 +136,12 @@ export default function ActionPanel({
 										!action.disableCondition && <PingCircle />}
 									{action.name === "Reveal Tile" ? (
 										<RevealTileModal
+											gameId={gameId}
+											actionCount={actionCount}
+											revealed={
+												board[currentTileIndex].id !== 12 &&
+												board[currentTileIndex].revealed
+											}
 											hurricaneDrawStatus={hurricaneDrawStatus}
 										/>
 									) : (
