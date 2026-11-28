@@ -20,12 +20,14 @@ import type { HurricaneDrawStatus } from "#/server/game/types";
 
 export default function RevealTileModal({
 	gameId,
+	isYou,
 	actionCount,
 	revealed,
 	stateVersion,
 	hurricaneDrawStatus,
 }: {
 	gameId: string;
+	isYou: boolean;
 	actionCount: number;
 	revealed: boolean;
 	stateVersion: number;
@@ -48,6 +50,7 @@ export default function RevealTileModal({
 	});
 	const isAnyGameActionPending = useIsMutating({ mutationKey: gameKey }) > 0;
 	const disabled =
+		!isYou ||
 		mutation.isPending ||
 		actionCount === 0 ||
 		revealed ||

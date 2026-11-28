@@ -13,6 +13,7 @@ import PlayerCards from "#/components/PlayerCards";
 import { sumSandPoints } from "#/server/board/helpers";
 import { getGameInfo, getUserInfo } from "#/server/game/helpers";
 import type { GameAction, GameInfo, SetGameAction } from "#/server/game/types";
+import { getCurrentPlayer } from "#/server/player/helpers";
 
 export const Route = createFileRoute("/$gameId/started")({
 	loader: async ({ params: { gameId } }) => {
@@ -113,6 +114,10 @@ function RouteComponent() {
 								actionCount={gameState.actionCount}
 								board={gameState.board}
 								players={gameState.players}
+								isYou={
+									userInfo[getCurrentPlayer(gameState.players).roleKey]
+										?.isYou ?? false
+								}
 								selectedAction={selectedAction}
 								setSelectedAction={setSelectedAction}
 								drawnHurricaneCard={gameState.drawnHurricaneCard}

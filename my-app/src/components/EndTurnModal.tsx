@@ -13,8 +13,10 @@ import { Button } from "#/components/ui/button";
 import type { HurricaneDrawStatus } from "#/server/game/types";
 
 export default function EndTurnModal({
+	disabled,
 	hurricaneDrawStatus,
 }: {
+	disabled: boolean;
 	hurricaneDrawStatus: HurricaneDrawStatus;
 }) {
 	return (
@@ -22,6 +24,7 @@ export default function EndTurnModal({
 			<AlertDialogTrigger asChild>
 				<Button
 					variant="outline"
+					disabled={disabled}
 					className={`rounded-lg border bg-red-600/70 px-3 py-6 text-base font-semibold motion-safe:transition ${
 						hurricaneDrawStatus
 							? "cursor-not-allowed brightness-50"

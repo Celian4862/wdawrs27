@@ -31,6 +31,7 @@ export default function ActionPanel({
 	actionCount,
 	board,
 	players,
+	isYou,
 	selectedAction,
 	setSelectedAction,
 	drawnHurricaneCard,
@@ -41,6 +42,7 @@ export default function ActionPanel({
 	actionCount: number;
 	board: Board;
 	players: PlayerState;
+	isYou: boolean;
 	selectedAction: GameAction;
 	setSelectedAction: SetGameAction;
 	drawnHurricaneCard: HurricaneCard;
@@ -100,6 +102,7 @@ export default function ActionPanel({
 	}
 
 	const disabled = (action: (typeof actions)[number]) =>
+		!isYou ||
 		action.disableCondition ||
 		// || state.isDrawingHurricaneCards
 		actionCount === 0;
@@ -139,6 +142,7 @@ export default function ActionPanel({
 									{action.name === "Reveal Tile" ? (
 										<RevealTileModal
 											gameId={gameId}
+											isYou={isYou}
 											actionCount={actionCount}
 											revealed={
 												board[currentTileIndex].id !== 12 &&
@@ -193,7 +197,10 @@ export default function ActionPanel({
 							))}
 							<div className="relative inline-block">
 								{actionCount === 0 && !hurricaneDrawStatus && <PingCircle />}
-								<EndTurnModal hurricaneDrawStatus={hurricaneDrawStatus} />
+								<EndTurnModal
+									disabled={!isYou}
+									hurricaneDrawStatus={hurricaneDrawStatus}
+								/>
 							</div>
 						</div>
 					</details>
