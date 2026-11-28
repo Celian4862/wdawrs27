@@ -22,11 +22,13 @@ export default function RevealTileModal({
 	gameId,
 	actionCount,
 	revealed,
+	stateVersion,
 	hurricaneDrawStatus,
 }: {
 	gameId: string;
 	actionCount: number;
 	revealed: boolean;
+	stateVersion: number;
 	hurricaneDrawStatus: HurricaneDrawStatus;
 }) {
 	const queryClient = useQueryClient();
@@ -82,7 +84,10 @@ export default function RevealTileModal({
 					<AlertDialogAction
 						disabled={disabled}
 						onClick={() => {
-							mutation.mutate();
+							if (mutation.isPending) {
+								return;
+							}
+							mutation.mutate({ data: { stateVersion } });
 						}}
 						className="bg-green-700 hover:bg-green-600 active:brightness-50"
 					>

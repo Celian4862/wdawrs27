@@ -24,6 +24,7 @@ export type GameAction =
 export type SetGameAction = Dispatch<SetStateAction<GameAction>>;
 export type GameInfo = GameState & {
 	isAdmin: boolean;
+	stateVersion: number;
 };
 
 export interface GameState {

@@ -11,7 +11,7 @@ import Legend from "#/components/Legend";
 import Parts from "#/components/Parts";
 import PlayerCards from "#/components/PlayerCards";
 import { sumSandPoints } from "#/server/board/helpers";
-import { getGameState, getUserInfo } from "#/server/game/helpers";
+import { getGameInfo, getUserInfo } from "#/server/game/helpers";
 import type { GameAction, GameInfo, SetGameAction } from "#/server/game/types";
 
 export const Route = createFileRoute("/$gameId/started")({
@@ -34,13 +34,14 @@ function RouteComponent() {
 	} = useQuery({
 		queryKey: ["game", gameId],
 		queryFn: () =>
-			getGameState({
+			getGameInfo({
 				data: { gameId },
 			}),
 		retry: 1,
 		refetchInterval: 2000,
 		initialData: {
 			isAdmin: false,
+			stateVersion: 0,
 			actionCount: 0,
 			board: [],
 			players: [],
@@ -57,6 +58,7 @@ function RouteComponent() {
 		},
 		select: (data: GameInfo | undefined): GameInfo => ({
 			isAdmin: data?.isAdmin ?? false,
+			stateVersion: data?.stateVersion ?? 0,
 			actionCount: data?.actionCount ?? 0,
 			board: data?.board ?? [],
 			players: data?.players ?? [],
@@ -107,6 +109,7 @@ function RouteComponent() {
 						{gameState.board.length > 0 && gameState.players.length > 0 && (
 							<ActionPanel
 								gameId={gameId}
+								stateVersion={gameState.stateVersion}
 								actionCount={gameState.actionCount}
 								board={gameState.board}
 								players={gameState.players}

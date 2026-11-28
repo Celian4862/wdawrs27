@@ -27,6 +27,7 @@ interface ActionType {
 
 export default function ActionPanel({
 	gameId,
+	stateVersion,
 	actionCount,
 	board,
 	players,
@@ -36,6 +37,7 @@ export default function ActionPanel({
 	hurricaneDrawStatus,
 }: {
 	gameId: string;
+	stateVersion: number;
 	actionCount: number;
 	board: Board;
 	players: PlayerState;
@@ -142,6 +144,7 @@ export default function ActionPanel({
 												board[currentTileIndex].id !== 12 &&
 												board[currentTileIndex].revealed
 											}
+											stateVersion={stateVersion}
 											hurricaneDrawStatus={hurricaneDrawStatus}
 										/>
 									) : (

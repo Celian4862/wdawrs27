@@ -255,13 +255,21 @@ export const startGame = createServerFn({ method: "POST" })
 			.where(eq(gamesTable.id, gameId));
 	});
 
-export const getGameState = createServerFn({ method: "GET" })
+export const getGameInfo = createServerFn({ method: "GET" })
 	.middleware([isAdminMiddleware])
 	.validator(z.object({ gameId: z.string().min(8).max(8) }))
 	.handler(
 		async ({ data: { gameId }, context: { isAdmin } }): Promise<GameInfo> => {
-			let gameStateResult: GameInfo;
-			// 1. Try reading from Redis Cache first
+			const [stateVersion] = await db
+				.select({ stateVersion: gamesTable.stateVersion })
+				.from(gamesTable)
+				.where(eq(gamesTable.id, gameId));
+
+			if (!stateVersion) {
+				throw new Error("Game not found");
+			}
+
+			// Try reading from Redis Cache first
 			const cachedGameState = await redis.getex(
 				`url:${gameId}`,
 				"EX",
@@ -269,33 +277,33 @@ export const getGameState = createServerFn({ method: "GET" })
 			);
 
 			if (cachedGameState) {
-				gameStateResult = {
-					...JSON.parse(cachedGameState),
+				return {
+					...(JSON.parse(cachedGameState) as GameState),
 					isAdmin,
-				};
-			} else {
-				// 2. Fallback to Turso DB
-				const [queriedGame] = await db
-					.select({ stateJSON: gamesTable.stateJSON })
-					.from(gamesTable)
-					.where(eq(gamesTable.id, gameId));
-
-				if (!queriedGame) {
-					throw new Error("Invalid game session");
-				}
-
-				const gameState = queriedGame.stateJSON;
-
-				// Cache back to Redis for subsequent reads
-				await setRedisCache(gameId, gameState);
-
-				gameStateResult = {
-					...gameState,
-					isAdmin,
+					...stateVersion,
 				};
 			}
 
-			return gameStateResult;
+			// Fallback to Turso DB
+			const [queriedGame] = await db
+				.select({ stateJSON: gamesTable.stateJSON })
+				.from(gamesTable)
+				.where(eq(gamesTable.id, gameId));
+
+			if (!queriedGame) {
+				throw new Error("Invalid game session");
+			}
+
+			const gameState = queriedGame.stateJSON;
+
+			// Cache back to Redis for subsequent reads
+			await setRedisCache(gameId, gameState);
+
+			return {
+				...gameState,
+				isAdmin,
+				...stateVersion,
+			};
 		},
 	);
 
@@ -326,7 +334,8 @@ export const getUserInfo = createServerFn({ method: "GET" })
 
 export const revealTile = createServerFn({ method: "POST" })
 	.middleware([cookieMiddleware])
-	.handler(async ({ context: { token } }) => {
+	.validator(z.object({ stateVersion: z.number().min(0) }))
+	.handler(async ({ data: { stateVersion }, context: { token } }) => {
 		const [userInfo] = await db
 			.select({
 				role: usersTable.role,
@@ -339,7 +348,7 @@ export const revealTile = createServerFn({ method: "POST" })
 			throw new Error("You must join a game first");
 		}
 
-		const gameInfo = await getGameState({ data: { gameId: userInfo.gameId } });
+		const gameInfo = await getGameInfo({ data: { gameId: userInfo.gameId } });
 		const { isAdmin, ...gameState } = gameInfo;
 		const currentPlayer = getCurrentPlayer(gameState.players);
 
@@ -366,12 +375,22 @@ export const revealTile = createServerFn({ method: "POST" })
 			board: revealTileHelper(gameState.board, currentPlayer),
 		};
 
-		await db.transaction(async (tx) => {
+		const [insertResult] = await db.transaction(async (tx) => {
 			return await tx
 				.update(gamesTable)
 				.set({ stateJSON: newGameState })
-				.where(eq(gamesTable.id, userInfo.gameId));
+				.where(
+					and(
+						eq(gamesTable.id, userInfo.gameId),
+						eq(gamesTable.stateVersion, stateVersion),
+					),
+				)
+				.returning();
 		});
+
+		if (!insertResult) {
+			throw new Error("Game state out of sync");
+		}
 
 		await setRedisCache(userInfo.gameId, newGameState);
 

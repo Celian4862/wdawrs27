@@ -21,6 +21,7 @@ export const gamesTable = sqliteTable("games", {
 	// For randomizing role assignments
 	roles: text("roles", { mode: "json" }).$type<RoleKey[]>().notNull(),
 	stateJSON: text("state_json", { mode: "json" }).$type<GameState>().notNull(),
+	stateVersion: integer("state_version").notNull().default(0),
 });
 
 export type GameRecord = typeof gamesTable.$inferSelect;
