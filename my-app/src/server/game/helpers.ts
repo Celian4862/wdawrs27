@@ -22,7 +22,7 @@ import {
 import { oneDayInSeconds } from "../shared/data";
 import { generateGameId } from "../shared/helpers";
 import { adminOnlyMessage } from "./data";
-import type { GameInfo, GameState, GameStatus } from "./types";
+import type { GameInfo, GameState, GameStatus, UserInfo } from "./types";
 
 async function setRedisCache(gameId: string, newGameState: GameState) {
 	await redis.setex(
@@ -310,27 +310,29 @@ export const getGameInfo = createServerFn({ method: "GET" })
 export const getUserInfo = createServerFn({ method: "GET" })
 	.middleware([cookieMiddleware])
 	.validator(z.object({ gameId: z.string().min(8).max(8) }))
-	.handler(async ({ data: { gameId }, context: { token } }) => {
-		const userInfo = await db
-			.select({
-				token: usersTable.token,
-				playerName: usersTable.playerName,
-				role: usersTable.role,
-			})
-			.from(usersTable)
-			.where(eq(usersTable.gameId, gameId));
+	.handler(
+		async ({ data: { gameId }, context: { token } }): Promise<UserInfo> => {
+			const userInfo = await db
+				.select({
+					token: usersTable.token,
+					playerName: usersTable.playerName,
+					role: usersTable.role,
+				})
+				.from(usersTable)
+				.where(eq(usersTable.gameId, gameId));
 
-		if (userInfo.length === 0) {
-			throw new Error("Game not found");
-		}
+			if (userInfo.length === 0) {
+				throw new Error("Game not found");
+			}
 
-		return Object.fromEntries(
-			userInfo.map((user) => [
-				user.role,
-				{ isYou: user.token === token, playerName: user.playerName },
-			]),
-		);
-	});
+			return Object.fromEntries(
+				userInfo.map((user) => [
+					user.role,
+					{ isYou: user.token === token, playerName: user.playerName },
+				]),
+			);
+		},
+	);
 
 export const revealTile = createServerFn({ method: "POST" })
 	.middleware([cookieMiddleware])
